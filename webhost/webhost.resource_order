@@ -1,0 +1,25 @@
+{
+  "FolderOrderSettings": [
+    {"name":"HttpServer","order":2,"path":"folders/Libraries/HttpServer.yy",},
+    {"name":"Init","order":2,"path":"folders/Init.yy",},
+    {"name":"Libraries","order":1,"path":"folders/Libraries.yy",},
+    {"name":"LoggingSuite","order":1,"path":"folders/Libraries/LoggingSuite.yy",},
+    {"name":"Iterators","order":3,"path":"folders/Libraries/Iterators.yy",},
+  ],
+  "ResourceOrderSettings": [
+    {"name":"objHttpServerListener","order":1,"path":"objects/objHttpServerListener/objHttpServerListener.yy",},
+    {"name":"HttpServerSession","order":2,"path":"scripts/HttpServerSession/HttpServerSession.yy",},
+    {"name":"scrLogger","order":3,"path":"scripts/scrLogger/scrLogger.yy",},
+    {"name":"HttpServerRouter","order":5,"path":"scripts/HttpServerRouter/HttpServerRouter.yy",},
+    {"name":"HttpServerLineBuffer","order":7,"path":"scripts/HttpServerLineBuffer/HttpServerLineBuffer.yy",},
+    {"name":"HttpRequest","order":3,"path":"scripts/HttpRequest/HttpRequest.yy",},
+    {"name":"init_globals","order":2,"path":"scripts/init_globals/init_globals.yy",},
+    {"name":"HttpResponse","order":4,"path":"scripts/HttpResponse/HttpResponse.yy",},
+    {"name":"Exception","order":2,"path":"scripts/Exception/Exception.yy",},
+    {"name":"HttpServerFileServer","order":8,"path":"scripts/HttpServerFileServer/HttpServerFileServer.yy",},
+    {"name":"scrHttpServerExceptions","order":6,"path":"scripts/scrHttpServerExceptions/scrHttpServerExceptions.yy",},
+    {"name":"SnowState","order":1,"path":"scripts/SnowState/SnowState.yy",},
+    {"name":"GameManager","order":1,"path":"scripts/GameManager/GameManager.yy",},
+    {"name":"rInit","order":3,"path":"rooms/rInit/rInit.yy",},
+  ],
+}
