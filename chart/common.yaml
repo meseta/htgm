@@ -12,6 +12,9 @@ istio:
 podAnnotations:
   "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
 
+serviceAccount:
+  name: saas
+
 resources:
   limits:
     cpu: 500m
