@@ -29,7 +29,7 @@ variables:
   RUNTIME: "2023.1100.0.455"
   YYP_FILE: webhost/webhost.yyp
 
-gamemaker build server:
+gamemaker build:
   needs: []
   stage: build
   image: us-central1-docker.pkg.dev/webb-store/images/infrastructure/gamemaker-ci:$RUNTIME
@@ -66,12 +66,12 @@ gamemaker build server:
     - merge_requests
   interruptible: true
 
-docker build server:
+docker build:
   extends: .docker build
   stage: build
   needs: 
-    - gamemaker build server
-  dependencies: [gamemaker build server]
+    - gamemaker build
+  dependencies: [gamemaker build]
   before_script:
     - mkdir -p $CI_PROJECT_DIR/dist
     - unzip build_linux.zip -d $CI_PROJECT_DIR/dist
