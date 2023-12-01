@@ -8,4 +8,4 @@ ENV APP_VERSION=$APP_VERSION
 
 EXPOSE 5000
 
-CMD ["sh", "-c", "./worldwidewebb -noaudio"]
+CMD ["sh", "-c", "./webhost -noaudio"]
