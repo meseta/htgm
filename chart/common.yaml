@@ -7,7 +7,7 @@ image:
 istio:
   gateway:
     enabled: true
-    credentialName: "cloudflare-origin-ca"
+    credentialName: "cloudflare-origin-ca-meseta"
 
 podAnnotations:
   "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
