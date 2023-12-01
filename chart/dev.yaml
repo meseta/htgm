@@ -5,3 +5,4 @@ istio:
     enabled: true
     hosts:
       - "webhost.apps.webb.party"
+      - "gm.meseta.dev"
