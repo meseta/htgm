@@ -1,14 +1,11 @@
-/**
- * @desc A buffer that can return one line of string at a time
-**/
+/** A buffer that can return one line of string at a time */
 function HttpServerLineBuffer() constructor {
 	self.__buffer = -1;
 	
-	/**
-	 * @desc Add a buffer to the data in this buffer
+	/** Add a buffer to the data in this buffer
 	 * @param {Id.Buffer} _incoming_buffer existing buffer to use
 	 * @param {Real} _incoming_size bytes incoming
-	**/
+	 */
 	static concatenate = function(_incoming_buffer, _incoming_size) {
 		if (buffer_exists(self.__buffer)) {
 			var _old_size = buffer_get_size(self.__buffer)
@@ -23,10 +20,9 @@ function HttpServerLineBuffer() constructor {
 		}
 	};
 	
-	/**
-	 * @desc Whether buffer has data in it
+	/** Whether buffer has data in it
 	 * @return {Bool}
-	**/
+	 */
 	static has_data = function() {
 		if (buffer_exists(self.__buffer)) {
 			return buffer_tell(self.__buffer) < buffer_get_size(self.__buffer);
@@ -34,9 +30,7 @@ function HttpServerLineBuffer() constructor {
 		return false;
 	};
 	
-	/**
-	 * @desc Cleanup resources
-	**/
+	/** Cleanup resources */
 	static cleanup = function() {
 		if (buffer_exists(self.__buffer)) {
 			buffer_delete(self.__buffer);
@@ -44,10 +38,9 @@ function HttpServerLineBuffer() constructor {
 		}
 	};
 	
-	/**
-	 * @desc Read a line of text from the buffer
+	/** Read a line of text from the buffer
 	 * @return {Any}
-	**/
+	 */
 	static read_line = function() {
 		if (!buffer_exists(self.__buffer)) return undefined;
 		
@@ -77,10 +70,9 @@ function HttpServerLineBuffer() constructor {
 		return undefined;
 	};
 	
-	/**
-	 * @desc Read some amount of bytes and return as a buffer
+	/** Read some amount of bytes and return as a buffer
 	 * @return {Id.Buffer}
-	**/
+	 */
 	static read_length_to_buffer = function(_read_len) {
 		if (!buffer_exists(self.__buffer) || buffer_get_size(self.__buffer) < buffer_tell(self.__buffer) + _read_len) return -1;
 		

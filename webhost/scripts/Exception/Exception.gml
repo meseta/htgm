@@ -1,8 +1,7 @@
-/**
- * @desc Custom exception to mirror gamemaker's built-in exceptions
+/** Custom exception to mirror gamemaker's built-in exceptions
  * @param {String} _message The exception message
  * @param {String} _long_message A longer message
-**/
+ */
 function Exception(_message, _long_message=undefined) constructor {
 	/// Feather ignore GM2017
 	self.stacktrace = debug_get_callstack();

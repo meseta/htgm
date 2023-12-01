@@ -1,13 +1,10 @@
 init_globals();
 
+SERVER.add_file_server("static/*", "static");
 
-SERVER.add_path(
-	"", 
-	/// @param {Struct.HttpRequest} _request @param {Struct.HttpResponse} _response
-	function(_request, _response) {
-		_response.send_string("hello world!");
-	}
-);
+SERVER.add_render(HtmxPage1);
+SERVER.add_render(HtmxPage2);
+SERVER.add_render(HtmxMain);
 
 GAME = new GameManager();
 GAME.set_debug_mode(true);

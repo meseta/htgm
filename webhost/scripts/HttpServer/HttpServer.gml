@@ -1,8 +1,7 @@
-/**
- * @desc An HTTP server that can respond to HTTP requests
+/** An HTTP server that can respond to HTTP requests
  * @param {Real} _port The port number to bind to
  * @param {Struct.Logger} _logger An optional logger to use. if not provided, one will be created
-**/
+ */
 function HttpServer(_port, _logger=undefined) constructor {
 	/* @ignore */ self.__port = _port;
 	/* @ignore */ self.__logger = _logger ?? new Logger("HttpServer", {port: _port});
@@ -12,10 +11,9 @@ function HttpServer(_port, _logger=undefined) constructor {
 	/* @ignore */ self.__client_sessions = {};
 	/* @ignore */ self.__router = new HttpServerRouter(self.__logger);
 	
-	/**
-	 * @desc Start the server, returning whether successful
+	/** Start the server, returning whether successful
 	 * @return {Bool}
-	**/
+	 */
 	static start = function() {
 		// can't start if already has a socket
 		if (self.__socket != -1) {
@@ -34,19 +32,18 @@ function HttpServer(_port, _logger=undefined) constructor {
 		
 		// spawn the listener instance if not already exists
 		var _bound_handler = method(self, self.__async_networking_handler);
-		if (!instance_exists(self.__listener_instance)) {
-			self.__listener_instance = instance_create_depth(0, 0, 0, objHttpServerListener, {async_networking_handler: _bound_handler})
+		if (instance_exists(self.__listener_instance)) {
+			self.__listener_instance.set_callback(_bound_handler);
 		}
 		else {
-			self.__listener_instance.async_networking_handler = _bound_handler;
+			self.__listener_instance = add_async_networking_callback(_bound_handler)
 		}
 		return true;
 	};
 	
-	/**
-	 * @desc Stops the server and removes the listener
+	/** Stops the server and removes the listener
 	 * @return {Bool}
-	**/
+	 */
 	static stop = function() {
 		struct_foreach(self.__client_sessions, function(_client_socket, _client_session) {
 			_client_session.close();
@@ -60,33 +57,69 @@ function HttpServer(_port, _logger=undefined) constructor {
 		}
 	};
 	
-	/**
-	 * @desc Add a path to the router, this is an alias for HttpServerRouter.add_path
+	/** Add a path to the router, this is an alias for HttpServerRouter.add_path
 	 * @param {String} _path The path pattern to add
 	 * @param {Function} _callback The function to call that will handle this path
 	 * @return {Struct.HttpServerRouter}
-	**/
+	 */
 	static add_path = function(_path, _callback) {
+		self.__logger.info("Added path", {path: _path})
 		return self.__router.add_path(_path, _callback);
 	};
 	
-	/**
-	 * @desc Add a file server, serving from files gamemaker can access
+	/** Add a single file, serving from files gamemaker can access
+	 * @param {String} _path The path pattern to add
+	 * @param {String} _file The file path
+	 * @return {Struct.HttpServerRouter}
+	 */
+	static add_file = function(_path, _file) {
+		self.__logger.info("Added file", {path: _path})
+		var _file_handler = new HttpServerFile(_file);
+		return self.__router.add_path(_path, method(_file_handler, _file_handler.handler))
+	}
+		
+	/** Add a file server, serving from files gamemaker can access
 	 * @param {String} _path The path pattern to add
 	 * @param {String} _web_root The file path that is the server root
 	 * @param {String} _index_file The name of the index file in the root
 	 * @return {Struct.HttpServerRouter}
-	**/
+	 */
 	static add_file_server = function(_path, _web_root, _index_file="index.html") {
-		var _fileserver = new HttpServerFileServer(_web_root, _index_file);
-		return self.__router.add_path(_path, method(_fileserver, _fileserver.handler))
+		self.__logger.info("Added file server", {path: _path})
+		var _file_handler = new HttpServerFileServer(_web_root, _index_file);
+		return self.__router.add_path(_path, method(_file_handler, _file_handler.handler))
 	}
 	
-	/**
-	 * @desc Handles the incoming async_load from async networking event
+	/** Add a constructor with a render to the router
+	 * @param {Function} _render
+	 * @return {Struct.HttpServerRouter}
+	 */
+	static add_render = function(_render) {
+		var _inst = new _render();
+		if (!is_instanceof(_inst, HttpServerRenderBase)) {
+			throw new ExceptionHttpServerSetup("Render not a child of HttpServerRenderBase", "Render "+instanceof(_inst)+ " is not a child of HttpServerRenderBase");
+		}
+		
+		var _bound_handler = method(_inst, _inst.handler);
+		if (!is_undefined(_inst.path)) {
+			self.__logger.info("Added render", {path: _inst.path})
+			self.__router.add_path(_inst.path, _bound_handler);
+		}
+		if (is_array(_inst.paths)) {
+			array_foreach(_inst.paths, method({this: other, bound_handler: _bound_handler}, function(_path) {
+				this.__logger.info("Added render", {path: _path})
+				this.__router.add_path(_path, bound_handler);
+			}));
+		}
+		
+		/// Feather ignore once GM1041
+		return self.__router;
+	};
+	
+	/** Handles the incoming async_load from async networking event
 	 * @param {Id.DsMap} _async_load the async_load map from async networking event
 	 * @ignore
-	**/
+	 */
 	static __async_networking_handler = function(_async_load) {
 		var _type = _async_load[? "type"];
 		var _async_id = _async_load[? "id"];
@@ -113,22 +146,20 @@ function HttpServer(_port, _logger=undefined) constructor {
 		}
 	};
 	
-	/**
-	 * @desc Handle connection events from incoming async_load
+	/** Handle connection events from incoming async_load
 	 * @param {Id.Socket} _client_socket the client's socket ID
 	 * @ignore
-	**/
+	 */
 	static __handle_connect = function(_client_socket, _ip) {
 		self.__logger.debug("Client connected", {socket_id: _client_socket, ip: _ip}, LOG_TYPE_HTTP)  
 		var _child_logger = self.__logger.bind({socket_id: _client_socket, ip: _ip});
 		self.__client_sessions[$ _client_socket] = new HttpServerSession(_client_socket, self.__router, _child_logger);
 	};
 	
-	/**
-	 * @desc Handle disconnect events from incoming async_load
+	/** Handle disconnect events from incoming async_load
 	 * @param {Id.Socket} _client_socket the client's socket ID
 	 * @ignore
-	**/
+	 */
 	static __handle_disconnect = function(_client_socket) {
 		self.__logger.debug("Client disconnected", {socket_id: _client_socket}, LOG_TYPE_HTTP) 
 		var _client_session = self.__client_sessions[$ _client_socket];
@@ -137,13 +168,12 @@ function HttpServer(_port, _logger=undefined) constructor {
 		}
 	};
 	
-	/**
-	 * @desc Handle incoming data, closing socket if necessary
+	/** Handle incoming data, closing socket if necessary
 	 * @param {Id.Socket} _client_socket the client's socket ID
 	 * @param {Id.Buffer} _buffer the incoming buffer
 	 * @param {Real} _size size of incoming buffer
 	 * @ignore
-	**/
+	 */
 	static __handle_data = function(_client_socket, _buffer, _size) {
 		var _client_session = self.__client_sessions[$ _client_socket];
 		_client_session.handle_data(_buffer, _size);
@@ -153,12 +183,11 @@ function HttpServer(_port, _logger=undefined) constructor {
 		}
 	};
 	
-	/**
-	* @desc Get the string representation of a status code
+	/** Get the string representation of a status code
 	* @param {Real} _code The numerical return code
 	* @return {String}
 	* @pure
-	**/
+	 */
 	static status_code_to_string = function(_code) {
 		switch (_code) {
 			case 100: return "Continue";
@@ -233,17 +262,14 @@ function HttpServer(_port, _logger=undefined) constructor {
 		}
 	};
 	
-	/**
-	 * @desc Get the mime type from a file extension
+	/** Get the mime type from a file extension
 	 * @param {String} _file_name The filename to guess mimetype of
 	 * @return {String}
 	 * @pure
-	**/
+	 */
 	static filename_to_mimetype = function(_file_name) {
-		var _len = string_length(_file_name);
 		var _last_pos = string_last_pos(".", _file_name);
-		
-		var _extension = _last_pos == 0 ? "" : string_copy(_file_name, _last_pos, _len-_last_pos)
+		var _extension = _last_pos == 0 ? "" : string_delete(_file_name, 1, _last_pos);
 		
 		switch (_extension) {
 			case "aac": return "audio/aac";

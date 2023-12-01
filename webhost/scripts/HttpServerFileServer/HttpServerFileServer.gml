@@ -1,8 +1,7 @@
-/**
- * @desc A file server for loading files from gamemaker
+/** A file server for loading files from gamemaker
  * @param {String} _web_root The file path that is the server root
  * @param {String} _index_file The name of the index file in the root
-**/
+ */
 function HttpServerFileServer(_web_root, _index_file="index.html") constructor {
 	/* @ignore */ self.__web_root = _web_root;
 	/* @ignore */ self.__index_file = _index_file;
@@ -12,21 +11,18 @@ function HttpServerFileServer(_web_root, _index_file="index.html") constructor {
 		self.__web_root += "/";
 	}
 	
-	/**
-	 * @desc Handle function for processing a request
-	 * @param {Struct.HttpRequest} _request The incoming request
-	 * @param {Struct.HttpResponse} _response The response going back out
-	**/
-	static handler = function(_request, _response) {
-		if (_request.method != "GET") {
+	/** Handle function for processing a request
+	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
+	 */
+	static handler = function(_context) {
+		if (_context.request.method != "GET") {
 			throw new ExceptionHttpMethodNotAllowed()
 			return;
 		}
 					
-		var _file = self.__web_root + _request.path;
-
+		var _file = self.__web_root + _context.request.get_parameter("*");
 		if (file_exists(_file)) {
-			_response.send_file(_file);
+			_context.response.send_file(_file);
 			return
 		}
 		
@@ -34,14 +30,14 @@ function HttpServerFileServer(_web_root, _index_file="index.html") constructor {
 		if (string_char_at(_file, string_length(_file)) != "/") {
 			_file += "/";
 		}
-		_file += self.__index_file;;
-						
+		_file += self.__index_file;
+
 		if (file_exists(_file)) {
-			_response.send_file(_file);
+			_context.response.send_file(_file);
 			return
 		}
 		
 		// if that didn't work, it's not found
-		throw new ExceptionHttpNotFound($"{_request.path} not found");
+		throw new ExceptionHttpNotFound($"{_context.request.path} not found");
 	}
 }

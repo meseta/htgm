@@ -1,9 +1,8 @@
-/**
- * @desc An incoming client session for the HTTP server
+/** An incoming client session for the HTTP server
  * @param {Id.Socket} _client_socket The client's socket
  * @param {Struct.HttpServerRouter} _router The router that serves the paths
  * @param {Struct.Logger} _logger An optional logger to use. if not provided, one will be created
-**/
+ */
 function HttpServerSession(_client_socket, _router, _logger) constructor {
 	// An HTTP connection session state machine, using SnowState to provide state machine
 	
@@ -15,7 +14,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 	
 	/* @ignore */ self.__line_buffer = new HttpServerLineBuffer();
 
-	self.request = new HttpRequest();
+	self.request = undefined;
 	self.response = undefined;
 
 	/* @ignore */ self.__fsm = new SnowState("request");
@@ -43,13 +42,15 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 				return;
 			}
 			
-			self.request.method = _tokens[0];
-			self.request.path = _tokens[1]; 
+			var _method = _tokens[0];
+			var _path = _tokens[1];
 			
 			// trim first slash
-			if (string_char_at(self.request.path, 1) == "/") {
-				self.request.path = string_delete(self.request.path, 1, 1);
+			if (string_char_at(_path, 1) == "/") {
+				_path = string_delete(_path, 1, 1);
 			}
+			
+			self.request = new HttpRequest(_method, _path);
 			
 			self.__fsm.change("headers");
 		}
@@ -63,7 +64,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			
 			if (_str == "") {
 				// empty line means end of headers
-				if (struct_exists(self.request.headers, "content-length") and self.request.headers[$ "content-length"] != "0") {
+				if (self.request.has_header("content-length") && self.request.get_header("content-length") != "0") {
 					self.__fsm.change("data");
 				}
 				else {
@@ -79,13 +80,14 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 				return;
 			}
 			
-			self.request.headers[$ string_lower(_tokens[0])] = _tokens[1];
+			self.request.set_header(_tokens[0], _tokens[1]);
 		}
 	});
 	self.__fsm.add("data", {
 		handle_data: function(_line_buffer) {
-			self.request.data = _line_buffer.read_length_to_buffer(real(self.request.headers[$ "content-length"]));
-			if (buffer_exists(self.request.data)) {
+			var _buffer = _line_buffer.read_length_to_buffer(real(self.request.get_header("content-length")));
+			if (buffer_exists(_buffer)) {
+				self.request.set_data(_buffer);
 				self.__fsm.change("dispatch");	
 			}
 		}
@@ -98,7 +100,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			// check accept encodings
 			var _compress = false;
 			if (!_header_only) {
-				var _encodings = string_split(self.request.headers[$ "accept-encoding"] ?? "", ",");
+				var _encodings = string_split(self.request.get_header("accept-encoding") ?? "", ",");
 				var _compression_idx = array_find_index(_encodings, function(_encoding) {
 					return string_trim(_encoding) == "deflate";
 				})
@@ -131,12 +133,12 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			
 			network_send_raw(self.__client_socket, _buffer, _size);
 				
-			self.__logger.debug("Sent response", {response_code: self.response.get_status_code(), size: _size}, LOG_TYPE_HTTP);
+			self.__logger.debug("Sent response", {response_code: self.response.status_code, size: _size}, LOG_TYPE_HTTP);
 			self.response.cleanup();
-			
-			if (buffer_exists(self.request.data)) {
-				buffer_delete(self.request.data);	
-			}
+			self.response = undefined;
+			self.request.cleanup();
+			self.request = undefined;
+
 			self.close();
 			self.__fsm.change("finished");
 		}
@@ -145,11 +147,10 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 		handle_data: function() { return; }
 	});
 	
-	/**
-	 * @desc Handle received data
+	/** Handle received data
 	 * @param {Id.Buffer} _incoming_buffer existing buffer to use
 	 * @param {Real} _incoming_size bytes incoming
-	**/
+	 */
 	static handle_data = function(_incoming_buffer, _incoming_size) {
 		self.__line_buffer.concatenate(_incoming_buffer, _incoming_size);
 		while(self.__closed == false && self.__line_buffer.has_data()) {
@@ -157,13 +158,14 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 		}
 	};
 	
-	/**
-	 * @desc Close the client connection
-	**/
+	/** Close the client connection
+	 */
 	static close = function() {
-		if (buffer_exists(self.request.data)) {
-			buffer_delete(self.request.data);
-			self.request.data = -1;
+		if (is_struct(self.request)) {
+			self.request.cleanup();
+		}
+		if (is_struct(self.response)) {
+			self.response.cleanup();
 		}
 		
 		self.__line_buffer.cleanup();
@@ -176,10 +178,9 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 		self.__closed = true;
 	};
 	
-	/**
-	 * @desc Whether the client is closed
+	/** Whether the client is closed
 	 * @return {Bool}
-	**/
+	 */
 	static is_closed = function() {
 		return self.__closed;
 	};

@@ -26,11 +26,9 @@
 // Width of the padding used in the output
 #macro LOGGING_PAD_WIDTH 48
 
-/**
- * @desc A quick debugging function that is an alias for the root logger's debug() output
+/** A quick debugging function that is an alias for the root logger's debug() output
  * @param {Any} _message The message or data to send
  * @param {Struct} _extras Optional extra data to send
- *
  */
 function trace(_message, _extras=undefined) {
 	LOGGER.debug(_message, _extras);

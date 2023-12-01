@@ -1,39 +1,39 @@
-/**
- * @desc Handles routing requests to specific handler functions
+/** Handles routing requests to specific handler functions
  * @param {Struct.Logger} _logger logger to use
-**/
+ */
 function HttpServerRouter(_logger) constructor {
 	/* @ignore */ self.__logger = _logger;
 	/* @ignore */ self.__handlers = [];
+	/* @ignore */ self.__paths = {};
 	/* @ignore */ self.__not_found_handler = self.__default_not_found_handler;
 	
-	/**
-	 * @desc Add a path to the router
+	/** Add a path to the router
 	 * @param {String} _path The path pattern to add
 	 * @param {Function} _callback The function to call that will handle this path
 	 * @return {Struct.HttpServerRouter}
-	**/
+	 */
 	static add_path = function(_path, _callback) {
-		// trim first "/"
-		if (string_char_at(_path, 1) == "/") {
-			_path = string_delete(_path, 1, 1);
+		var _check_path = _path == "" ? "/" : _path;
+		if (struct_exists(self.__paths, _check_path)) {
+			throw new ExceptionHttpServerSetup("HttpServerRouter Path already exists", $"The path {_path} already exists in the router")	
 		}
-		
 		// validate paths
-		var _pattern_parts = string_split(_path, "/");
+		var _pattern_parts = string_split(_path, "/", true);
 		array_foreach(_pattern_parts, function(_part) {
 			var _left = string_count("{", _part);
 			var _right = string_count("}", _part);
 			var _stars = string_count("*", _part);
 			
 			if (_left != _right or _left > 1 or _right > 1 or _stars > 1) {
-				throw new ExceptionHttpServerSetup("HttpServerRouter Path format incorrect", "Path part format incorrect '"+string(_part)+"'");
+				throw new ExceptionHttpServerSetup("HttpServerRouter Path format incorrect", $"Path part {_part} is incorrectly formatted");
 			}
 			
-			if (_stars == 1 and not _part.equals("*")) {
-				throw new ExceptionHttpServerSetup("HttpServerRouter Path too many wildcards", "Path part must be exactly a wildard '*' if at all: '"+string(_part)+"'");
+			if (_stars == 1 and _part != "*") {
+				throw new ExceptionHttpServerSetup("HttpServerRouter Path too many wildcards", $"Path part {_part} must be exactly a wildard '*' if at all");
 			}
 		});
+		
+		self.__paths[$ _check_path] = true;
 		
 		array_push(self.__handlers, {
 			pattern_parts: _pattern_parts,
@@ -43,47 +43,64 @@ function HttpServerRouter(_logger) constructor {
 		return self;
 	};
 	
-	/**
-	 * @desc Process a request and run the handler for the path
+	/** Process a request and run the handler for the path
 	 * @param {Struct.HttpRequest} _request The incoming request
 	 * @param {Struct.HttpResponse} _response The response going back out
-	**/
+	 */
 	static process_request = function(_request, _response) {
-		var _context = {this: other, request: _request, response: _response};
-		var _completed = array_foreach_interruptible(self.__handlers, method(_context, function(_handler) {
-			/// Feather ignore GM1013
-			var _match_params = this.__path_match(_handler.pattern_parts, request.path);
-			if (!is_undefined(_match_params)) {
-				request.parameters = _match_params;
-				_handler.callback(request, response, this.__logger);
-				throw new ExceptionStopIteration();
+		var _context = new HttpServerRequestContext(_request, _response, self.__logger.bind({}));
+		
+		var _internal_redirect;
+		var _completed;
+		
+		do {
+			_internal_redirect = false;
+			try {
+				_completed = array_foreach_interruptible(self.__handlers, method({this: other, context: _context}, function(_handler) {
+					/// Feather ignore GM1013
+					var _match_params = this.__path_match(_handler.pattern_parts, context.request.path);
+					if (!is_undefined(_match_params)) {
+						context.request.set_parameters(_match_params);
+						_handler.callback(context);
+						throw new ExceptionStopIteration();
+					}
+				}));
 			}
-		}));
+			catch (_err) {
+				if (is_instanceof(_err, ExceptionHttpServerInternalRedirect)) {
+					var _path = _err.path;
+					self.__logger.debug("Internal redirect", {path: _path}, LOG_TYPE_HTTP);
+					_response.cleanup();
+					_request.set_path(_path);
+					_internal_redirect = true;
+				}
+				else {
+					throw _err;
+				}
+			}
+		} until (!_internal_redirect);
 		
 		if (_completed) { // if we completed the iteration, then we didn't find anything, so run the default handler
-			self.__not_found_handler(_request, _response);
+			self.__not_found_handler(_context);
 		}
 	};
 	
-	/**
-	 * @desc Set the handler for paths that aren't found
+	/** Set the handler for paths that aren't found
 	 * @param {Function} _function The incoming request
 	 * @return {Struct.HttpServerRouter}
-	**/
+	 */
 	static set_not_found_handler = function(_function) {
 		self.__not_found_handler = _function;
 		return self;
 	};
 	
-	/**
-	 * @desc Try to match a path to a pattern, either a matches struct is returned, or undefined
+	/** Try to match a path to a pattern, either a matches struct is returned, or undefined
 	 * @param {Array<string>} _pattern_parts The split array of the pattern that the raw path matches to
 	 * @param {string} _raw_path The response going back out
 	 * @return {Any}
 	 * @ignore
-	**/
+	 */
 	static __path_match = function(_pattern_parts, _raw_path) {
-		
 		// handle queries
 		var _query_pos = string_pos("?", _raw_path);
 		var _path_params_string;
@@ -98,12 +115,8 @@ function HttpServerRouter(_logger) constructor {
 		}
 		
 		 // trim first "/"
-		if (string_char_at(_path_string, 1) == "/") {
-			_path_string = string_delete(_path_string, 1, 1);
-		}
-		
 		var _param_struct = {}
-		var _paths = string_split(_path_string, "/");
+		var _paths = string_split(_path_string, "/", true);
 		var _paths_len = array_length(_paths);
 		
 		var _patterns_len = array_length(_pattern_parts);
@@ -177,7 +190,7 @@ function HttpServerRouter(_logger) constructor {
 						array_push(self[$ _key], _value);
 					}
 					else {
-						self[$ _key] = _value;	
+						self[$ _key] = _value;
 					}
 				}
 			}));
@@ -186,13 +199,11 @@ function HttpServerRouter(_logger) constructor {
 		return _param_struct;
 	};
 	
-	/**
-	 * @desc Default handler for when path isn't found
-	 * @param {Struct.HttpRequest} _request The incoming request
-	 * @param {Struct.HttpResponse} _response The response going back out
+	/** Default handler for when path isn't found
+	 * @param {Struct.HttpServerRequestContext} _context The incoming request context
 	 * @ignore
-	**/
-	static __default_not_found_handler = function(_request, _response) {
-		_response.send_string(HttpServer.status_code_to_string(404), 404);	
+	 */
+	static __default_not_found_handler = function(_context) {
+		_context.response.send_string(HttpServer.status_code_to_string(404), 404);	
 	};
 }

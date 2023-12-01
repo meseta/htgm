@@ -1,4 +1,4 @@
-/** @desc Initialize all globals */
+/** Initialize all globals */
 function init_globals() {
 	// The current config. While this _starts_ as the return value of os_get_config()
 	// this could also be overwritten at some point during initialization to allow

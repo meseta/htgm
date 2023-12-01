@@ -1,14 +1,11 @@
-/**
- * @desc An object that can be thrown to signal stopping iterations
-**/
+/** An object that can be thrown to signal stopping iterations */
 function ExceptionStopIteration() constructor {}
 
-/**
- * @desc A version of array_foreach that can be interrupted by throwing ExceptionStopIteration, returning whether iteration completed or not
+/** A version of array_foreach that can be interrupted by throwing ExceptionStopIteration, returning whether iteration completed or not
  * @param {Array} _array An array to iterate over
  * @param {Function} _function Delegate to run
  * @return {Bool} something
-**/
+ */
 function array_foreach_interruptible(_array, _function) {
 
 	try {
