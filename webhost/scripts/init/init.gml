@@ -4,7 +4,7 @@ SERVER.add_file_server("static/*", "static");
 
 SERVER.add_render(HtmxPage1);
 SERVER.add_render(HtmxPage2);
-SERVER.add_render(HtmxMain);
+SERVER.add_render(SiteMain);
 
 GAME = new GameManager();
 GAME.set_debug_mode(true);
