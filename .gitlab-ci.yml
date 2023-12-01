@@ -5,9 +5,7 @@ include:
       - 'common.yaml'
       - 'docker.yaml'
       - 'helm.yaml'
-      - 'openapi.yaml'
-      - 'node.yaml'
-      - 'standard_docker.yaml'
+      - 'standard_helm.yaml'
 
 stages:
   - test
