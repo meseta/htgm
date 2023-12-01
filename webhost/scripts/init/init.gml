@@ -1,10 +1,7 @@
 init_globals();
+init_site();
 
-SERVER.add_file_server("static/*", "static");
-
-SERVER.add_render(HtmxPage1);
-SERVER.add_render(HtmxPage2);
-SERVER.add_render(SiteMain);
+draw_enable_drawevent(false);
 
 GAME = new GameManager();
 GAME.set_debug_mode(true);

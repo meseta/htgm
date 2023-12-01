@@ -1,0 +1,7 @@
+replicaCount: 2
+
+istio:
+  gateway:
+    enabled: true
+    hosts:
+      - "webhost.apps.webb.party"

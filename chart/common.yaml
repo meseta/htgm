@@ -1,0 +1,40 @@
+# overrides service chart at https://gitlab.com/worldwidewebb/infrastructure/helm-service-chart
+fullnameOverride: webhost
+
+image:
+  repository: us-central1-docker.pkg.dev/webb-store/images/saas/webhost
+
+istio:
+  gateway:
+    enabled: true
+    credentialName: "cloudflare-origin-ca"
+
+podAnnotations:
+  "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 400Mi
+  requests:
+    cpu: 40m
+    memory: 170Mi
+
+nodeSelector:
+  node_pool: preempt-pool
+  
+tolerations:
+  - key: "preemptible"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+    - labelSelector:
+        matchExpressions:
+        - values: ["webhost"]
+          operator: In
+          key: "app.kubernetes.io/instance"
+      topologyKey: "kubernetes.io/hostname"

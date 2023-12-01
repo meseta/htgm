@@ -29,6 +29,7 @@
     {"name":"scrLogger","order":2,"path":"scripts/scrLogger/scrLogger.yy",},
     {"name":"init_globals","order":2,"path":"scripts/init_globals/init_globals.yy",},
     {"name":"HttpResponse","order":3,"path":"scripts/HttpResponse/HttpResponse.yy",},
+    {"name":"scrSite","order":4,"path":"scripts/scrSite/scrSite.yy",},
     {"name":"HttpServerRequestContext","order":12,"path":"scripts/HttpServerRequestContext/HttpServerRequestContext.yy",},
     {"name":"HtmxComponent","order":3,"path":"scripts/HtmxComponent/HtmxComponent.yy",},
     {"name":"HttpServerFileServer","order":7,"path":"scripts/HttpServerFileServer/HttpServerFileServer.yy",},

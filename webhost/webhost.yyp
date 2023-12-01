@@ -57,6 +57,7 @@
     {"id":{"name":"scrLogger","path":"scripts/scrLogger/scrLogger.yy",},},
     {"id":{"name":"init_globals","path":"scripts/init_globals/init_globals.yy",},},
     {"id":{"name":"HttpResponse","path":"scripts/HttpResponse/HttpResponse.yy",},},
+    {"id":{"name":"scrSite","path":"scripts/scrSite/scrSite.yy",},},
     {"id":{"name":"HttpServerRequestContext","path":"scripts/HttpServerRequestContext/HttpServerRequestContext.yy",},},
     {"id":{"name":"Exception","path":"scripts/Exception/Exception.yy",},},
     {"id":{"name":"HtmxComponent","path":"scripts/HtmxComponent/HtmxComponent.yy",},},
