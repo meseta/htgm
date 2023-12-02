@@ -21,16 +21,17 @@ function SiteNavigation(): HtmxComponent() constructor {
 function SiteNavigationLink(_path, _text): HtmxComponent() constructor {
 	self.path = _path;
 	self.text = _text;
+	static link_class = self.auto_id("link");
 	
 	static render = function(_context) {
 		return dedent(@'
 			<li>
 				<a
-				 hx-on="click: document.querySelectorAll(`nav ul li a`).forEach((el) => el.classList.add(`outline`)); this.classList.remove(`outline`);"
+				 hx-on="click: htmx.findAll(`.'+self.link_class+ @'`).forEach((el) => htmx.addClass(el, `outline`)); htmx.removeClass(this, `outline`);"
 				 hx-target="#'+ SiteMain.content_id +@'"
 				 href="'+ self.path +@'"
 				 role="button"
-				 class="'+  (self.path==_context.request.path_original ? "" : "outline") +@'"
+				 class="'+ self.link_class + (self.path==_context.request.path_original ? "" : " outline") +@'"
 				>
 					'+ self.text +@'
 				</a>

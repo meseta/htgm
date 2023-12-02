@@ -29,7 +29,7 @@ function SiteMain(): HtmxView() constructor {
 			<link rel="stylesheet" href="/static/pico.min.css">
 			<link rel="stylesheet" href="/static/theme.css">
 			<script src="/static/htmx.min.js"></script>
-			<script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+			<script src="/static/htmx_ext_ws.min.js"></script>
 			
 			'+ self.navigation.render(_context) +@'
 			<main class="container" id="'+self.content_id+@'">

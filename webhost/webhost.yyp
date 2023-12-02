@@ -27,6 +27,7 @@
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"htmx.min.js","CopyToMask":-1,"filePath":"datafiles/static",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"htmx_ext_ws.min.js","CopyToMask":-1,"filePath":"datafiles/static",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"pico.min.css","CopyToMask":-1,"filePath":"datafiles/static",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"theme.css","CopyToMask":-1,"filePath":"datafiles/static",},
   ],
