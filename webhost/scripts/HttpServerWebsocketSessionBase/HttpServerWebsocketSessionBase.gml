@@ -25,6 +25,5 @@ function HttpServerWebsocketSessionBase() constructor {
 	 * @param {String} _close_reason The close reason received
 	 */
 	static on_close = function(_close_code=undefined, _close_reason=undefined) {
-		show_debug_message("closed");
 	}
 }

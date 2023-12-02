@@ -90,6 +90,17 @@ function HttpServer(_port, _logger=undefined) constructor {
 		return self.__router.add_path(_path, method(_file_handler, _file_handler.handler))
 	}
 	
+	/** Add a sprite server, serving sprite assets
+	 * @param {String} _path The path pattern to add
+	 * @param {String} _parameter_name The parameter name inside the path to use
+	 * @return {Struct.HttpServerRouter}
+	 */
+	static add_sprite_server = function(_path, _parameter_name="image_name") {
+		self.__logger.info("Added sprite server", {path: _path})
+		var _sprite_handler = new HttpServerSpriteServer(_parameter_name);
+		return self.__router.add_path(_path, method(_sprite_handler, _sprite_handler.handler))
+	}
+	
 	/** Add a constructor with a render to the router
 	 * @param {Function} _render
 	 * @return {Struct.HttpServerRouter}
@@ -149,8 +160,9 @@ function HttpServer(_port, _logger=undefined) constructor {
 				
 			case network_type_data:
 				var _client_socket = _async_load[? "id"];
-				if (struct_exists(self.__client_sessions, _client_socket)) {
-					self.__handle_data(_client_socket, _async_load[? "buffer"], _async_load[? "size"])
+				var _buffer = _async_load[? "buffer"];
+				if (struct_exists(self.__client_sessions, _client_socket) && buffer_exists(_buffer)) {
+					self.__handle_data(_client_socket, _buffer, _async_load[? "size"])
 				}
 				break;
 		}

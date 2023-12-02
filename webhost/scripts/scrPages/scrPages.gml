@@ -6,7 +6,7 @@ function HtmxPage1(): HtmxView() constructor {
 			<div hx-ext="ws" ws-connect="/chatroom">
 			    <div id="notifications"></div>
 			    <div id="chat_room">
-			        ...
+			        ...<br />
 			    </div>
 				<form id="form" ws-send>
 			        <input name="chat_message">

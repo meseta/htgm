@@ -16,11 +16,21 @@ function WebsocketChat(): HttpServerWebsocketSessionBase() constructor {
 	 * @param {String} _text
 	 */
 	static on_broadcast = function(_text) {
-		self.websocket.send_data_string(dedent(@'
-			<div id="chat_room" hx-swap-oob="beforeend">
-			    '+ _text +@'<br />
-			</div>
-		'));
+		if (_text == "cat") {
+			var _cat = new HtmxSprite(sTest);
+			self.websocket.send_data_string(dedent(@'
+				<div id="chat_room" hx-swap-oob="beforeend">
+				    '+ _cat.render() +@'<br />
+				</div>
+			'));
+		}
+		else {
+			self.websocket.send_data_string(dedent(@'
+				<div id="chat_room" hx-swap-oob="beforeend">
+				    '+ _text +@'<br />
+				</div>
+			'));
+		}
 	}
 }
 

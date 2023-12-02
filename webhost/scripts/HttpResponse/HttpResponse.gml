@@ -58,6 +58,8 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 	 * @return {Struct.HttpResponse}
 	 */
 	static send_file = function(_filename, _status_code=200) {
+		static _file_buffers = {}; // keep a bunch of open buffers to avoid re-reading
+		
 		if (buffer_exists(self.__response_data_buffer)) {
 			throw "HttpResponse already has data, can't add another buffer";	
 		}
@@ -79,9 +81,9 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 		}
 		_string = string(_string);
 		self.status_code = _status_code;
-		var _buff = buffer_create(string_byte_length(_string), buffer_fixed, 1);
-		buffer_write(_buff, buffer_text, _string);
-		self.__set_buffer_response(_buff, true);
+		var _buffer = buffer_create(string_byte_length(_string), buffer_fixed, 1);
+		buffer_write(_buffer, buffer_text, _string);
+		self.__set_buffer_response(_buffer, true);
 		return self;
 	};
 	
@@ -172,7 +174,7 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 	 * @param {Bool} _delete_buffer_on_cleanup whether to delete the buffer on cleanup
 	 * @ignore
 	 */
-	static __set_buffer_response = function(_buffer, _delete_buffer_on_cleanup=false) {
+	static __set_buffer_response = function(_buffer, _delete_buffer_on_cleanup=true) {
 		if (buffer_exists(self.__response_data_buffer)) {
 			throw new ExceptionHttpInternal("HttpResponse already has data, can't add another buffer");
 		}

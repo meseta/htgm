@@ -182,8 +182,9 @@ function HttpServerRouter(_logger) constructor {
 			var _path_len = string_length(_path);
 			var _after_pos = string_pos("}", _pattern);
 			var _pattern_length = string_length(_pattern);
-			if (_after_pos < _pattern_length) {
-				if (string_delete(_path, 1, _after_pos) != string_delete(_pattern, 1, _after_pos)) {
+			var _after_len = _pattern_length - _after_pos;
+			if (_after_len > 0) {
+				if (string_delete(_path, 1, _path_len-_after_len) != string_delete(_pattern, 1, _after_pos)) {
 					return undefined;
 				}
 			}

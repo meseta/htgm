@@ -27,6 +27,7 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 	self.__fsm.add("header", {
 		handle_data: function(_line_buffer) {
 			if (!_line_buffer.has_data(1)) {
+				_line_buffer.cleanup(); // trim the buffer back to empty
 				return false;
 			}
 				
@@ -303,16 +304,17 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 				buffer_write(_buffer, buffer_s8, _len);
 			}
 			else if (_len < 65536) {
-				_buffer = buffer_create(_len + 2, buffer_fixed, 1);
+				_buffer = buffer_create(_len + 4, buffer_fixed, 1);
 				buffer_write(_buffer, buffer_u8, _opcode); 
 				buffer_write(_buffer, buffer_s8, 126);
 				buffer_write(_buffer, buffer_u8, (_len >> 8) & 0xff);
 				buffer_write(_buffer, buffer_u8, _len & 0xff);
 			}
 			else {
-				_buffer = buffer_create(_len + 2, buffer_fixed, 1);
+				_buffer = buffer_create(_len + 10, buffer_fixed, 1);
 				buffer_write(_buffer, buffer_u8, _opcode); 
 				buffer_write(_buffer, buffer_s8, 127);
+				buffer_write(_buffer, buffer_u32, 0); // let's be realistic, we're not going to send more than 4gb of data here
 				buffer_write(_buffer, buffer_u8, (_len >> 24) & 0xff);
 				buffer_write(_buffer, buffer_u8, (_len >> 16) & 0xff);
 				buffer_write(_buffer, buffer_u8, (_len >> 8) & 0xff);
@@ -340,16 +342,17 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 				buffer_write(_buffer, buffer_s8, _len);
 			}
 			else if (_len < 65536) {
-				_buffer = buffer_create(_len + 2, buffer_fixed, 1);
+				_buffer = buffer_create(_len + 4, buffer_fixed, 1);
 				buffer_write(_buffer, buffer_u8, _opcode); 
 				buffer_write(_buffer, buffer_s8, 126);
 				buffer_write(_buffer, buffer_u8, (_len >> 8) & 0xff);
 				buffer_write(_buffer, buffer_u8, _len & 0xff);
 			}
 			else {
-				_buffer = buffer_create(_len + 2, buffer_fixed, 1);
+				_buffer = buffer_create(_len + 10, buffer_fixed, 1);
 				buffer_write(_buffer, buffer_u8, _opcode); 
 				buffer_write(_buffer, buffer_s8, 127);
+				buffer_write(_buffer, buffer_u32, 0); // let's be realistic, we're not going to send more than 4gb of data here
 				buffer_write(_buffer, buffer_u8, (_len >> 24) & 0xff);
 				buffer_write(_buffer, buffer_u8, (_len >> 16) & 0xff);
 				buffer_write(_buffer, buffer_u8, (_len >> 8) & 0xff);

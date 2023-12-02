@@ -2,6 +2,7 @@
 function init_site(){
 	// static file host
 	SERVER.add_file_server("static/*", "static");
+	SERVER.add_sprite_server("images/{image_name}.png", "image_name");
 
 	// kubernetes heatlhchecks
 	SERVER.add_path("healthz", function(_context) { _context.response.send_string("OK"); });
