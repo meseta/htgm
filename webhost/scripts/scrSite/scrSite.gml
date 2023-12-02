@@ -13,7 +13,7 @@ function init_site(){
 	SERVER.add_render(SiteMain);
 	
 	// websocket
-	SERVER.add_websocket("websocket", function(_context) {
-		return new HttpServerWebsocketSessionBase();
+	SERVER.add_websocket("chatroom", function(_context) {
+		return new WebsocketChat();
 	});
 }

@@ -11,15 +11,12 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 	/* @ignore */ self.__closed = false;
 	
 	/* @ignore */ self.__line_buffer = new HttpServerLineBuffer();
-
+	/* @ignore */ self.__fsm = new SnowState("request");
+	
 	self.request = undefined;
 	self.response = undefined;
 	self.upgrade = undefined;
 
-	/* @ignore */ self.__fsm = new SnowState("request");
-		self.__fsm.on("state changed", function(_dest_state, _source_state, _trigger_name) {
-		self.__logger.info("State Change", {source_state: _source_state, dest_state: _dest_state, trigger_name: _trigger_name }, LOG_TYPE_NAVIGATION);
-	});
 	self.__fsm.add("request", {
 		handle_data: function(_line_buffer) {
 			// read first line of request

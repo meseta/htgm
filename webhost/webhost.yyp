@@ -23,6 +23,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"SnowState","folderPath":"folders/Libraries/SnowState.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Website","folderPath":"folders/Website.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Pages","folderPath":"folders/Website/Pages.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Websocket","folderPath":"folders/Website/Websocket.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"htmx.min.js","CopyToMask":-1,"filePath":"datafiles/static",},
@@ -36,6 +37,7 @@
   },
   "resources": [
     {"id":{"name":"scrPages","path":"scripts/scrPages/scrPages.yy",},},
+    {"id":{"name":"WebsocketChat","path":"scripts/WebsocketChat/WebsocketChat.yy",},},
     {"id":{"name":"oAsyncNetworkingWrapper","path":"objects/oAsyncNetworkingWrapper/oAsyncNetworkingWrapper.yy",},},
     {"id":{"name":"HttpServerRenderBase","path":"scripts/HttpServerRenderBase/HttpServerRenderBase.yy",},},
     {"id":{"name":"HttpServerWebsocket","path":"scripts/HttpServerWebsocket/HttpServerWebsocket.yy",},},

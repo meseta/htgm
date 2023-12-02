@@ -11,6 +11,7 @@
     {"name":"Object wrappers","order":7,"path":"folders/Libraries/Object wrappers.yy",},
     {"name":"Website","order":6,"path":"folders/Website.yy",},
     {"name":"Pages","order":2,"path":"folders/Website/Pages.yy",},
+    {"name":"Websocket","order":5,"path":"folders/Website/Websocket.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"oAsyncNetworkingWrapper","order":2,"path":"objects/oAsyncNetworkingWrapper/oAsyncNetworkingWrapper.yy",},
