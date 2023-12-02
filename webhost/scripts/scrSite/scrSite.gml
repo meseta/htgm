@@ -11,4 +11,9 @@ function init_site(){
 	SERVER.add_render(HtmxPage1);
 	SERVER.add_render(HtmxPage2);
 	SERVER.add_render(SiteMain);
+	
+	// websocket
+	SERVER.add_websocket("websocket", function(_context) {
+		return new HttpServerWebsocketSessionBase();
+	});
 }

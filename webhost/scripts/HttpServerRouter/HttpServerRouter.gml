@@ -4,15 +4,17 @@
 function HttpServerRouter(_logger) constructor {
 	/* @ignore */ self.__logger = _logger;
 	/* @ignore */ self.__handlers = [];
+	/* @ignore */ self.__websocket_handlers = [];
 	/* @ignore */ self.__paths = {};
 	/* @ignore */ self.__not_found_handler = self.__default_not_found_handler;
 	
 	/** Add a path to the router
 	 * @param {String} _path The path pattern to add
 	 * @param {Function} _callback The function to call that will handle this path
+	 * @param {Bool} _is_websocket Whether the pathi s a websocket path
 	 * @return {Struct.HttpServerRouter}
 	 */
-	static add_path = function(_path, _callback) {
+	static add_path = function(_path, _callback, _is_websocket=false) {
 		var _check_path = _path == "" ? "/" : _path;
 		if (struct_exists(self.__paths, _check_path)) {
 			throw new ExceptionHttpServerSetup("HttpServerRouter Path already exists", $"The path {_path} already exists in the router")	
@@ -35,7 +37,8 @@ function HttpServerRouter(_logger) constructor {
 		
 		self.__paths[$ _check_path] = true;
 		
-		array_push(self.__handlers, {
+		var _handlers = _is_websocket ? self.__websocket_handlers : self.__handlers;
+		array_push(_handlers, {
 			pattern_parts: _pattern_parts,
 			callback: _callback
 		});
@@ -49,19 +52,20 @@ function HttpServerRouter(_logger) constructor {
 	 */
 	static process_request = function(_request, _response) {
 		var _context = new HttpServerRequestContext(_request, _response, self.__logger.bind({}));
+		var _foreach_context = {this: other, completed: false, context: _context};
 		
 		var _internal_redirect;
-		var _completed;
 		
 		do {
 			_internal_redirect = false;
 			try {
-				_completed = array_foreach_interruptible(self.__handlers, method({this: other, context: _context}, function(_handler) {
+				array_foreach_interruptible(self.__handlers, method(_foreach_context, function(_handler) {
 					/// Feather ignore GM1013
 					var _match_params = this.__path_match(_handler.pattern_parts, context.request.path);
 					if (!is_undefined(_match_params)) {
 						context.request.set_parameters(_match_params);
 						_handler.callback(context);
+						completed = true;
 						throw new ExceptionStopIteration();
 					}
 				}));
@@ -80,9 +84,30 @@ function HttpServerRouter(_logger) constructor {
 			}
 		} until (!_internal_redirect);
 		
-		if (_completed) { // if we completed the iteration, then we didn't find anything, so run the default handler
+		if (!_foreach_context.completed) { // if we didn't run a callback run the default handler
 			self.__not_found_handler(_context);
 		}
+	};
+	
+	/** Process a websocket, returning the handler object if successful
+	 * @param {Struct.HttpRequest} _request The incoming request
+	 * @return {Struct.HttpServerwebsocketSessionBase|Undefined}
+	 */
+	static process_websocket = function(_request) {
+		var _context = new HttpServerRequestContext(_request, undefined, self.__logger.bind({}));
+		var _foreach_context = {this: other, session_handler: undefined, context: _context};
+		
+		array_foreach_interruptible(self.__websocket_handlers, method(_foreach_context, function(_handler) {
+			/// Feather ignore GM1013
+			var _match_params = this.__path_match(_handler.pattern_parts, context.request.path);
+			if (!is_undefined(_match_params)) {
+				context.request.set_parameters(_match_params);
+				session_handler = _handler.callback(context);
+				throw new ExceptionStopIteration();
+			}
+		}));
+		
+		return _foreach_context.session_handler;
 	};
 	
 	/** Set the handler for paths that aren't found

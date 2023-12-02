@@ -4,8 +4,6 @@
  * @param {Struct.Logger} _logger An optional logger to use. if not provided, one will be created
  */
 function HttpServerSession(_client_socket, _router, _logger) constructor {
-	// An HTTP connection session state machine, using SnowState to provide state machine
-	
 	/* @ignore */ self.__client_socket = _client_socket;
 	/* @ignore */ self.__router = _router;
 	/* @ignore */ self.__logger = _logger;
@@ -16,8 +14,12 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 
 	self.request = undefined;
 	self.response = undefined;
+	self.upgrade = undefined;
 
 	/* @ignore */ self.__fsm = new SnowState("request");
+		self.__fsm.on("state changed", function(_dest_state, _source_state, _trigger_name) {
+		self.__logger.info("State Change", {source_state: _source_state, dest_state: _dest_state, trigger_name: _trigger_name }, LOG_TYPE_NAVIGATION);
+	});
 	self.__fsm.add("request", {
 		handle_data: function(_line_buffer) {
 			// read first line of request
@@ -64,7 +66,17 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			
 			if (_str == "") {
 				// empty line means end of headers
-				if (self.request.has_header("content-length") && self.request.get_header("content-length") != "0") {
+				if (self.request.get_header("connection") == "Upgrade") {
+					var _upgrade = self.request.get_header("upgrade");
+					if (_upgrade == "websocket") {
+						self.__fsm.change("upgrade");
+					}
+					else {
+						self.__logger.warning("Unsupported Upgrade, closing", {upgrade: _upgrade}, LOG_TYPE_HTTP);
+						self.close();	
+					}
+				}
+				else if (self.request.has_header("content-length") && self.request.get_header("content-length") != "0") {
 					self.__fsm.change("data");
 				}
 				else {
@@ -143,6 +155,78 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			self.__fsm.change("finished");
 		}
 	});
+	self.__fsm.add("upgrade", {
+		enter: function() {
+			if (self.request.has_header("sec-websocket-key")) {
+				// handle accept, implement the websocket Accept handshake
+				var _key = self.request.get_header("sec-websocket-key");
+				var _hash = sha1_string_utf8(_key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11");	
+
+				var _buff = buffer_create(20, buffer_fixed, 1);
+				for(var _i=0; _i<40; _i+=2) {
+					var _nibble_low = string_byte_at(_hash, _i+2) - 0x30;
+					if(_nibble_low > 16) { // it's in the alpha range
+						_nibble_low -= 39 // bring it back down
+					}
+					var _nibble_high = string_byte_at(_hash, _i+1) - 0x30;
+					if(_nibble_high > 16) { // it's in the alpha range
+						_nibble_high -= 39 // bring it back down
+					}
+					buffer_write(_buff, buffer_u8, _nibble_low | _nibble_high << 4);
+				}
+				var _accept = buffer_base64_encode(_buff, 0, 20);
+				buffer_delete(_buff);
+			
+				var _switch_protocol_response = "HTTP/1.1 101 Switching Protocols\r\n" +
+										"Upgrade: websocket\r\n" +
+										"Connection: Upgrade\r\n" +
+										"Sec-WebSocket-Accept: " + _accept + "\r\n" +
+										"\r\n";
+				var _len = string_byte_length(_switch_protocol_response);
+				var _response_buff = buffer_create(_len, buffer_fixed, 1);
+				buffer_write(_response_buff, buffer_text, _switch_protocol_response);
+				network_send_raw(self.__client_socket, _response_buff, _len);
+				buffer_delete(_response_buff);
+	
+				self.__fsm.change("websocket")
+			}
+			else {
+				self.__logger.debug("No sec-websocket-key presented for upgrade, closing", undefined, LOG_TYPE_HTTP);
+				self.close();
+				self.__fsm.change("finished");
+			}
+		},
+	});
+	self.__fsm.add("websocket", {
+		enter: function() {
+			self.__logger.info("Received websocket request", {method: self.request.method, path: self.request.path}, LOG_TYPE_HTTP);
+			
+			var _session_handler = undefined;
+			try {
+				_session_handler = self.__router.process_websocket(self.request);
+			}
+			catch (_err) {
+				self.__logger.exception(_err);
+				self.close();
+				return;
+			}
+			
+			if (is_undefined(_session_handler)) {
+				self.__logger.debug("Websocket handler not found for path");
+				self.close();
+			}
+			else {
+				self.upgrade = new HttpServerWebsocket(self.__client_socket, _session_handler, self.__logger);	
+			}
+		},
+		handle_data: function(_line_buffer) {
+			self.upgrade.handle_data(_line_buffer);
+			if (self.upgrade.is_closed()) {
+				self.close();
+				self.__fsm.change("finished");
+			}
+		}
+	});
 	self.__fsm.add("finished", {
 		handle_data: function() { return; }
 	});
@@ -166,6 +250,9 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 		}
 		if (is_struct(self.response)) {
 			self.response.cleanup();
+		}
+		if (is_struct(self.upgrade)) {
+			self.upgrade.cleanup();
 		}
 		
 		self.__line_buffer.cleanup();

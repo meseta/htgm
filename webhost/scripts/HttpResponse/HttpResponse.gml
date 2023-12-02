@@ -135,7 +135,7 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 		
 		var _response = {
 			top_matter: $"HTTP/1.1 {self.status_code} {HttpServer.status_code_to_string(self.status_code)}\r\n" + 
-				$"Date: {self.__rfc_date_now()}\r\n" +
+				$"Date: {HttpServer.rfc_date_now()}\r\n" +
 				$"Server: {game_display_name} {GM_version} (GameMaker/{GM_runtime_version})\r\n"
 		};
 		
@@ -191,72 +191,5 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 		self.__response_data_buffer = _buffer;
 		self.__dirty = true;
 		self.__end_function();
-	};
-	
-	/** Get the current correctly formatted date
-	 * @return {String}
-	 * @ignore
-	 */
-	static __rfc_date_now = function() {
-		var _prev_timezone = date_get_timezone();
-		date_set_timezone(timezone_utc);
-		
-		var _str = self.__rfc_date(date_current_datetime());
-		
-		date_set_timezone(_prev_timezone);
-		return _str;
-	};
-	
-	/** Get the correctly formatted date for a given gamemaker datetime
-	 * @return {Real} _datetime the datetime in Gamemaker format (e.g. date_current_datetime());
-	 * @return {String}
-	 * @ignore
-	 */
-	static __rfc_date = function(_datetime) {	
-		var _weekday;
-		switch(date_get_weekday(_datetime)) {
-			case 0: _weekday = "Sun"; break;
-			case 1: _weekday = "Mon"; break;
-			case 2: _weekday = "Tue"; break;
-			case 3: _weekday = "Wed"; break;
-			case 4: _weekday = "Thu"; break;
-			case 5: _weekday = "Fri"; break;
-			case 6: _weekday = "Sat"; break;
-		}
-		
-		var _day = self.__zero_pad_string(date_get_day(_datetime), 2);
-		
-		var _month;
-		switch(date_get_month(_datetime)) {
-			case 1: _month = "Jan"; break;
-			case 2: _month = "Feb"; break;
-			case 3: _month = "Mar"; break;
-			case 4: _month = "Apr"; break;
-			case 5: _month = "May"; break;
-			case 6: _month = "Jun"; break;
-			case 7: _month = "Jul"; break;
-			case 8: _month = "Aug"; break;
-			case 9: _month = "Sep"; break;
-			case 10: _month = "Oct"; break;
-			case 11: _month = "Nov"; break;
-			case 12: _month = "Dec"; break;
-		}
-		
-		var _year = string(date_get_year(_datetime));
-		var _hours = self.__zero_pad_string(date_get_hour(_datetime), 2);
-		var _minutes = self.__zero_pad_string(date_get_minute(_datetime), 2);
-		var _seconds = self.__zero_pad_string(date_get_second(_datetime), 2);
-		
-		return $"{_weekday}, {_day} {_month} {_year} {_hours}:{_minutes}:{_seconds} GMT";
-	};
-	
-	/** Pad a number zeros
-	 * @return {Real} _number The number to pad
-	 * @return {Real} _places How many places to pad to
-	 * @return {String}
-	 * @ignore
-	 */
-	static __zero_pad_string = function(_number, _places) {
-		return string_replace(string_format(_number, _places, 0), " ", "0");
 	};
 }

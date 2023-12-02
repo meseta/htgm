@@ -23,9 +23,9 @@ function HttpServerLineBuffer() constructor {
 	/** Whether buffer has data in it
 	 * @return {Bool}
 	 */
-	static has_data = function() {
+	static has_data = function(_amount=1) {
 		if (buffer_exists(self.__buffer)) {
-			return buffer_tell(self.__buffer) < buffer_get_size(self.__buffer);
+			return buffer_get_size(self.__buffer) - buffer_tell(self.__buffer) >= _amount;
 		}
 		return false;
 	};
@@ -68,6 +68,13 @@ function HttpServerLineBuffer() constructor {
 		// no return, return to original position
 		buffer_seek(self.__buffer, buffer_seek_start, _original_position);
 		return undefined;
+	};
+	
+	/** Read a u8 from the buffer
+	 * @return {Real}
+	 */
+	static read_byte = function() {
+		return buffer_read(self.__buffer, buffer_u8);
 	};
 	
 	/** Read some amount of bytes and return as a buffer

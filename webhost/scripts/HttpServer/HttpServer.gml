@@ -116,6 +116,16 @@ function HttpServer(_port, _logger=undefined) constructor {
 		return self.__router;
 	};
 	
+	/** Add a websocket route, this is an alias for HttpServerRouter.add_path
+	 * @param {String} _path The path pattern to add
+	 * @param {Function} _callback The function to call that will handle this path
+	 * @return {Struct.HttpServerRouter}
+	 */
+	static add_websocket = function(_path, _callback) {
+		self.__logger.info("Added websocket", {path: _path})
+		return self.__router.add_path(_path, _callback, true);
+	};
+	
 	/** Handles the incoming async_load from async networking event
 	 * @param {Id.DsMap} _async_load the async_load map from async networking event
 	 * @ignore
@@ -164,6 +174,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 		self.__logger.debug("Client disconnected", {socket_id: _client_socket}, LOG_TYPE_HTTP) 
 		var _client_session = self.__client_sessions[$ _client_socket];
 		if (!is_undefined(_client_session)) {
+			_client_session.close();
 			struct_remove(self.__client_sessions, _client_socket);
 		}
 	};
@@ -350,5 +361,71 @@ function HttpServer(_port, _logger=undefined) constructor {
 			case "7z": return "application/x-7z-compressed";
 			default: return "application/octet-stream";
 		}
+	};
+	
+	/** Get the current correctly formatted date
+	 * @return {String}
+	 */
+	static rfc_date_now = function() {
+		var _prev_timezone = date_get_timezone();
+		date_set_timezone(timezone_utc);
+		
+		var _str = self.__rfc_date(date_current_datetime());
+		
+		date_set_timezone(_prev_timezone);
+		return _str;
+	};
+	
+	/** Get the correctly formatted date for a given gamemaker datetime
+	 * @return {Real} _datetime the datetime in Gamemaker format (e.g. date_current_datetime());
+	 * @return {String}
+	 * @ignore
+	 */
+	static __rfc_date = function(_datetime) {	
+		var _weekday;
+		switch(date_get_weekday(_datetime)) {
+			case 0: _weekday = "Sun"; break;
+			case 1: _weekday = "Mon"; break;
+			case 2: _weekday = "Tue"; break;
+			case 3: _weekday = "Wed"; break;
+			case 4: _weekday = "Thu"; break;
+			case 5: _weekday = "Fri"; break;
+			case 6: _weekday = "Sat"; break;
+		}
+		
+		var _day = self.__zero_pad_string(date_get_day(_datetime), 2);
+		
+		var _month;
+		switch(date_get_month(_datetime)) {
+			case 1: _month = "Jan"; break;
+			case 2: _month = "Feb"; break;
+			case 3: _month = "Mar"; break;
+			case 4: _month = "Apr"; break;
+			case 5: _month = "May"; break;
+			case 6: _month = "Jun"; break;
+			case 7: _month = "Jul"; break;
+			case 8: _month = "Aug"; break;
+			case 9: _month = "Sep"; break;
+			case 10: _month = "Oct"; break;
+			case 11: _month = "Nov"; break;
+			case 12: _month = "Dec"; break;
+		}
+		
+		var _year = string(date_get_year(_datetime));
+		var _hours = self.__zero_pad_string(date_get_hour(_datetime), 2);
+		var _minutes = self.__zero_pad_string(date_get_minute(_datetime), 2);
+		var _seconds = self.__zero_pad_string(date_get_second(_datetime), 2);
+		
+		return $"{_weekday}, {_day} {_month} {_year} {_hours}:{_minutes}:{_seconds} GMT";
+	};
+	
+	/** Pad a number zeros
+	 * @return {Real} _number The number to pad
+	 * @return {Real} _places How many places to pad to
+	 * @return {String}
+	 * @ignore
+	 */
+	static __zero_pad_string = function(_number, _places) {
+		return string_replace(string_format(_number, _places, 0), " ", "0");
 	};
 }

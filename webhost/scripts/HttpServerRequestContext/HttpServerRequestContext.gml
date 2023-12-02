@@ -3,8 +3,10 @@
  * @param {Struct.HttpResponse} _response The response going back out
  * @param {Struct.Logger} _logger logger to use
  */
-function HttpServerRequestContext(_request, _response, _logger) constructor {
+function HttpServerRequestContext(_request, _response=undefined, _logger=undefined) constructor {
 	self.request = _request;
 	self.response = _response;
-	self.logger = _logger.bind({request_time: HttpResponse.__rfc_date_now() });
+	
+	_logger ??= LOGGER;
+	self.logger = _logger.bind({request_time: HttpServer.rfc_date_now() });
 }
