@@ -4,4 +4,4 @@ istio:
   gateway:
     enabled: true
     hosts:
-      - "webhost.apps.webb.party"
+      - "htgm.apps.webb.party"

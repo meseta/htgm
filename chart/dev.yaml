@@ -4,5 +4,5 @@ istio:
   gateway:
     enabled: true
     hosts:
-      - "webhost.apps.webb.party"
-      - "gm.meseta.dev"
+      - "htgm.apps.webb.party"
+      - "htgm.meseta.dev"

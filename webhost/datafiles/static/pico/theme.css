@@ -1,0 +1,37 @@
+/* DB32 Purple Light scheme (Default) */
+/* Can be forced with data-theme="light" */
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  --primary: #76428a;
+  --primary-hover: #d77bba;
+  --primary-focus: rgba(69, 40, 60, 0.5);
+  --primary-inverse: #FFF;
+}
+
+/* DB32 Purple Dark scheme (Auto) */
+/* Automatically enabled if user has Dark mode enabled */
+@media only screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --primary: #76428a;
+    --primary-hover: #d77bba;
+    --primary-focus: rgba(69, 40, 60, 0.5);
+    --primary-inverse: #FFF;
+  }
+}
+
+/* DB32 Purple Dark scheme (Forced) */
+/* Enabled if forced with data-theme="dark" */
+[data-theme="dark"] {
+  --primary: #76428a;
+  --primary-hover: #d77bba;
+  --primary-focus: rgba(69, 40, 60, 0.5);
+  --primary-inverse: #FFF;
+}
+
+/* Purple (Common styles) */
+:root {
+  --form-element-active-border-color: var(--primary);
+  --form-element-focus-color: var(--primary-focus);
+  --switch-color: var(--primary-inverse);
+  --switch-checked-background-color: var(--primary);
+}
