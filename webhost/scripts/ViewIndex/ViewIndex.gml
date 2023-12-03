@@ -16,7 +16,6 @@ function ViewIndex(): HtmxView() constructor {
 		switch(_context.request.path_original) {
 			default:
 			case ViewHome.path: return ViewHome.render(_context);
-			case ViewAbout.path: return ViewAbout.render(_context);
 		}
 	};
 	
