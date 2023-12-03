@@ -1,6 +1,6 @@
 /**
  * An HTTP client that returns a Chain
- * You must run `cleanup()` to avoid a memory leak when this struct is no longer needed
+ * You must run cleanup() to avoid a memory leak when this struct is no longer needed
  */
 function HttpClient(_base_url="", _logger_name=undefined) constructor {
 	/** the bound loger, making use of the global logger */

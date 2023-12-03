@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "dedent",
+  "name": "quote_fix",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

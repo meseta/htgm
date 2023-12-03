@@ -10,7 +10,6 @@ function init_site(){
 
 	// add views
 	SERVER.add_render(ViewHome);
-	SERVER.add_render(ViewAbout);
 	SERVER.add_render(ViewIndex);
 	
 	// websocket

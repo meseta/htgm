@@ -15,6 +15,7 @@
     {"name":"Footer","order":3,"path":"folders/Website/Main/Footer.yy",},
     {"name":"Main","order":7,"path":"folders/Website/Main.yy",},
     {"name":"Navigation","order":5,"path":"folders/Website/Main/Navigation.yy",},
+    {"name":"Utils","order":5,"path":"folders/Libraries/Html/Utils.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"sLogo","order":1,"path":"sprites/sLogo/sLogo.yy",},
@@ -42,13 +43,14 @@
     {"name":"init_site","order":4,"path":"scripts/init_site/init_site.yy",},
     {"name":"HttpServerRequestContext","order":12,"path":"scripts/HttpServerRequestContext/HttpServerRequestContext.yy",},
     {"name":"HtmlSprite","order":1,"path":"scripts/HtmlSprite/HtmlSprite.yy",},
+    {"name":"HtmlCode","order":2,"path":"scripts/HtmlCode/HtmlCode.yy",},
     {"name":"HttpServerFileServer","order":7,"path":"scripts/HttpServerFileServer/HttpServerFileServer.yy",},
     {"name":"HttpServerWebsocketSessionBase","order":14,"path":"scripts/HttpServerWebsocketSessionBase/HttpServerWebsocketSessionBase.yy",},
     {"name":"scrHttpServerExceptionsInternal","order":10,"path":"scripts/scrHttpServerExceptionsInternal/scrHttpServerExceptionsInternal.yy",},
     {"name":"scrHttpServerExceptions","order":5,"path":"scripts/scrHttpServerExceptions/scrHttpServerExceptions.yy",},
     {"name":"SnowState","order":1,"path":"scripts/SnowState/SnowState.yy",},
     {"name":"GameManager","order":1,"path":"scripts/GameManager/GameManager.yy",},
-    {"name":"dedent","order":11,"path":"scripts/dedent/dedent.yy",},
+    {"name":"dedent","order":1,"path":"scripts/dedent/dedent.yy",},
     {"name":"rInit","order":3,"path":"rooms/rInit/rInit.yy",},
   ],
 }

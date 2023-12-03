@@ -1,8 +1,9 @@
 /** De-indent a string, automatically detecting the indentation of the first line, and subtracting the same indent from subsequent lines if they exist
  * @param {String} _string String to de-dent
+ * @param {String} _insert String to insert at the start of every line
  * @return {String}
  */
-function dedent(_string){
+function dedent(_string, _insert=""){
 	var _lines = string_split_ext(_string, ["\r\n", "\r", "\n"]);
 	var _lines_len = array_length(_lines);
 	
@@ -35,11 +36,12 @@ function dedent(_string){
 	
 	array_delete(_lines, 0, _empty_lines);
 	
-	array_foreach(_lines, method({lines: _lines, space_string: _space_string, space_len: _space_len}, function(_line, _idx) {
-		if (string_pos(space_string, _line) == 1) {
-			lines[_idx] = string_delete(_line, 1, space_len);
-		}
-	}));
-	
+	if (_space_len > 0) {
+		array_foreach(_lines, method({lines: _lines, space_string: _space_string, space_len: _space_len, insert: _insert}, function(_line, _idx) {
+			if (string_pos(space_string, _line) == 1) {
+				lines[_idx] = insert+string_delete(_line, 1, space_len);
+			}
+		}));
+	}
 	return string_join_ext("\n", _lines); 
 }

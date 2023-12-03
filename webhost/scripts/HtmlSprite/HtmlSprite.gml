@@ -1,7 +1,7 @@
 /** An HTML image that is actually a gamemaker sprite
  * @param {Asset.GMSprite} _sprite A gamemaker sprite index
  */
-function HtmxSprite(_sprite): HtmlComponent() constructor {
+function HtmlSprite(_sprite): HtmlComponent() constructor {
 	static _generated = {}; // keep track of generated images
 	
 	var _image_name = sprite_get_name(_sprite);
