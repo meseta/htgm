@@ -38,9 +38,9 @@ function HttpClient(_base_url="", _logger_name=undefined) constructor {
 
 	/** Set several headers in the client using a struct */
 	static set_headers = function(_header_struct) {
-		var _len = variable_struct_names_count(_header_struct);
-		var _header_names = variable_struct_get_names(_header_struct);
-		for (var _i; _i<_len; _i++) {
+		var _len = struct_names_count(_header_struct);
+		var _header_names = struct_get_names(_header_struct);
+		for (var _i=0; _i<_len; _i++) {
 			var _header_name = _header_names[_i];
 			self.__header_map[? _header_name] = _header_struct[$ _header_name];
 		}
@@ -158,7 +158,7 @@ function HttpClient(_base_url="", _logger_name=undefined) constructor {
 			}
 			var _req_id = self.__timeouts.pop_min_value();
 
-			if (variable_struct_exists(self.__requests, _req_id)) {
+			if (struct_exists(self.__requests, _req_id)) {
 				var _request = self.__requests[$ _req_id];
 				self.logger.warning("Request timed out", {http_method: _request.http_method, url: _request.url, req_id: _req_id})
 				if (is_method(_request.errback)) {
@@ -167,19 +167,19 @@ function HttpClient(_base_url="", _logger_name=undefined) constructor {
 				else {
 					throw "Request timed out";	
 				}
-				variable_struct_remove(self.__requests, _req_id);
+				struct_remove(self.__requests, _req_id);
 			}
 		}
 	};
 	
 	static __async_http = function(_async_load) {
 		var _req_id = _async_load[? "id"];
-		if (!variable_struct_exists(self.__requests, _req_id)) {
+		if (!struct_exists(self.__requests, _req_id)) {
 			return false;
 		}
 		
 		var _request = self.__requests[$ _req_id];
-		variable_struct_remove(self.__requests, _req_id);
+		struct_remove(self.__requests, _req_id);
 			
 		var _status = _async_load[? "status"];
 		var _http_status = _async_load[? "http_status"];

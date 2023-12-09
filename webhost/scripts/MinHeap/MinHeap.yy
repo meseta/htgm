@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "init_site",
+  "name": "MinHeap",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Init",
-    "path": "folders/Init.yy",
+    "name": "HttpClient",
+    "path": "folders/Libraries/HttpClient.yy",
   },
 }

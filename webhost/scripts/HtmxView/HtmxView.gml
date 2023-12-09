@@ -18,6 +18,12 @@ function HtmxView(_redirect_path=""): HttpServerRenderBase() constructor {
 		return $"{_id_prefix}-{instanceof(self)}";
 	}
 	
+	/** The render function for rendering this component, can be either string or Chain return
+	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
+	 * @return {String|Struct.Chain}
+	 */
+	static render = function(_context) { return ""; };
+	
 	/** Handle function for processing a request
 	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
 	 */
@@ -30,7 +36,24 @@ function HtmxView(_redirect_path=""): HttpServerRenderBase() constructor {
 			throw new ExceptionHttpServerInternalRedirect(self.__redirect_path);
 		}
 		
-		var _rendered = is_method(self.render) ? self.render(_context) : self.render;
-		_context.response.send_html(_rendered);
+		var _rendered = self.render(_context);
+		if (is_instanceof(_rendered, Chain)) {
+			_rendered
+				.chain_callback(method(_context, function(_payload) {
+					response.send_html(_payload);
+				}))
+				.on_error(method(_context, function(_err) {
+					response.send_exception(_err);	
+				}));
+		}
+		else {
+			_context.response.send_html(_rendered);
+		}
 	};
+	
+	/** Handle asynchronous rendering. Because some renderers return a Chain, and because
+	 * Sometimes we want to make sure all the renderers are resolved before returning
+	 * Use this to return a chain than resolves after all members have resolved
+	 * @param {Struct} _renderers
+	 */
 }

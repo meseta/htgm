@@ -102,11 +102,11 @@ function HttpServer(_port, _logger=undefined) constructor {
 	}
 	
 	/** Add a constructor with a render to the router
-	 * @param {Function} _render
+	 * @param {Function|Struct.HttpServerRenderBase} _render
 	 * @return {Struct.HttpServerRouter}
 	 */
 	static add_render = function(_render) {
-		var _inst = new _render();
+		var _inst = is_struct(_render) ? _render : new _render();
 		if (!is_instanceof(_inst, HttpServerRenderBase)) {
 			throw new ExceptionHttpServerSetup("Render not a child of HttpServerRenderBase", "Render "+instanceof(_inst)+ " is not a child of HttpServerRenderBase");
 		}

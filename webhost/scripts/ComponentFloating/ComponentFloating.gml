@@ -6,7 +6,7 @@ function ComponentFloating(): HtmlComponent() constructor {
 	
 	static render = function(_context) {
 		static cached = dedent(@'
-			<aside style="position: fixed; bottom: 0; right: 0;" hx-ext="ws" ws-connect="/metrics">
+			<aside style="position: fixed; bottom: 0; right: 0;" hx-ext="ws" ws-connect="/fps">
 				<article style="margin: 0; padding: 0.5em 1em;">
 					<div id="'+ self.element_id + @'" ><small>Server stats offline</small></div>
 				</article>
@@ -27,7 +27,7 @@ function ComponentFloating(): HtmlComponent() constructor {
 	}
 }
 
-function WebsocketMetrics(): HttpServerWebsocketSessionBase() constructor {
+function WebsocketFps(): HttpServerWebsocketSessionBase() constructor {
 	self.call = call_later(1, time_source_units_seconds, method(self, self.tick), true);
 	
 	static on_close = function(_close_code=undefined, _close_reason=undefined) {

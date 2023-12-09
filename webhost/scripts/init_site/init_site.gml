@@ -10,8 +10,13 @@ function init_site(){
 
 	// add views
 	SERVER.add_render(ViewHome);
+	SERVER.add_render(ViewAbout);
 	SERVER.add_render(ViewIndex);
 	
 	// websocket
-	SERVER.add_websocket("metrics", function(_context) { return new WebsocketMetrics(); });
+	SERVER.add_websocket("fps", function(_context) { return new WebsocketFps(); });
+	
+	global.clients = {
+		ghost: new GhostClient(),
+	}
 }

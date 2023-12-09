@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "init_site",
+  "name": "GhostPage",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Init",
-    "path": "folders/Init.yy",
+    "name": "Ghost",
+    "path": "folders/Libraries/Ghost.yy",
   },
 }

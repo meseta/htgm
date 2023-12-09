@@ -1,6 +1,7 @@
 function ComponentNavigation(): HtmlComponent() constructor {
 	static links = [
 		new ComponentNavigationLink(ViewHome.path, "Home", true),
+		new ComponentNavigationLink("about", "About"),
 	];
 	
 	static render = function(_context) {
