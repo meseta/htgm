@@ -32,7 +32,7 @@ function HtmxView(_redirect_path=""): HttpServerRenderBase() constructor {
 			throw new ExceptionHttpMethodNotAllowed();
 		}
 		if (_context.request.get_header("hx-request") != "true" && _context.request.path != self.__redirect_path) {
-			_context.logger.debug("Htmx Fetching without view, internal redirect", {request_path: _context.request.path, redirect_path: self.__redirect_path}, LOG_TYPE_HTTP);
+			_context.logger.debug("Htmx Fetching without view, internal redirect", {request_path: _context.request.path, redirect_path: self.__redirect_path}, Logger.TYPE_HTTP);
 			throw new ExceptionHttpServerInternalRedirect(self.__redirect_path);
 		}
 		

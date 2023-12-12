@@ -21,7 +21,7 @@ function ViewIndex(): HtmxView() constructor {
 	};
 	
 	static render = function(_context) {
-		return chain_concurrent_struct({
+		return Chain.concurrent_struct({
 			route: self.render_route(_context),
 			navigation: self.navigation.render(_context),
 			floating: self.floating.render(_context),

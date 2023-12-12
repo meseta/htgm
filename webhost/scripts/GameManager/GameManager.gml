@@ -7,7 +7,7 @@ function GameManager() constructor {
 	
 	// Set up state machine
 	self.__fsm.on("state changed", function(_dest_state, _source_state, _trigger_name) {
-		self.__logger.info("State Change", {source_state: _source_state, dest_state: _dest_state, trigger_name: _trigger_name }, LOG_TYPE_NAVIGATION);
+		self.__logger.info("State Change", {source_state: _source_state, dest_state: _dest_state, trigger_name: _trigger_name }, Logger.TYPE_NAVIGATION);
 	});
 	self.__fsm.add("init");
 	self.__fsm.add("running", {
@@ -39,7 +39,7 @@ function GameManager() constructor {
 			return self.__fsm.trigger(_trigger_name);
 		}
 		else {
-			self.__logger.error("Couldn't trigger game state change, trigger doesn't exist", {trigger_name: _trigger_name, current_state: _current_state}, LOG_TYPE_NAVIGATION);
+			self.__logger.error("Couldn't trigger game state change, trigger doesn't exist", {trigger_name: _trigger_name, current_state: _current_state}, Logger.TYPE_NAVIGATION);
 			return false;
 		}
 	};

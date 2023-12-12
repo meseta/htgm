@@ -17,14 +17,14 @@ function HttpServer(_port, _logger=undefined) constructor {
 	static start = function() {
 		// can't start if already has a socket
 		if (self.__socket != -1) {
-			self.__logger.warning("Can't start server, already started", undefined, LOG_TYPE_HTTP);
+			self.__logger.warning("Can't start server, already started", undefined, Logger.TYPE_HTTP);
 			return false;
 		}
 		
-		self.__logger.info("Starting server", undefined, LOG_TYPE_HTTP);
+		self.__logger.info("Starting server", undefined, Logger.TYPE_HTTP);
 		self.__socket = network_create_server_raw(network_socket_tcp, self.__port, 20);
 		if (self.__socket == -1) {
-			self.__logger.error("Server port not available", undefined, LOG_TYPE_HTTP);
+			self.__logger.error("Server port not available", undefined, Logger.TYPE_HTTP);
 			return false;
 		}
 		
@@ -173,7 +173,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 	 * @ignore
 	 */
 	static __handle_connect = function(_client_socket, _ip) {
-		self.__logger.debug("Client connected", {socket_id: _client_socket, ip: _ip}, LOG_TYPE_HTTP)  
+		self.__logger.debug("Client connected", {socket_id: _client_socket, ip: _ip}, Logger.TYPE_HTTP)  
 		var _child_logger = self.__logger.bind({socket_id: _client_socket, ip: _ip});
 		self.__client_sessions[$ _client_socket] = new HttpServerSession(_client_socket, self.__router, _child_logger);
 	};
@@ -183,7 +183,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 	 * @ignore
 	 */
 	static __handle_disconnect = function(_client_socket) {
-		self.__logger.debug("Client disconnected", {socket_id: _client_socket}, LOG_TYPE_HTTP) 
+		self.__logger.debug("Client disconnected", {socket_id: _client_socket}, Logger.TYPE_HTTP) 
 		var _client_session = self.__client_sessions[$ _client_socket];
 		if (!is_undefined(_client_session)) {
 			_client_session.close();

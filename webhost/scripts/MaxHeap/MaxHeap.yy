@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "scrLogger",
+  "name": "MaxHeap",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "LoggingSuite",
-    "path": "folders/Libraries/LoggingSuite.yy",
+    "name": "HttpClient",
+    "path": "folders/Libraries/HttpClient.yy",
   },
 }

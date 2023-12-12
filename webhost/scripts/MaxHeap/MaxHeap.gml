@@ -1,7 +1,7 @@
-/** A min-heap implementation (i.e. priority queue). value-priority pairs can be inserted into the heap, which wil
- * efficiently maintain sort order, and the minimum priorty value can be queried at any time */
-function MinHeap() constructor {
-	/* @ignore */ self.__values = []; //  Heap-ordered storage. array of value/priority pairs, the zerth index is maintained to be lowest priority
+/** A max-heap implementation (i.e. priority queue). value-priority pairs can be inserted into the heap, which wil
+ * efficiently maintain sort order, and the maximum priorty value can be queried at any time */
+function MaxHeap() constructor {
+	/* @ignore */ self.__values = []; //  Heap-ordered storage. array of value/priority pairs, the zerth index is maintained to be highest priority
 	/* @ignore */ self.__length = 0;
 
 	/** Returns how many elements are in the heap
@@ -21,62 +21,62 @@ function MinHeap() constructor {
 		self.__shift_up(self.__length-1);
 	};
 	
-	/** Removes the lowest value/priority pair from the heap, and returns it as an array
+	/** Removes the highest value/priority pair from the heap, and returns it as an array
 	 * in the format [value, priority]; undefined will be returned if there's no values available
 	 * @return {Array*}
 	 */
-	static pop_min = function() {
+	static pop_max = function() {
 		if (self.__length == 0) {
 			return undefined;
 		}
 		var _result = self.__values[0];
-		self.__remove_min();
+		self.__remove_max();
 		return _result
 	};
 	
-	/** Removes the lowest value/priority pair from the heap, and returns the value
+	/** Removes the highest value/priority pair from the heap, and returns the value
 	 * @return {Any*}
 	 */
-	static pop_min_value = function() {
+	static pop_max_value = function() {
 		if (self.__length == 0) {
 			return undefined;
 		}
 		var _result = self.__values[0][0];
-		self.__remove_min();
+		self.__remove_max();
 		return _result;
 	};
 	
-	/** Removes the lowest value/priority pair from the heap, and returns the priority
+	/** Removes the highest value/priority pair from the heap, and returns the priority
 	 * @return {Real*}
 	 */
-	static pop_min_priority = function() {
+	static pop_max_priority = function() {
 		if (self.__length == 0) {
 			return undefined;
 		}
 		var _result = self.__values[0][1];
-		self.__remove_min();
+		self.__remove_max();
 		return _result;
 	};
 	
-	/** Fetch the lowest value/priority pair from the heap without removing it, and returns it as an array
+	/** Fetch the highest value/priority pair from the heap without removing it, and returns it as an array
 	 * in the format [value, priority]; undefined will be returned if there's no values available
 	 * @return {Array*}
 	 */
-	static peek_min = function() {
+	static peek_max = function() {
 		return self.__length ? self.__values[0] : undefined;
 	};
 	
-	/** Fetch the value of lowest priority value from the heap without removing it
+	/** Fetch the value of highest priority value from the heap without removing it
 	 * @return {Any*}
 	 */
-	static peek_min_value = function() {
+	static peek_max_value = function() {
 		return self.__length ? self.__values[0][0] : undefined;
 	};
 	
-	/** Fetch the lowest priority value from the heap without removing it
+	/** Fetch the highest priority value from the heap without removing it
 	 * @return {Real*}
 	 */
-	static peek_min_priority = function() {
+	static peek_max_priority = function() {
 		return self.__length ? self.__values[0][1] : undefined;
 	};
 	
@@ -86,10 +86,10 @@ function MinHeap() constructor {
 		self.__length = 0;
 	};
 	
-	/** Internal function for managing the heap. Removes the lowest priority value from the heap
+	/** Internal function for managing the heap. Removes the highest priority value from the heap
 	 * @ignore
 	 */
-	static __remove_min = function() {
+	static __remove_max = function() {
 		self.__length -= 1;
 		self.__values[0] = self.__values[self.__length];
 		array_resize(self.__values, self.__length);
@@ -104,12 +104,12 @@ function MinHeap() constructor {
 		
 		var _left = self.__left_child(_idx);
 		
-		if (_left < self.__length && self.__values[_left][1] < self.__values[_max_idx][1]) {
+		if (_left < self.__length and self.__values[_left][1] > self.__values[_max_idx][1]) {
 			_max_idx = _left;	
 		}
 		
 		var _right = self.__right_child(_idx);
-		if (_right < self.__length && self.__values[_right][1] < self.__values[_max_idx][1]) {
+		if (_right < self.__length and self.__values[_right][1] > self.__values[_max_idx][1]) {
 			_max_idx = _right;	
 		}
 		
@@ -125,7 +125,7 @@ function MinHeap() constructor {
 	static __shift_up = function(_idx) {
 		while(_idx > 0) {
 			var _parent_idx = self.__parent(_idx);
-			if (self.__values[_parent_idx][1] <= self.__values[_idx][1]) {
+			if (self.__values[_parent_idx][1] >= self.__values[_idx][1]) {
 				break;
 			}
 			self.__swap(_parent_idx, _idx);

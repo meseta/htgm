@@ -1,4 +1,6 @@
 /** Initialize the website */
+
+/// Feather ignore GM2017
 function init_site(){
 	// static file host
 	SERVER.add_file_server("static/*", "static");

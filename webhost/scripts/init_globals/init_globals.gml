@@ -8,7 +8,8 @@ function init_globals() {
 	
 	// The root logger
 	#macro LOGGER global.logger
-	LOGGER = new Logger();
+	LOGGER = new Logger()
+	LOGGER.set_global_json(true);
 	
 	// The global game manager
 	#macro GAME global.game

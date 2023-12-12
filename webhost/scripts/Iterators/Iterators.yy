@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "scrChain",
+  "name": "Iterators",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Chain",
-    "path": "folders/Libraries/Chain.yy",
+    "name": "Iterators",
+    "path": "folders/Libraries/Iterators.yy",
   },
 }

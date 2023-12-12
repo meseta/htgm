@@ -59,21 +59,21 @@ function HttpServerRouter(_logger) constructor {
 		do {
 			_internal_redirect = false;
 			try {
-				array_foreach_interruptible(self.__handlers, method(_foreach_context, function(_handler) {
+				Iterators.foreach(self.__handlers, method(_foreach_context, function(_handler) {
 					/// Feather ignore GM1013
 					var _match_params = this.__path_match(_handler.pattern_parts, context.request.path);
 					if (!is_undefined(_match_params)) {
 						context.request.set_parameters(_match_params);
 						_handler.callback(context);
 						completed = true;
-						throw new ExceptionStopIteration();
+						throw Iterators.STOP_ITERATION;
 					}
 				}));
 			}
 			catch (_err) {
 				if (is_instanceof(_err, ExceptionHttpServerInternalRedirect)) {
 					var _path = _err.path;
-					self.__logger.debug("Internal redirect", {path: _path}, LOG_TYPE_HTTP);
+					self.__logger.debug("Internal redirect", {path: _path}, Logger.TYPE_HTTP);
 					_response.cleanup();
 					_request.set_path(_path);
 					_internal_redirect = true;
@@ -97,13 +97,13 @@ function HttpServerRouter(_logger) constructor {
 		var _context = new HttpServerRequestContext(_request, undefined, self.__logger.bind({}));
 		var _foreach_context = {this: other, session_handler: undefined, context: _context};
 		
-		array_foreach_interruptible(self.__websocket_handlers, method(_foreach_context, function(_handler) {
+		Iterators.foreach(self.__websocket_handlers, method(_foreach_context, function(_handler) {
 			/// Feather ignore GM1013
 			var _match_params = this.__path_match(_handler.pattern_parts, context.request.path);
 			if (!is_undefined(_match_params)) {
 				context.request.set_parameters(_match_params);
 				session_handler = _handler.callback(context);
-				throw new ExceptionStopIteration();
+				throw Iterators.STOP_ITERATION;
 			}
 		}));
 		

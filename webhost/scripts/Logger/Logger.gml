@@ -1,13 +1,11 @@
 /** A logger instance that can be used for writing log messages
  * @param {String} _name The logger's name. This will appear in any log messages produced by this logger
  * @param {Struct} _bound_values Optional struct of bound values which will be included in all log messages produced by this logger
- * @param {Bool} _json_mode Whether the output will be purely json, or a formatted string
  * @param {Struct.Logger} _root_logger The loot logger instance that is this logger's parent
  */
-function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root_logger=undefined) constructor {
+function Logger(_name="logger", _bound_values=undefined, _root_logger=undefined) constructor {
 	/* @ignore */ self.__name = _name;
 	/* @ignore */ self.__bound_values = (is_struct(_bound_values) ? _bound_values : {});
-	/* @ignore */ self.__json_logging = _json_mode;
 	/* @ignore */ self.__file_handle = -1;
 	/* @ignore */ self.__filename = undefined;
 	
@@ -21,6 +19,25 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	/* @ignore */ self.__enable_warning = true;
 	/* @ignore */ self.__enable_info = true;
 	/* @ignore */ self.__enable_debug = true;
+	
+	/* @ignore */ self.__pad_width = 48; // Width of the padding used in the output
+	
+	/* @ignore */ static __global_json_logging = true;
+	/* @ignore */ static __global_logging_enabled = true; // Set to false to globally disable logging
+
+	/** Globally enable or disable loggin
+	 * @param {Boolean} _enable
+	 */
+	static set_global_enabled = function(_enabled) {
+		self.__global_logging_enabled = _enabled;
+	};
+	
+	/** Globally set loggers to json
+	 * @param {Boolean} _json_mode
+	 */
+	static set_global_json = function(_json_mode) {
+		self.__global_json_logging = _json_mode;
+	};
 
 	/** Output a debug-level log message
 	 * @param {String} _message The log message
@@ -29,8 +46,8 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	 */
 	static debug = function(_message, _extras=undefined, _type=undefined) {
 		// Create a debug-level log message
-		if (LOGGING_DISABLED || !self.__enable_debug) return;
-		self.__log(LOG_DEBUG, _message, _extras, _type);	
+		if (!self.__global_logging_enabled || !self.__enable_debug) return;
+		self.__log(Logger.DEBUG, _message, _extras, _type);	
 	};
 	
 	/** Output an info-level log message
@@ -40,8 +57,8 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	 */
 	static info = function(_message, _extras=undefined, _type=undefined) {
 		// Create an info-level log message
-		if (LOGGING_DISABLED || !self.__enable_info) return;
-		self.__log(LOG_INFO, _message, _extras, _type);	
+		if (!self.__global_logging_enabled || !self.__enable_info) return;
+		self.__log(Logger.INFO, _message, _extras, _type);	
 	};
 	static log = self.info; // this is an alias of info
 	
@@ -52,8 +69,8 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	 */
 	static warning = function(_message, _extras=undefined, _type=undefined) {
 		// Create a warning-level log message
-		if (LOGGING_DISABLED || !self.__enable_warning) return;
-		self.__log(LOG_WARNING, _message, _extras, _type);	
+		if (!self.__global_logging_enabled || !self.__enable_warning) return;
+		self.__log(Logger.WARNING, _message, _extras, _type);	
 	};
 	static warn = self.warning; // sometimes this gets mixed up, so why not both
 	
@@ -64,15 +81,15 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	 */
 	static error = function(_message, _extras=undefined, _type=undefined) {
 		// Create an error-level log message
-		if (LOGGING_DISABLED || !self.__enable_error) return;
+		if (!self.__global_logging_enabled || !self.__enable_error) return;
 		
 		if (self.__sentry_send_errors) {
 			var _stacktrace = debug_get_callstack();
 			array_delete(_stacktrace, 0, 1);
-			self.__log(LOG_ERROR, _message, _extras, _type, _stacktrace);
+			self.__log(Logger.ERROR, _message, _extras, _type, _stacktrace);
 		}
 		else {
-			self.__log(LOG_ERROR, _message, _extras, _type);
+			self.__log(Logger.ERROR, _message, _extras, _type);
 		}
 	};
 	
@@ -83,8 +100,8 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	 */
 	static fatal = function(_message, _extras=undefined, _type=undefined) {
 		// Create an fatal-level log message
-		if (LOGGING_DISABLED || !self.__enable_fatal) return;
-		self.__log(LOG_FATAL, _message, _extras, _type);	
+		if (!self.__global_logging_enabled || !self.__enable_fatal) return;
+		self.__log(Logger.FATAL, _message, _extras, _type);	
 	};
 	
 	/** Output a stacktrace (as a debug-level log)
@@ -94,10 +111,10 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	 */
 	static stacktrace = function(_message, _extras=undefined, _type=undefined) {
 		// Log a stacktrace
-		if (LOGGING_DISABLED) return;
+		if (!self.__global_logging_enabled) return;
 		var _stacktrace = debug_get_callstack();
 		array_delete(_stacktrace, 0, 1);
-		self.__log(LOG_DEBUG, _message, _extras, _type, _stacktrace);	
+		self.__log(Logger.DEBUG, _message, _extras, _type, _stacktrace);	
 	};
 	
 	/** Output a log for an exception
@@ -105,9 +122,9 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	 * @param {Struct} _extras Any key/values to include in the log message
 	 * @param {String} _level The log level for this exception
 	 */
-	static exception = function(_exception, _extras=undefined, _level=LOG_ERROR, _type=undefined) {
+	static exception = function(_exception, _extras=undefined, _level=Logger.ERROR, _type=undefined) {
 		// logs a GML catch exception, or one of our own Exception structs
-		if (LOGGING_DISABLED) return;
+		if (!self.__global_logging_enabled) return;
 	
 		if (is_struct(_exception)) {
 			// If it has a message component, log it
@@ -128,7 +145,7 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	static bind_named = function(_name, _extras=undefined) {
 		// create a new logger instance with extra bindings
 		
-		if (LOGGING_DISABLED) return new Logger(_name);
+		if (!self.__global_logging_enabled) return new Logger(_name);
 		
 		// combine current bound values
 		var _struct = variable_clone(self.__bound_values);
@@ -139,7 +156,7 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 		}
 		
 		var _root_logger = is_undefined(self.__root_logger) ? self : self.__root_logger;
-		var _new_logger = new Logger(_name, _struct, self.__json_logging, /* Feather ignore once GM1041 */_root_logger);
+		var _new_logger = new Logger(_name, _struct, /* Feather ignore once GM1041 */_root_logger);
 		
 		if (!is_undefined(self.__sentry)) {
 			_new_logger.use_sentry(self.__sentry, self.__sentry_send_errors);
@@ -159,18 +176,18 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	/** Sets the logging level of this logger instance. Any logs with severity lower than the minimum log level will be silenced
 	 * @param {String} _minimum_log_level The minimum severity level for logs that this logger instance will output
 	 */
-	static set_level = function(_minimum_log_level=LOG_DEBUG) {
+	static set_level = function(_minimum_log_level=Logger.DEBUG) {
 		self.__enable_fatal = false
 		self.__enable_error = false;
 		self.__enable_warning = false;
 		self.__enable_info = false;
 		self.__enable_debug = false;
 		switch(_minimum_log_level) {
-			case LOG_DEBUG: self.__enable_debug = true;
-			case LOG_INFO: self.__enable_info = true;
-			case LOG_WARNING: self.__enable_warning = true;
-			case LOG_ERROR: self.__enable_error = true;
-			case LOG_FATAL: self.__enable_fatal = true;
+			case Logger.DEBUG: self.__enable_debug = true;
+			case Logger.INFO: self.__enable_info = true;
+			case Logger.WARNING: self.__enable_warning = true;
+			case Logger.ERROR: self.__enable_error = true;
+			case Logger.FATAL: self.__enable_fatal = true;
 		}
 		return self;
 	};
@@ -178,7 +195,7 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	/** When file logging is enabled, explicitly flush the log to file */
 	static flush_to_file = function() {
 		// Flush pending log messages to file
-		if (LOGGING_DISABLED) return;
+		if (!self.__global_logging_enabled) return;
 		if (self.__file_handle != -1) {
 			file_text_close(self.__file_handle);
 			self.__file_handle = file_text_open_append(self.__filename);
@@ -191,7 +208,7 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	 */
 	static log_to_file = function(_filename, _auto_flush=false) {
 		// Configure this logger to log to file
-		if (LOGGING_DISABLED) return;
+		if (!self.__global_logging_enabled) return;
 		self.close_log()
 		
 		self.__filename =_filename
@@ -211,19 +228,10 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	/** Close the file log */
 	static close_log = function() {
 		// Explicitly close the log
-		if (LOGGING_DISABLED) return;
+		if (!self.__global_logging_enabled) return;
 		if (self.__file_handle != -1) {
 			file_text_close(self.__file_handle);
 		}
-	};
-	
-	/** Sets JSON mode on the logger
-	 * @param {Bool} _mode Set to True to turn on JSON mode, False to turn off
-	 */
-	static json_mode = function(_mode=true) {
-		// Configure this logger to write logs in json mode
-		self.__json_logging = _mode;
-		return self;
 	};
 	
 	/** Enables Sentry for this logging instance
@@ -249,13 +257,13 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 	static __log = function(_level, _message, _extras=undefined, _type=undefined, _stacktrace=undefined) {
 		// Create a log message
 		
-		if (LOGGING_DISABLED) return;
+		if (!self.__global_logging_enabled) return;
 		
-		if (!(_level == LOG_FATAL and self.__enable_fatal) and 
-			!(_level == LOG_ERROR and self.__enable_error) and
-			!(_level == LOG_WARNING and self.__enable_warning) and
-			!(_level == LOG_INFO and self.__enable_info) and
-			!(_level == LOG_DEBUG and self.__enable_debug)){
+		if (!(_level == Logger.FATAL and self.__enable_fatal) and 
+			!(_level == Logger.ERROR and self.__enable_error) and
+			!(_level == Logger.WARNING and self.__enable_warning) and
+			!(_level == Logger.INFO and self.__enable_info) and
+			!(_level == Logger.DEBUG and self.__enable_debug)){
 			return;
 		}
 
@@ -273,7 +281,7 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 		}
 
 		var _output
-		if (self.__json_logging) {
+		if (self.__global_json_logging) {
 			var _struct = {
 				logName: self.__name,
 				times: self.__datetime_string_iso(),
@@ -293,16 +301,16 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 			
 			var _level_str;
 			switch(_level) {
-				case LOG_FATAL:		_level_str = "fatal  "; break;
-				case LOG_ERROR:		_level_str = "error  "; break;
-				case LOG_WARNING:	_level_str = "warning"; break;
-				case LOG_INFO:		_level_str = "info   "; break;
-				case LOG_DEBUG:		_level_str = "debug  "; break;
+				case Logger.FATAL:		_level_str = "fatal  "; break;
+				case Logger.ERROR:		_level_str = "error  "; break;
+				case Logger.WARNING:	_level_str = "warning"; break;
+				case Logger.INFO:		_level_str = "info   "; break;
+				case Logger.DEBUG:		_level_str = "debug  "; break;
 				default:			_level_str = string(_level);
 			}
 			
 			if (struct_names_count(_combined)) {
-				_output = $"{self.__datetime_string()} [{_level_str}][{self.__string_pad(self.__name + "] " + string(_message), LOGGING_PAD_WIDTH)} {json_stringify(_combined)}";
+				_output = $"{self.__datetime_string()} [{_level_str}][{self.__string_pad(self.__name + "] " + string(_message), self.__pad_width)} {json_stringify(_combined)}";
 			}
 			else {
 				_output = $"{self.__datetime_string()} [{_level_str}][{self.__name}] {_message}";
@@ -313,15 +321,15 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 		self.__write_line_to_file(_output);
 		
 		if (!is_undefined(self.__sentry)) {
-			if (self.__sentry_send_errors and _level == LOG_ERROR) {
+			if (self.__sentry_send_errors and _level == Logger.ERROR) {
 				self.__sentry.send_report(_level, _message, undefined, undefined, self.__name, _combined, _stacktrace); 
 			}
 			else {
 				if (is_undefined(_type)) {
-					if (_level == LOG_FATAL || _level = LOG_ERROR || _level = LOG_WARNING) {
-						_type = LOG_ERROR	
+					if (_level == Logger.FATAL || _level = Logger.ERROR || _level = Logger.WARNING) {
+						_type = Logger.ERROR	
 					}
-					else if (_level == LOG_INFO || _level == LOG_DEBUG) {
+					else if (_level == Logger.INFO || _level == Logger.DEBUG) {
 						_type = _level
 					}
 					else {
@@ -428,4 +436,32 @@ function Logger(_name="logger", _bound_values=undefined, _json_mode=false, _root
 				string_format(date_get_second(_datetime), 2, 0);
 		return string_replace_all(_str, " ", "0");
 	};
+	
+	/// Feather ignore GM2017
+	// Log severity levels. These match the sentry level macros. so are interchangeable
+	static FATAL = "fatal"
+	static ERROR = "error"
+	static WARNING = "warning"
+	static INFO = "info"
+	static DEBUG = "debug"
+
+	// Log types. These match the sentry breadcrumb types
+	static TYPE_DEFAULT = "default"
+	static TYPE_ERROR = "error"
+	static TYPE_INFO = "info"
+	static TYPE_DEBUG = "debug"
+	static TYPE_NAVIGATION = "navigation"
+	static TYPE_HTTP = "http"
+	static TYPE_QUERY = "query"
+	static TYPE_TRANSACTION = "transaction"
+	static TYPE_UI = "ui"
+	static TYPE_USER = "user"
+}
+
+/** A quick debugging function that is an alias for the root logger's debug() output
+ * @param {Any} _message The message or data to send
+ * @param {Struct} _extras Optional extra data to send
+ */
+function trace(_message, _extras=undefined) {
+	LOGGER.debug(_message, _extras);
 }
