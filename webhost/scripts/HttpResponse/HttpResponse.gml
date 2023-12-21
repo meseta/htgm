@@ -69,6 +69,7 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 		self.__set_buffer_response(_buffer, true);
 		return self;
 	};
+
 	
 	/** Send a string
 	 * @param {string} _string Path to file
@@ -129,10 +130,10 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 	 */
 	static send_exception = function(_err) {
 		if (is_instanceof(_err, ExceptionHttpBase)) {
-			self.response.send_string(_err.long_message, _err.http_code);
+			self.send_string(_err.long_message, _err.http_code);
 		}
 		else {
-			self.response.send_string(HttpServer.status_code_to_string(500), 500);
+			self.send_string(HttpServer.status_code_to_string(500), 500);
 		}
 	}
 

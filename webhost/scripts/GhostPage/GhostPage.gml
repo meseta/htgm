@@ -14,13 +14,13 @@ function GhostPage(): HtmxView() constructor {
 					throw new ExceptionHttpNotFound();	
 				}
 				var _page = _result.pages[0];
-				self.cached = dedent(@'
+				self.cached = @'
 					<section>
 						<h1>'+ string(_page.title)+ @'</h1>
 						'+ string(_page.html) + @'
 					</section>
-				');
+				';
 				return self.cached;
-			});
+			})
 	};
 }

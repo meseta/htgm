@@ -20,7 +20,7 @@
   ],
   "ResourceOrderSettings": [
     {"name":"sLogo","order":1,"path":"sprites/sLogo/sLogo.yy",},
-    {"name":"oAsyncNetworkingWrapper","order":2,"path":"objects/oAsyncNetworkingWrapper/oAsyncNetworkingWrapper.yy",},
+    {"name":"oAsyncWrapperNetworking","order":2,"path":"objects/oAsyncWrapperNetworking/oAsyncWrapperNetworking.yy",},
     {"name":"HttpServerRenderBase","order":9,"path":"scripts/HttpServerRenderBase/HttpServerRenderBase.yy",},
     {"name":"HttpServerWebsocket","order":13,"path":"scripts/HttpServerWebsocket/HttpServerWebsocket.yy",},
     {"name":"HttpServerSession","order":1,"path":"scripts/HttpServerSession/HttpServerSession.yy",},
@@ -31,7 +31,8 @@
     {"name":"ViewAbout","order":3,"path":"scripts/ViewAbout/ViewAbout.yy",},
     {"name":"HttpServerLineBuffer","order":6,"path":"scripts/HttpServerLineBuffer/HttpServerLineBuffer.yy",},
     {"name":"MinHeap","order":2,"path":"scripts/MinHeap/MinHeap.yy",},
-    {"name":"scrAsyncWrappers","order":1,"path":"scripts/scrAsyncWrappers/scrAsyncWrappers.yy",},
+    {"name":"Sentry","order":2,"path":"scripts/Sentry/Sentry.yy",},
+    {"name":"AsyncWrapper","order":1,"path":"scripts/AsyncWrapper/AsyncWrapper.yy",},
     {"name":"HttpServerFile","order":8,"path":"scripts/HttpServerFile/HttpServerFile.yy",},
     {"name":"HttpRequest","order":2,"path":"scripts/HttpRequest/HttpRequest.yy",},
     {"name":"sGameMaker","order":1,"path":"sprites/sGameMaker/sGameMaker.yy",},

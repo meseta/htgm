@@ -1,121 +1,20 @@
 /**
- * Creates a chain of callbacks to make it easier (flatter) to write  the instance to ending point, from optional starting point
- * One limitation is that chains can only make use of a single function argument and return value. but these can be arrays.
- * 
- * Example 1:
- * A framework developer implementing chains in their async code can allow the user developer to receive a chain as a return value
- * which they can chain callbacks to, and which the framework dev's code will later fire off the callbacks for when the async
- * process completes.
- *
- * The framework developer's code looks like this:
- *
- *		function fetch_value_from_internet(_arg1) {
- *			var _chain = new Chain();
- *			set_up_the_fetching(_arg1, _chain.create_start_callback(), _chain.create_errback()); // this function will later call _chain.fire_callback(_result)
- *			return _chain;
- *		}
- *
- * The user developer's code using this framework looks like this:
- *
- *		fetch_value_from_internet(_arg1)
- *			.chain_callback(function(_result) {
- *				if (_result < 0) {
- *					throw "uh oh"
- *				}
- *				return fetch_another_value_from_internet(sqrt(_result));
- *			})
- *          .chain_delay(2)
- *			.chain_callback(function(_result) {
- *				deal_with_it(_result, 123);
- *			})
- *			.on_error(function(_err) {
- *				logger.info("something went wrong", {err: _err});
- *			})
- *	
- * Where before the equivalent code may have looked like this:
- * (where fetch_value_from_internet's arguments includes providing a callback and errorback)
- * 
- *		fetch_value_from_internet(
- *			_arg1,
- *			function(_result) {
- *				if (_result < 0) {
- *					logger.error("something went wrong", {err: "uh oh"});
- *				}
- *				fetch_another_value_from_internet(
- *					sqrt(_value),
- *					function(_result) {
- *						deal_with_it(_result, 123);
- *					},
- *					function(_err) {
- *						logger.error("something went wrong", {err: _err});
- *					}
- *				);
- *			},
- *			function(_err) {
- *				logger.error("something went wrong", {err: _err});
- *			}
- *		);
- *
- * 
- * Example 2:
- * If a user needs to do further asynchronous work, user may return Chain.deferred to indicate that
- * the chain execution should wait until an async callback is run. Each chain is called with _callback and _errback callbacks
- * that can later be called to continue processing
- *
- *		fetch_value_from_internet(_arg1)
- *			.chain_callback(function(_result, _callback) {
- *              call_later(10, time_source_units_seconds, method({callback: _callback, result: _result}, function() { callback(sqrt(result)); }), false);
- *				return Chain.DEFERRED;
- *			})
- *			.chain_callback(function(_result) {
- *				deal_with_it(_result, 123);
- *			})
- *			.on_error(function(_err) {
- *				logger.info("something went wrong", {err: _err});
- *			})
- *
- * Example 3:
- * A user may return another Chain, it will be executed as well
- *
- *		fetch_value_from_internet(_arg1)
- *			.chain_callback(function(_result) {
- *              call_later(10, time_source_units_seconds, method({callback: _callback, result: _result}, function() { callback(sqrt(result)); }), false);
- *				return Chain.DEFERRED;
- *			})
- *			.chain_callback(function(_result) {
- *				deal_with_it(_result, 123);
- *			})
- *			.on_error(function(_err) {
- *				logger.info("something went wrong", {err: _err});
- *			})
- *
- *
- *
+ * Creates a chain of callbacks to make it easier (flatter) to write async code
+ * @author Meseta https://meseta.dev
  */
- 
 function Chain() constructor {
-	/** The list of callbacks that will be executed as we go */
-	self.__callback_chain = [];
-
-	/** The pointer into the callback array. We use this to point at the next function to execute */
-	self.__callback_chain_pointer = 0;
+	/* @ignore */ self.__callback_chain = [];
+	/* @ignore */ self.__callback_chain_pointer = 0;
+	/* @ignore */ self.__errback = undefined;
+	/* @ignore */ self.__started = false;
+	/* @ignore */ self.__errored = false;
+	/* @ignore */ self.__finished = false;
+	/* @ignore */ self.__last_result = undefined;
 	
-	/** The error that will be run if an exception is thrown */
-	self.__errback = undefined;
-	
-	/** Whether this chain has started */
-	self.__started = false;
-	
-	/** Whether this chain has already errored, preventing any further execution */
-	self.__errored = false;
-	
-	/** Whether this chain has already finished executing, if so, any new methods added to it will fire immediately */
-	self.__finished = false;
-	
-	/** The stored last value, for chains that might finish execution, and will continue once the next callback is added to it */
-	self.__last_result = undefined;
-	
-	/** Chains further functions onto the end of the chain, ready for execution */
+	/** Chains further functions onto the end of the chain, ready for execution
+	 * @param {Function} _callback The callback to run
+	 * @return {Struct.Chain}
+	 */
 	static chain_callback = function(_callback) {
 		if (is_undefined(_callback)) {
 			return self;
@@ -132,7 +31,10 @@ function Chain() constructor {
 		return self;
 	};
 	
-	/** Adds a call_later into the chain here, so when the call gets to this point we fire off a delay */
+	/** Adds a call_later into the chain here, so when the call gets to this point we fire off a delay
+	 * @param {Number} _time The number of seconds
+	 * @return {Struct.Chain}
+	 */
 	static chain_delay = function(_time) {
 		self.chain_callback(method({this: other, time: _time}, function(_result) {
 			result = _result;
@@ -144,16 +46,28 @@ function Chain() constructor {
 		return self;
 	};
 	
-	/** Adds a convenience step in the chain to output log the result */
-	static chain_debug_log = function(_debug_text="Chain debug log") {
-		self.chain_callback(method({debug_text: _debug_text}, function(_result) {
-			LOGGER.debug(debug_text, {result: _result})
+	/** Adds a convenience step in the chain to output log the result 
+	 * @param {String} _debug_text Text to add
+	 * @param {Struct.Logger} _logger The logger to use
+	 * @return {Struct.Chain}
+	 */
+	static chain_debug_log = function(_debug_text="Chain debug log", _logger=undefined) {
+		self.chain_callback(method({debug_text: _debug_text, logger: _logger}, function(_result) {
+			if (!is_undefined(logger)) {
+				logger.debug(debug_text, {result: _result})
+			}
+			else {
+				show_debug_message(debug_text, result);	
+			}
 			return _result;
 		}));
 		return self;
 	};
 	
-	/** Sets the error handle for the whole chain. there can only be one of these */
+	/** Sets the error handle for the whole chain. there can only be one of these
+	 * @param {Function} _errback The callback to run on error
+	 * @return {Struct.Chain}
+	 */
 	static on_error = function(_errback) {
 		if (is_undefined(_errback)) {
 			return self;	
@@ -162,29 +76,31 @@ function Chain() constructor {
 		return self;
 	};
 	
-	/** Convenience function to add a simple logger to the error */
-	static on_error_log = function() {
-		self.__errback = self.__log_error;
-		return self;
-	};
-	
-	/** Creates a callback, and mark as started. the expectation is the firing callback will start the chain */
+	/** Creates a callback, and mark as started. the expectation is the firing callback will start the chain
+	 * @return {Function}
+	 */
 	static create_start_callback = function() {
 		self.__started = true;
 		return method(self, self.__accept);
 	};
 	
-	/** Creates a callback, which will continue the chain*/
+	/** Creates a callback, which will continue the chain
+	 * @return {Function}
+	 */
 	static create_callback = function() {
 		return method(self, self.__accept);
 	};
 	
-	/** Creates an errback that can be called, which will end the chain*/
+	/** Creates an errback that can be called, which will end the chain
+	 * @return {Function}
+	 */
 	static create_errback = function() {
 		return method(self, self.__fire_errback);
 	};
 	
-	/** Unconditional start */
+	/** Unconditional start 
+	 * @param {Any*} _initial_value The initial value to be passed to the first callback
+	 */
 	static start = function(_initial_value=undefined) {
 		if (!self.__started) {
 			self.__started = true;
@@ -193,7 +109,10 @@ function Chain() constructor {
 		return self;
 	}
 	
-	/** Runs the errorback */
+	/** Runs the errorback
+	 * @param {Any*} _err The error to use
+	 * @ignore
+	 */
 	static __fire_errback = function(_err) {
 		if (self.__errored) {
 			return;
@@ -208,13 +127,21 @@ function Chain() constructor {
 		}
 	};
 	
-	/** Accept return value and run chain */
+	/** Accept return value and run chain
+	 * @param {Any*} _result The result to pass onto the chain
+	 * @ignore
+	 */
 	static __accept = function(_result) {
 		self.__last_result = _result;
 		self.__run_chain();
 	};
 	
-	/** Runs the chain */
+	/** Runs the chain 
+	 * @param {Function*} _callback
+	 * @param {Function*} _errback
+	 * @return {Struct.Chain}
+	 * @ignore
+	 */
 	static __run_chain = function(_callback=undefined, _errback=undefined) {
 		_callback ??= self.create_callback(); // iff callback is not provided, we use our own
 		_errback ??= self.create_errback(); // if errback is not provided, we use our own
@@ -264,15 +191,12 @@ function Chain() constructor {
 		self.__finished = true;
 		return self;
 	};
-	
-	/** Simple function for logging the error, which can be used as the errback */
-	static __log_error = function(_err) {
-		LOGGER.error("Chain error", {err: _err})
-	};
 
 	/** Utility function to execute an array of Chains concurrently and create a new Chain
 	 * Works by attaching a callback on the end of every chain that checks for and runs this one
 	 * WARNING: this overrides each member chain's onerr function
+	 * @param {Array<Struct.Chain>} _chain_array Array of chains
+	 * @return {Struct.Chain}
 	 */
 	static concurrent_array = function(_chain_array) {
 		// Loop over array to ensure only chains are added
@@ -320,6 +244,8 @@ function Chain() constructor {
 	/** Utility function to execute a struct of Chains concurrently and create a new Chain
 	 * with the result. Works by attaching a callback on the end of every chain that checks for and runs this one
 	 * WARNING: this overrides each member chain's onerr function
+	 * @param {Struct} _chain_struct Struct of chains and other values
+	 * @return {Struct.Chain}
 	 */
 	static concurrent_struct = function(_chain_struct) {
 		

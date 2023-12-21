@@ -7,7 +7,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 	/* @ignore */ self.__logger = _logger ?? new Logger("HttpServer", {port: _port});
 	
 	/* @ignore */ self.__socket = -1;
-	/* @ignore */ self.__listener_instance = noone;
+	/* @ignore */ self.__bound_handler = method(self, self.__async_networking_handler);
 	/* @ignore */ self.__client_sessions = {};
 	/* @ignore */ self.__router = new HttpServerRouter(self.__logger);
 	
@@ -31,13 +31,8 @@ function HttpServer(_port, _logger=undefined) constructor {
 		self.__client_sessions = {};
 		
 		// spawn the listener instance if not already exists
-		var _bound_handler = method(self, self.__async_networking_handler);
-		if (instance_exists(self.__listener_instance)) {
-			self.__listener_instance.set_callback(_bound_handler);
-		}
-		else {
-			self.__listener_instance = add_async_networking_callback(_bound_handler)
-		}
+		AsyncWrapper.remove_async_networking_callback(self.__bound_handler);
+		AsyncWrapper.add_async_networking_callback(self.__bound_handler);
 		return true;
 	};
 	
@@ -52,9 +47,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 			network_destroy(self.__socket);
 			self.__socket = -1;
 		}
-		if (instance_exists(self.__listener_instance)) {
-			instance_destroy(self.__listener_instance);
-		}
+		AsyncWrapper.remove_async_networking_callback(self.__bound_handler);
 	};
 	
 	/** Add a path to the router, this is an alias for HttpServerRouter.add_path

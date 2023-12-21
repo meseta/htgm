@@ -5,13 +5,13 @@ function ComponentFloating(): HtmlComponent() constructor {
 	static average_fps = fps_real;
 	
 	static render = function(_context) {
-		static cached = dedent(@'
+		static cached = @'
 			<aside style="position: fixed; bottom: 0; right: 0;" hx-ext="ws" ws-connect="/fps">
 				<article style="margin: 0; padding: 0.5em 1em;">
 					<div id="'+ self.element_id + @'" ><small>Server stats offline</small></div>
 				</article>
 			</aside>
-		');
+		';
 		return cached;
 	};
 	

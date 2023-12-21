@@ -1,80 +1,98 @@
-/**
- * An HTTP client that returns a Chain
+/** A HTTP client that returns a Chain
  * You must run cleanup() to avoid a memory leak when this struct is no longer needed
+ * @param {String*} _base_url The base url used for every request
+ * @param {String*} _logger_name The name the internal logger will use
+ * @param {Struct.Logger*} _parent_logger A parent logger to use
+ * @author Meseta https://meseta.dev
  */
-function HttpClient(_base_url="", _logger_name=undefined) constructor {
-	/** the bound loger, making use of the global logger */
-	self.logger = new Logger(_logger_name ?? "HttpClient", {base_url: _base_url});
-	
-	/** Base URL is prepended to all requests */
-	self.__base_url = _base_url;
-	
-	/** The map used to maintain any headers that will be sent with all requests */
-	self.__header_map = ds_map_create();
-	
-	/** Internal record of ongoing requests */
-	self.__requests = {};
-	
-	/** Internal record of ongoing timeouts */
-	self.__timeouts = new MinHeap();
-	
-	/** Timeout handler, runs every few frames */
-	self.__call_later = call_later(10, time_source_units_frames, method(self, self.__step), true);
-	
-	/** This variable will eventuall hold a persistent ref to this method, without it, GC would get rid of the callback; the target object uses weakrefs. */
-	self.__async_http_handler = undefined;
-	static __register_async_handler = function() {
-		if (is_undefined(self.__async_http_handler)) {
-			self.__async_http_handler = method(self, self.__async_http);
-			add_async_http_callback(self.__async_http_handler);	
-		}
+function HttpClient(_base_url="", _logger_name="HttpClient", _parent_logger=undefined) constructor {
+	if (!is_undefined(_parent_logger)) {
+		self.logger = _parent_logger.bind_named(_logger_name, {base_url: _base_url});
 	}
+	else {
+		self.logger = new Logger(_logger_name, {base_url: _base_url});
+	}
+	
+	/* @ignore */ self.__base_url = _base_url;
+	/* @ignore */ self.__headers = {};
+	/* @ignore */ self.__requests = {};
+	/* @ignore */ self.__timeouts = new MinHeap();
+	/* @ignore */ self.__call_later = call_later(10, time_source_units_frames, method(self, self.__step), true);
+	/* @ignore */ self.__async_http_handler = undefined;
 	
 	/** Run cleanup to clean up any dynamic resources. The client is inoperable after running this */
 	static cleanup = function() {
-		ds_map_destroy(self.__header_map);
 		call_cancel(self.__call_later);
 	};
 
-	/** Set several headers in the client using a struct */
+	/** Set several headers in the client using a struct
+	 * @param {Struct} _header_struct
+	 * @return {Struct.HttpClient}
+	 */
 	static set_headers = function(_header_struct) {
-		var _len = struct_names_count(_header_struct);
-		var _header_names = struct_get_names(_header_struct);
-		for (var _i=0; _i<_len; _i++) {
-			var _header_name = _header_names[_i];
-			self.__header_map[? _header_name] = _header_struct[$ _header_name];
-		}
+		struct_foreach(_header_struct, function(_header_name, _header_value) {
+			self.__headers[$ _header_name] = string(_header_value);
+		});
 		return self;
 	};
 	
-	/** Add a single header to the client */
+	/** Add a single header to the client
+	 * @param {String} _header_name
+	 * @param {String} _header_value
+	 * @return {Struct.HttpClient}
+	 */
 	static add_header = function(_header_name, _header_value) {
-		self.__header_map[? _header_name] = _header_value;
+		self.__headers[$ _header_name] = string(_header_value);
 		return self;
 	};
 	
-	/** Remove a header from the client */
+	/** Remove a header from the client 
+	 * @param {String} _header_name
+	 * @return {Struct.HttpClient}
+	 */
 	static remove_header = function(_header_name) {
-		ds_map_delete(self.__header_map, _header_name);
+		struct_remove(self.__headers, _header_name);
 		return self;
 	};
 	
-	/** Getter for reading the base URL */
+	/** Getter for reading the base URL 
+	 * @return {String}
+	 */
 	static get_base_url = function() {
 		return self.__base_url;
 	}
 	
-	/** Setter for setting the base URL */
+	/** Setter for setting the base URL 
+	 * @param {String} _url Base URL to set
+	 * @return {Struct.HttpClient}
+	 */
 	static set_base_url = function(_url) {
 		self.__base_url = _url;
+		return self;
 	}
-	
-	/** Make an HTTP request. this method returns a Chain */
-	static request = function(_http_method, _url, _body, _timeout=15, _result_raw=false) {
+
+	/** Make an HTTP request. this method returns a Chain 
+	 * @param {String} _http_method Http Method, e.g "GET", "POST"
+	 * @param {String} _url URL, this is appendend to the base URL
+	 * @param {String|Struct*} _body Body of request, can be undefined or blank
+	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @param {Bool*} _result_raw Whether to return raw result and headers or attempt to decode it
+	 * @return {Struct.Chain}
+	 */
+	static request = function(_http_method, _url, _body=undefined, _timeout=15, _result_raw=false) {
 		// register the async callback if needed
 		self.__register_async_handler();
 		
-		var _req_id = http_request(self.__base_url+_url, _http_method, self.__header_map, _body ?? "");
+		var _header_map = json_decode(json_stringify(self.__headers));
+		
+		// handle json body
+		if (is_struct(_body)) {
+			_body = json_stringify(_body);
+			_header_map[? "Content-Type"] = "application/json";
+		}
+		
+		var _req_id = http_request(self.__base_url+_url, _http_method, _header_map, _body ?? "");
+		ds_map_destroy(_header_map);
 		
 		var _expiry = get_timer() + _timeout*1000000;
 		
@@ -95,32 +113,60 @@ function HttpClient(_base_url="", _logger_name=undefined) constructor {
 		return _chain;
 	};
 	
-	/** Make an HTTP GET request. this method returns a Chain */
+	/** Make an HTTP GET request. this method returns a Chain
+	 * @param {String} _url URL, this is appendend to the base URL
+	 * @param {String|Struct*} _body Body of request, can be undefined or blank
+	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @return {Struct.Chain}
+	 */
 	static get = function(_url, _body=undefined, _timeout=15) {
 		return self.request("GET", _url, _body, _timeout);	
 	};
 	
-	/** Make an HTTP POST request. this method returns a Chain */
+	/** Make an HTTP POST request. this method returns a Chain 
+	 * @param {String} _url URL, this is appendend to the base URL
+	 * @param {String|Struct*} _body Body of request, can be undefined or blank
+	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @return {Struct.Chain}
+	 */
 	static post = function(_url, _body=undefined, _timeout=15) {
 		return self.request("POST", _url, _body, _timeout);	
 	};
 	
-	/** Make an HTTP PUT request. this method returns a Chain */
+	/** Make an HTTP PUT request. this method returns a Chain 
+	 * @param {String} _url URL, this is appendend to the base URL
+	 * @param {String|Struct*} _body Body of request, can be undefined or blank
+	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @return {Struct.Chain}
+	 */
 	static put = function(_url, _body=undefined, _timeout=15) {
 		return self.request("PUT", _url, _body, _timeout);	
 	};
 	
-	/** Make an HTTP PATCH request. this method returns a Chain */
+	/** Make an HTTP PATCH request. this method returns a Chain 
+	 * @param {String} _url URL, this is appendend to the base URL
+	 * @param {String|Struct*} _body Body of request, can be undefined or blank
+	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @return {Struct.Chain}
+	 */
 	static patch = function(_url, _body=undefined, _timeout=15) {
 		return self.request("PATCH", _url, _body, _timeout);	
 	};
 	
-	/** Make an HTTP DELETE request. this method returns a Chain */
+	/** Make an HTTP DELETE request. this method returns a Chain 
+	 * @param {String} _url URL, this is appendend to the base URL
+	 * @param {String|Struct*} _body Body of request, can be undefined or blank
+	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @return {Struct.Chain}
+	 */
 	static del = function(_url, _body=undefined, _timeout=15) {
 		return self.request("DELETE", _url, _body, _timeout);	
 	};
 	
-	/** Convenience function for turning sypmbols into URL-safe entities*/
+	/** Convenience function for turning sypmbols into URL-safe entities
+	 * @param {String} _str Input string
+	 * @return {String}
+	 */
 	static url_encode = function(_str) {
 		static _html_entities = [
 			"%00", "%01", "%02", "%03", "%04", "%05", "%06", "%07", "%08", "%09", "%0a", "%0b", "%0c", "%0d", "%0e", "%0f",
@@ -149,7 +195,20 @@ function HttpClient(_base_url="", _logger_name=undefined) constructor {
 		}
 		return _encoded;
 	};
+		
+	/** Register the async handler, using AsyncWrapper
+	 * @ignore
+	 */ 
+	static __register_async_handler = function() {
+		if (is_undefined(self.__async_http_handler)) {
+			self.__async_http_handler = method(self, self.__async_http);
+			AsyncWrapper.add_async_http_callback(self.__async_http_handler);	
+		}
+	}
 	
+	/** A function that will be run every step to check timeout values
+	 * @ignore
+	 */ 
 	static __step = function() {
 		while (self.__timeouts.get_length()) {
 			var _min_time = self.__timeouts.peek_min_priority();
@@ -172,6 +231,9 @@ function HttpClient(_base_url="", _logger_name=undefined) constructor {
 		}
 	};
 	
+	/** The Async HTTP callback that will be run from async-http event
+	 * @ignore
+	 */ 
 	static __async_http = function(_async_load) {
 		var _req_id = _async_load[? "id"];
 		if (!struct_exists(self.__requests, _req_id)) {
@@ -217,12 +279,17 @@ function HttpClient(_base_url="", _logger_name=undefined) constructor {
 				if (is_method(_request.errback)) {
 					_request.errback(_http_status);
 				}
-				else {
-					throw "Request failed";
-				}
 			}
 		}
-			
-		return true;
+		
+		if (struct_names_count(self.__requests)) {
+			// we're not done handling, there's more requests!
+			return false;
+		}
+		else {
+			// we're done handling, remove ourselves from the HTTP wrapper
+			self.__async_http_handler = undefined;
+			return true;
+		}
 	};
 }

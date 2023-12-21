@@ -89,7 +89,7 @@ function ViewHome(): HtmxView() constructor {
 	');
 	
 	static render = function(_context) {
-		static cached = dedent(@'
+		static cached = @'
 			<section style="text-align: center; margin-top: 3em;">
 				<hgroup>
 					<h1>HyperText GameMaker</h1>
@@ -167,7 +167,7 @@ function ViewHome(): HtmxView() constructor {
 					<a href="#" role="button" class="secondary outline">Download</a>
 				</p>
 			</section>
-		');
+		';
 		return cached;
 	}
 }

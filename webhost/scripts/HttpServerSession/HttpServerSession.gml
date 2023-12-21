@@ -63,6 +63,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			
 			if (_str == "") {
 				// empty line means end of headers
+				self.__logger.debug("Got headers", {headers: self.request.headers})
 				if (self.request.get_header("connection") == "Upgrade") {
 					var _upgrade = self.request.get_header("upgrade");
 					if (_upgrade == "websocket") {
@@ -73,11 +74,17 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 						self.close();	
 					}
 				}
-				else if (self.request.has_header("content-length") && self.request.get_header("content-length") != "0") {
-					self.__fsm.change("data");
-				}
 				else {
-					self.__fsm.change("dispatch");
+					if (self.request.get_header("connection") == "close") {
+						self.request.keep_alive = false;
+					}
+					
+					if (self.request.has_header("content-length") && self.request.get_header("content-length") != "0") {
+						self.__fsm.change("data");
+					}
+					else {
+						self.__fsm.change("dispatch");
+					}
 				}
 				return;
 			}
@@ -137,19 +144,28 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 	});
 	self.__fsm.add("response", {
 		enter: function() {
+			if (!self.request.keep_alive) {
+				self.response.set_header("Connection", "close");
+			}
+			
 			var _buffer = self.response.get_send_buffer();
 			var _size =  self.response.get_send_size();
 			
 			network_send_raw(self.__client_socket, _buffer, _size);
 				
 			self.__logger.debug("Sent response", {response_code: self.response.status_code, size: _size}, Logger.TYPE_HTTP);
-			self.response.cleanup();
-			self.response = undefined;
-			self.request.cleanup();
-			self.request = undefined;
 
-			self.close();
-			self.__fsm.change("finished");
+			if (self.request.keep_alive) {
+				self.response.cleanup();
+				self.response = undefined;
+				self.request.cleanup();
+				self.request = undefined;
+				self.__fsm.change("request");
+			}
+			else {
+				self.close();
+				self.__fsm.change("finished");
+			}
 		}
 	});
 	self.__fsm.add("upgrade", {

@@ -50,10 +50,4 @@ function HtmxView(_redirect_path=""): HttpServerRenderBase() constructor {
 			_context.response.send_html(_rendered);
 		}
 	};
-	
-	/** Handle asynchronous rendering. Because some renderers return a Chain, and because
-	 * Sometimes we want to make sure all the renderers are resolved before returning
-	 * Use this to return a chain than resolves after all members have resolved
-	 * @param {Struct} _renderers
-	 */
 }

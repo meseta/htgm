@@ -1,11 +1,11 @@
 function ComponentNavigation(): HtmlComponent() constructor {
 	static links = [
 		new ComponentNavigationLink(ViewHome.path, "Home", true),
-		new ComponentNavigationLink("about", "About"),
+		//new ComponentNavigationLink("about", "About"),
 	];
 	
 	static render = function(_context) {
-		return dedent(@'
+		return @'
 			<nav hx-boost="true" class="container-fluid" style="height: 3.5em; border-bottom: 1px solid var(--primary); padding-left: 0px;">
 				<div>
 					<img src="/images/sLogo.png" alt="" style="height: 100%; padding-right: 0.5em;" />
@@ -15,7 +15,7 @@ function ComponentNavigation(): HtmlComponent() constructor {
 					'+ HtmlComponent.render_array(self.links, "", _context) + @'
 				</ul>
 			</nav>
-		');
+		';
 	};
 }
 
@@ -33,7 +33,7 @@ function ComponentNavigationLink(_path, _text, _is_main=false): HtmlComponent() 
 	
 	static render = function(_context) {
 		var _is_on_page = (self.path == _context.request.path_original) || (self.is_main && _context.request.path_original == "");
-		return quote_fix(dedent(@'
+		return quote_fix(@'
 			<li>
 				<a
 				 hx-on="click: htmx.findAll(`.'+self.link_class+ @'`).forEach((el) => htmx.addClass(el, `secondary`)); htmx.removeClass(this, `secondary`);"
@@ -44,6 +44,6 @@ function ComponentNavigationLink(_path, _text, _is_main=false): HtmlComponent() 
 					'+ self.text +@'
 				</a>
 			</li>
-		'));
+		');
 	}
 }

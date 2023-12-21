@@ -2,6 +2,7 @@
  * @param {String} _name The logger's name. This will appear in any log messages produced by this logger
  * @param {Struct} _bound_values Optional struct of bound values which will be included in all log messages produced by this logger
  * @param {Struct.Logger} _root_logger The loot logger instance that is this logger's parent
+ * @author Meseta https://meseta.dev
  */
 function Logger(_name="logger", _bound_values=undefined, _root_logger=undefined) constructor {
 	/* @ignore */ self.__name = _name;
@@ -26,14 +27,14 @@ function Logger(_name="logger", _bound_values=undefined, _root_logger=undefined)
 	/* @ignore */ static __global_logging_enabled = true; // Set to false to globally disable logging
 
 	/** Globally enable or disable loggin
-	 * @param {Boolean} _enable
+	 * @param {Bool} _enable
 	 */
 	static set_global_enabled = function(_enabled) {
 		self.__global_logging_enabled = _enabled;
 	};
 	
 	/** Globally set loggers to json
-	 * @param {Boolean} _json_mode
+	 * @param {Bool} _json_mode
 	 */
 	static set_global_json = function(_json_mode) {
 		self.__global_json_logging = _json_mode;
@@ -321,7 +322,7 @@ function Logger(_name="logger", _bound_values=undefined, _root_logger=undefined)
 		self.__write_line_to_file(_output);
 		
 		if (!is_undefined(self.__sentry)) {
-			if (self.__sentry_send_errors and _level == Logger.ERROR) {
+			if (self.__sentry_send_errors && _level == Logger.ERROR) {
 				self.__sentry.send_report(_level, _message, undefined, undefined, self.__name, _combined, _stacktrace); 
 			}
 			else {

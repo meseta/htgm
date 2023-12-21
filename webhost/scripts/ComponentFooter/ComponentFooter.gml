@@ -1,6 +1,6 @@
 function ComponentFooter(): HtmlComponent() constructor {
 	static render = function(_context) {
-		static cached = dedent(@'
+		static cached = @'
 			<footer hx-boost="true" class="container-fluid grid">
 				<p style="text-align: center; color: var(--secondary);">
 					<small>
@@ -21,7 +21,7 @@ function ComponentFooter(): HtmlComponent() constructor {
 					</small>
 				</p>
 			</footer>
-		');
+		';
 		return cached;
 	};
 }

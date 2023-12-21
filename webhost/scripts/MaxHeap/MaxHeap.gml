@@ -1,5 +1,7 @@
 /** A max-heap implementation (i.e. priority queue). value-priority pairs can be inserted into the heap, which wil
- * efficiently maintain sort order, and the maximum priorty value can be queried at any time */
+ * efficiently maintain sort order, and the maximum priorty value can be queried at any time 
+ * @author Meseta https://meseta.dev
+ */
 function MaxHeap() constructor {
 	/* @ignore */ self.__values = []; //  Heap-ordered storage. array of value/priority pairs, the zerth index is maintained to be highest priority
 	/* @ignore */ self.__length = 0;

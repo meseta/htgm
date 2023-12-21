@@ -16,7 +16,7 @@ function ViewIndex(): HtmxView() constructor {
 		switch(_context.request.path_original) {
 			default:
 			case ViewHome.path: return ViewHome.render(_context);
-			case ViewAbout.path: return ViewAbout.render(_context);
+			//case ViewAbout.path: return ViewAbout.render(_context);
 		}
 	};
 	
@@ -28,7 +28,7 @@ function ViewIndex(): HtmxView() constructor {
 			footer: self.footer.render(_context),
 		}).chain_callback(function(_rendered) {
 			/// Feather ignore once GM1009
-			return dedent(@'
+			return @'
 				<!DOCTYPE html>
 				<html data-theme="dark" style="height: 100%">
 				<head>
@@ -54,6 +54,6 @@ function ViewIndex(): HtmxView() constructor {
 					'+ _rendered.footer +@'
 				</body>
 				</html>
-		')});
+		'});
 	};
 }

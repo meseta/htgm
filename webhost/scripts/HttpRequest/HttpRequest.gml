@@ -7,6 +7,7 @@ function HttpRequest(_method, _path) constructor {
 	self.path = _path;
 	self.path_original = _path;
 	
+	self.keep_alive = true;
 	self.headers = {};
 	self.data = -1;
 	self.parameters = {};

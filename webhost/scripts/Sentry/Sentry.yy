@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "scrAsyncWrappers",
+  "name": "Sentry",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Object wrappers",
-    "path": "folders/Libraries/Object wrappers.yy",
+    "name": "LoggingSuite",
+    "path": "folders/Libraries/LoggingSuite.yy",
   },
 }
