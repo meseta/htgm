@@ -1,8 +1,0 @@
-replicaCount: 2
-
-istio:
-  gateway:
-    enabled: true
-    hosts:
-      - "htgm.apps.webb.party"
-      - "htgm.meseta.dev"
