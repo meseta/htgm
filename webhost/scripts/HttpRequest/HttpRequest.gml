@@ -13,6 +13,8 @@ function HttpRequest(_method, _path) constructor {
 	self.parameters = {};
 	self.parameters_original = {};
 	
+	self.deferred_render = undefined;
+	
 	/** Clean up dynamic resources */
 	static cleanup = function() {
 		if (buffer_exists(self.data)) {

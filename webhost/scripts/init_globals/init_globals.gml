@@ -9,15 +9,10 @@ function init_globals() {
 	// The root logger
 	#macro LOGGER global.logger
 	LOGGER = new Logger()
-	LOGGER.set_global_json(true);
 	
 	// Sentry
 	#macro SENTRY global.sentry
 	SENTRY = new Sentry("https://54ef46466c580b483e07e7371b2d2ae2@o4506390902079488.ingest.sentry.io/4506390919315456");
-	SENTRY.ask_to_send = false;
-	SENTRY.ask_to_send_report = false;
-	
-	exception_unhandled_handler(global.sentry.get_exception_handler());
 	LOGGER.use_sentry(SENTRY);
 	
 	// The global game manager
@@ -27,7 +22,4 @@ function init_globals() {
 	// The webserver
 	#macro SERVER global.server
 	SERVER = new HttpServer(5000, LOGGER);
-	
-	// slow everything down
-	game_set_speed(20, gamespeed_fps);
 }

@@ -1,4 +1,4 @@
-function ViewIndex(): HtmxView() constructor {
+function ViewIndex(): HttpServerRenderBase() constructor {
 	// View setup
 	static path = "";
 	
@@ -11,13 +11,12 @@ function ViewIndex(): HtmxView() constructor {
 	static content_id = self.auto_id("content");
 	static title = "HyperText GameMaker";
 	
-	// Rendering functions
+	// Rendering dynamic routes
 	static render_route = function(_context) {
-		switch(_context.request.path_original) {
-			default:
-			case ViewHome.path: return ViewHome.render(_context);
-			//case ViewAbout.path: return ViewAbout.render(_context);
+		if (is_method(_context.request.deferred_render)) {
+			return _context.request.deferred_render(_context);
 		}
+		return ViewHome.render(_context);
 	};
 	
 	static render = function(_context) {

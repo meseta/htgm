@@ -73,7 +73,7 @@ function HttpServerRouter(_logger) constructor {
 			catch (_err) {
 				if (is_instanceof(_err, ExceptionHttpServerInternalRedirect)) {
 					var _path = _err.path;
-					self.__logger.debug("Internal redirect", {path: _path}, Logger.TYPE_HTTP);
+					self.__logger.debug("Internal redirect", {path: _path});
 					_response.cleanup();
 					_request.set_path(_path);
 					_internal_redirect = true;

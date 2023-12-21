@@ -3,7 +3,8 @@
  * @param {Struct.Logger} _logger An optional logger to use. if not provided, one will be created
  */
 function HttpServer(_port, _logger=undefined) constructor {
-	/* @ignore */ self.__port = _port;
+	self.port = _port;
+	
 	/* @ignore */ self.__logger = _logger ?? new Logger("HttpServer", {port: _port});
 	
 	/* @ignore */ self.__socket = -1;
@@ -17,14 +18,14 @@ function HttpServer(_port, _logger=undefined) constructor {
 	static start = function() {
 		// can't start if already has a socket
 		if (self.__socket != -1) {
-			self.__logger.warning("Can't start server, already started", undefined, Logger.TYPE_HTTP);
+			self.__logger.warning("Can't start server, already started");
 			return false;
 		}
 		
-		self.__logger.info("Starting server", undefined, Logger.TYPE_HTTP);
-		self.__socket = network_create_server_raw(network_socket_tcp, self.__port, 20);
+		self.__logger.info("Starting server");
+		self.__socket = network_create_server_raw(network_socket_tcp, self.port, 20);
 		if (self.__socket == -1) {
-			self.__logger.error("Server port not available", undefined, Logger.TYPE_HTTP);
+			self.__logger.error("Server port not available");
 			return false;
 		}
 		
@@ -166,7 +167,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 	 * @ignore
 	 */
 	static __handle_connect = function(_client_socket, _ip) {
-		self.__logger.debug("Client connected", {socket_id: _client_socket, ip: _ip}, Logger.TYPE_HTTP)  
+		self.__logger.debug("Client connected", {socket_id: _client_socket, ip: _ip})  
 		var _child_logger = self.__logger.bind({socket_id: _client_socket, ip: _ip});
 		self.__client_sessions[$ _client_socket] = new HttpServerSession(_client_socket, self.__router, _child_logger);
 	};
@@ -176,7 +177,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 	 * @ignore
 	 */
 	static __handle_disconnect = function(_client_socket) {
-		self.__logger.debug("Client disconnected", {socket_id: _client_socket}, Logger.TYPE_HTTP) 
+		self.__logger.debug("Client disconnected", {socket_id: _client_socket}) 
 		var _client_session = self.__client_sessions[$ _client_socket];
 		if (!is_undefined(_client_session)) {
 			_client_session.close();

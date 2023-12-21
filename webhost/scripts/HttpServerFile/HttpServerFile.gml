@@ -19,7 +19,7 @@ function HttpServerFile(_file) constructor {
 		}
 		
 		// if that didn't work, it's not found
-		_context.logger.warning("HttpServerFile file not found", {file: self.__file}, Logger.TYPE_HTTP);
+		_context.logger.warning("HttpServerFile file not found", {file: self.__file});
 		throw new ExceptionHttpNotFound($"{_context.request.path} not found");
 	}
 }

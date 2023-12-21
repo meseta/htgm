@@ -2,7 +2,6 @@
   "FolderOrderSettings": [
     {"name":"Init","order":1,"path":"folders/Init.yy",},
     {"name":"Chain","order":7,"path":"folders/Libraries/Chain.yy",},
-    {"name":"Ghost","order":9,"path":"folders/Libraries/Ghost.yy",},
     {"name":"Html","order":8,"path":"folders/Libraries/Html.yy",},
     {"name":"Utils","order":5,"path":"folders/Libraries/Html/Utils.yy",},
     {"name":"Htmx","order":4,"path":"folders/Libraries/Htmx.yy",},
@@ -37,7 +36,6 @@
     {"name":"HttpRequest","order":2,"path":"scripts/HttpRequest/HttpRequest.yy",},
     {"name":"sGameMaker","order":1,"path":"sprites/sGameMaker/sGameMaker.yy",},
     {"name":"ComponentFloating","order":1,"path":"scripts/ComponentFloating/ComponentFloating.yy",},
-    {"name":"GhostPage","order":1,"path":"scripts/GhostPage/GhostPage.yy",},
     {"name":"sFavicon","order":2,"path":"sprites/sFavicon/sFavicon.yy",},
     {"name":"HttpServerSpriteServer","order":15,"path":"scripts/HttpServerSpriteServer/HttpServerSpriteServer.yy",},
     {"name":"init_globals","order":2,"path":"scripts/init_globals/init_globals.yy",},
@@ -53,7 +51,6 @@
     {"name":"scrHttpServerExceptionsInternal","order":10,"path":"scripts/scrHttpServerExceptionsInternal/scrHttpServerExceptionsInternal.yy",},
     {"name":"scrHttpServerExceptions","order":5,"path":"scripts/scrHttpServerExceptions/scrHttpServerExceptions.yy",},
     {"name":"SnowState","order":1,"path":"scripts/SnowState/SnowState.yy",},
-    {"name":"GameManager","order":1,"path":"scripts/GameManager/GameManager.yy",},
     {"name":"dedent","order":1,"path":"scripts/dedent/dedent.yy",},
     {"name":"rInit","order":3,"path":"rooms/rInit/rInit.yy",},
   ],

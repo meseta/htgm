@@ -23,20 +23,20 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			var _str = _line_buffer.read_line();
 			
 			if (is_undefined(_str) || _str == "") {
-				self.__logger.warning("Not HTTP session, closing", undefined, Logger.TYPE_HTTP);
+				self.__logger.warning("Not HTTP session, closing");
 				self.close();
 				return;
 			}
 			
 			var _tokens = string_split(_str, " ");
 			if (array_length(_tokens) < 3) {
-				self.__logger.warning("Malformed HTTP request, closing", {tokens: _tokens, line: _str}, Logger.TYPE_HTTP);
+				self.__logger.warning("Malformed HTTP request, closing", {tokens: _tokens, line: _str});
 				self.close();
 				return;
 			}
 			
 			if (_tokens[2] != "HTTP/1.1") {
-				self.__logger.warning("Unsupported HTTP request, closing", {tokens: _tokens, line: _str}, Logger.TYPE_HTTP);
+				self.__logger.warning("Unsupported HTTP request, closing", {tokens: _tokens, line: _str});
 				self.close();
 				return;
 			}
@@ -70,7 +70,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 						self.__fsm.change("upgrade");
 					}
 					else {
-						self.__logger.warning("Unsupported Upgrade, closing", {upgrade: _upgrade}, Logger.TYPE_HTTP);
+						self.__logger.warning("Unsupported Upgrade, closing", {upgrade: _upgrade});
 						self.close();	
 					}
 				}
@@ -91,7 +91,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			
 			var _tokens = string_split(_str, ": ");
 			if (array_length(_tokens) < 2) {
-				self.__logger.warning("Malformed header request, closing", {tokens: _tokens, line: _str}, Logger.TYPE_HTTP);
+				self.__logger.warning("Malformed header request, closing", {tokens: _tokens, line: _str});
 				self.close();
 				return;
 			}
@@ -110,7 +110,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 	});
 	self.__fsm.add("dispatch", {
 		enter: function() {
-			self.__logger.info("Received request", {method: self.request.method, path: self.request.path}, Logger.TYPE_HTTP);
+			self.__logger.info("Received request", {method: self.request.method, path: self.request.path});
 			var _header_only = (self.request.method == "HEAD" or self.request.method == "OPTIONS")
 			
 			// check accept encodings
@@ -132,11 +132,11 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			}
 			catch (_err) {
 				if (is_instanceof(_err, ExceptionHttpBase)) {
-					self.__logger.exception(_err, undefined, Logger.INFO, Logger.TYPE_HTTP);
+					self.__logger.exception(_err, undefined, Logger.INFO);
 					self.response.send_string(_err.long_message, _err.http_code);
 				}
 				else {
-					self.__logger.exception(_err, undefined, Logger.ERROR, Logger.TYPE_HTTP);
+					self.__logger.exception(_err, undefined, Logger.ERROR);
 					self.response.send_string(HttpServer.status_code_to_string(500), 500);
 				}
 			}
@@ -144,6 +144,9 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 	});
 	self.__fsm.add("response", {
 		enter: function() {
+			// check for errors
+			
+			
 			if (!self.request.keep_alive) {
 				self.response.set_header("Connection", "close");
 			}
@@ -153,7 +156,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			
 			network_send_raw(self.__client_socket, _buffer, _size);
 				
-			self.__logger.debug("Sent response", {response_code: self.response.status_code, size: _size}, Logger.TYPE_HTTP);
+			self.__logger.debug("Sent response", {response_code: self.response.status_code, size: _size});
 
 			if (self.request.keep_alive) {
 				self.response.cleanup();
@@ -204,7 +207,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 				self.__fsm.change("websocket")
 			}
 			else {
-				self.__logger.debug("No sec-websocket-key presented for upgrade, closing", undefined, Logger.TYPE_HTTP);
+				self.__logger.debug("No sec-websocket-key presented for upgrade, closing", undefined);
 				self.close();
 				self.__fsm.change("finished");
 			}
@@ -212,7 +215,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 	});
 	self.__fsm.add("websocket", {
 		enter: function() {
-			self.__logger.info("Received websocket request", {method: self.request.method, path: self.request.path}, Logger.TYPE_HTTP);
+			self.__logger.info("Received websocket request", {method: self.request.method, path: self.request.path});
 			
 			var _session_handler = undefined;
 			try {
@@ -273,7 +276,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 		if (self.__client_socket != -1) {
 			network_destroy(self.__client_socket);
 			self.__client_socket = -1;
-			self.__logger.debug("Client closed", {socket_id: self.__client_socket}, Logger.TYPE_HTTP)  
+			self.__logger.debug("Client closed", {socket_id: self.__client_socket})  
 		}
 		self.__closed = true;
 	};

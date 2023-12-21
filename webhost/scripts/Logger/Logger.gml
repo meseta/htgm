@@ -23,7 +23,7 @@ function Logger(_name="logger", _bound_values=undefined, _root_logger=undefined)
 	
 	/* @ignore */ self.__pad_width = 48; // Width of the padding used in the output
 	
-	/* @ignore */ static __global_json_logging = true;
+	/* @ignore */ static __global_json_logging = false;
 	/* @ignore */ static __global_logging_enabled = true; // Set to false to globally disable logging
 
 	/** Globally enable or disable loggin
@@ -145,8 +145,6 @@ function Logger(_name="logger", _bound_values=undefined, _root_logger=undefined)
 	 */
 	static bind_named = function(_name, _extras=undefined) {
 		// create a new logger instance with extra bindings
-		
-		if (!self.__global_logging_enabled) return new Logger(_name);
 		
 		// combine current bound values
 		var _struct = variable_clone(self.__bound_values);
