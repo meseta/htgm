@@ -15,6 +15,7 @@ function Logger(_name="logger", _bound_values=undefined, _root_logger=undefined)
 	/* @ignore */ self.__sentry = undefined;
 	/* @ignore */ self.__sentry_send_errors = false;
 	
+	/* @ignore */ self.__minimum_log_level = undefined;
 	/* @ignore */ self.__enable_fatal = true;
 	/* @ignore */ self.__enable_error = true;
 	/* @ignore */ self.__enable_warning = true;
@@ -156,6 +157,7 @@ function Logger(_name="logger", _bound_values=undefined, _root_logger=undefined)
 		
 		var _root_logger = is_undefined(self.__root_logger) ? self : self.__root_logger;
 		var _new_logger = new Logger(_name, _struct, /* Feather ignore once GM1041 */_root_logger);
+		_new_logger.set_level(self.__minimum_log_level);
 		
 		if (!is_undefined(self.__sentry)) {
 			_new_logger.use_sentry(self.__sentry, self.__sentry_send_errors);
@@ -176,12 +178,14 @@ function Logger(_name="logger", _bound_values=undefined, _root_logger=undefined)
 	 * @param {String} _minimum_log_level The minimum severity level for logs that this logger instance will output
 	 */
 	static set_level = function(_minimum_log_level=Logger.DEBUG) {
+		self.__minimum_log_level = _minimum_log_level;
 		self.__enable_fatal = false
 		self.__enable_error = false;
 		self.__enable_warning = false;
 		self.__enable_info = false;
 		self.__enable_debug = false;
 		switch(_minimum_log_level) {
+			default:
 			case Logger.DEBUG: self.__enable_debug = true;
 			case Logger.INFO: self.__enable_info = true;
 			case Logger.WARNING: self.__enable_warning = true;

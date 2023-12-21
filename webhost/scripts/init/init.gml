@@ -1,5 +1,4 @@
 init_globals();
-init_site();
 
 // Are we running in the IDE?
 if (parameter_count() == 3 && parameter_string(1) == "-game") {
@@ -13,6 +12,7 @@ if (parameter_count() == 3 && parameter_string(1) == "-game") {
 }
 else {
 	// When deployed...
+	LOGGER.set_level(Logger.INFO);
 	
 	// slow everything down
 	game_set_speed(20, gamespeed_fps);
@@ -30,9 +30,12 @@ else {
 	// Wait 2 second to ensure previous process was closed,
 	// and to make sure we're going to be inside the room when this happens
 	call_later(2, time_source_units_seconds, function() {
+		// Allow CDN to cache
+		SERVER.set_default_cache_control("public, max-age=1800");
 		SERVER.start();
 	});
 
 }
 
-
+// Load up all the pages
+init_site();

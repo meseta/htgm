@@ -7,6 +7,7 @@ function HttpServerRouter(_logger) constructor {
 	/* @ignore */ self.__websocket_handlers = [];
 	/* @ignore */ self.__paths = {};
 	/* @ignore */ self.__not_found_handler = self.__default_not_found_handler;
+	/* @ignore */ self.__default_cache_control = "no-cache";
 	
 	/** Add a path to the router
 	 * @param {String} _path The path pattern to add
@@ -117,6 +118,22 @@ function HttpServerRouter(_logger) constructor {
 	static set_not_found_handler = function(_function) {
 		self.__not_found_handler = _function;
 		return self;
+	};
+	
+	/** Set the default cache control
+	 * @param {String} _cache_control The cache control header
+	 * @return {Struct.HttpServerRouter}
+	 */
+	static set_default_cache_control = function(_cache_control) {
+		self.__default_cache_control = _cache_control;
+		return self;
+	};
+	
+	/** Get the default cache control
+	 * @return {String}
+	 */
+	static get_default_cache_control = function() {
+		return self.__default_cache_control;
 	};
 	
 	/** Try to match a path to a pattern, either a matches struct is returned, or undefined

@@ -147,6 +147,9 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			if (!self.request.keep_alive) {
 				self.response.set_header("Connection", "close");
 			}
+			if (!self.response.get_should_cache()) {
+				self.response.set_header("Cache-Control", self.__router.get_default_cache_control());
+			}
 			
 			var _buffer = self.response.get_send_buffer();
 			var _size =  self.response.get_send_size();

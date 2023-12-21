@@ -11,9 +11,6 @@ function HttpRequest(_method, _path) constructor {
 	self.headers = {};
 	self.data = -1;
 	self.parameters = {};
-	self.parameters_original = {};
-	
-	/* @ignore */ self.__render_stack = [];
 	
 	/** Clean up dynamic resources */
 	static cleanup = function() {
@@ -81,27 +78,5 @@ function HttpRequest(_method, _path) constructor {
 	static set_parameters = function(_parameters) {
 		self.parameters = _parameters;
 		return self;
-	};
-	
-	/** Checks if there is a render stack
-	 * @return {Bool}
-	 */
-	static has_render_stack = function() {
-		return array_length(self.__render_stack) > 0;
-	};
-	
-	/** Gets the top-most 
-	 * @return {Function}
-	 */
-	static pop_render_stack = function() {
-		return array_pop(self.__render_stack);
-	};
-	
-	/** Pushes a renderer to the stack
-	 * @param {Function} _render Redner function to push
-	 * @return {Bool}
-	 */
-	static push_render_stack = function(_render) {
-		return array_push(self.__render_stack, _render);
 	};
 }

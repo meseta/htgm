@@ -2,6 +2,8 @@
  * @param {String} _parameter_name The parameter name inside the path to use
  */
 function HttpServerSpriteServer(_parameter_name) constructor {
+	static max_age = 3600; // max age of cache
+	
 	/* @ignore */ self.__parameter_name = _parameter_name;
 	
 	/** Handle function for processing a request
@@ -40,6 +42,7 @@ function HttpServerSpriteServer(_parameter_name) constructor {
 		}
 		
 		// read and return the image
+		_context.response.set_should_cache(true);
 		_context.response.send_file(_filename);
 	};
 }

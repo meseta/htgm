@@ -16,6 +16,7 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 	/* @ignore */ self.__delete_buffer_on_cleanup = false;
 	/* @ignore */ self.__header_only = _header_only;
 	/* @ignore */ self.__compress = _compress;
+	/* @ignore */ self.__should_cache = undefined;
 	
 	/** Clean up dynamic resources */
 	static cleanup = function() {
@@ -182,6 +183,25 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 	 */
 	static get_send_size = function() {
 		return buffer_get_size(self.get_send_buffer());
+	};
+	
+	/** Whether we shoould instruct browser/CDN to cache this request
+	 * @param {Bool} _should_cache Set to False to override cache value. Set to True to enable cache if nothing else has set it to false
+	 */
+	static set_should_cache = function(_should_cache) {
+		if (_should_cache) {
+			self.__should_cache ??= true;
+		}
+		else {
+			self.__should_cache = false;
+		}
+	};
+	
+	/**Returns whether we should cache. Defaults to false;
+	 * @return {Bool}
+	 */
+	static get_should_cache = function() {
+		return self.__should_cache ?? false;
 	};
 	
 	/** Sets the buffer as the response

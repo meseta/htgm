@@ -1,5 +1,7 @@
 function ViewAbout(): HtmxView() constructor {
+	// View setup
 	static path = "about";
+	static shoud_cache = true;
 	
 	static render = function(_context) {
 		static cached = @'

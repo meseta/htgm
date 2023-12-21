@@ -3,6 +3,8 @@
  * @param {String} _index_file The name of the index file in the root
  */
 function HttpServerFileServer(_web_root, _index_file="index.html") constructor {
+	static max_age = 3600; // max age of cache
+	
 	/* @ignore */ self.__web_root = _web_root;
 	/* @ignore */ self.__index_file = _index_file;
 	
@@ -33,6 +35,7 @@ function HttpServerFileServer(_web_root, _index_file="index.html") constructor {
 		_file += self.__index_file;
 
 		if (file_exists(_file)) {
+			_context.set_shoud_cache(true);
 			_context.response.send_file(_file);
 			return
 		}

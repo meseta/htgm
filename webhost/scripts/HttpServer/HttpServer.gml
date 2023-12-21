@@ -54,50 +54,54 @@ function HttpServer(_port, _logger=undefined) constructor {
 	/** Add a path to the router, this is an alias for HttpServerRouter.add_path
 	 * @param {String} _path The path pattern to add
 	 * @param {Function} _callback The function to call that will handle this path
-	 * @return {Struct.HttpServerRouter}
+	 * @return {Struct.HttpServer}
 	 */
 	static add_path = function(_path, _callback) {
-		self.__logger.info("Added path", {path: _path})
-		return self.__router.add_path(_path, _callback);
+		self.__logger.info("Added path", {path: _path});
+		self.__router.add_path(_path, _callback);
+		return self;
 	};
 	
 	/** Add a single file, serving from files gamemaker can access
 	 * @param {String} _path The path pattern to add
 	 * @param {String} _file The file path
-	 * @return {Struct.HttpServerRouter}
+	 * @return {Struct.HttpServer}
 	 */
 	static add_file = function(_path, _file) {
-		self.__logger.info("Added file", {path: _path})
+		self.__logger.info("Added file", {path: _path});
 		var _file_handler = new HttpServerFile(_file);
-		return self.__router.add_path(_path, method(_file_handler, _file_handler.handler))
+		self.__router.add_path(_path, method(_file_handler, _file_handler.handler));
+		return self;
 	};
 		
 	/** Add a file server, serving from files gamemaker can access
 	 * @param {String} _path The path pattern to add
 	 * @param {String} _web_root The file path that is the server root
 	 * @param {String} _index_file The name of the index file in the root
-	 * @return {Struct.HttpServerRouter}
+	 * @return {Struct.HttpServer}
 	 */
 	static add_file_server = function(_path, _web_root, _index_file="index.html") {
-		self.__logger.info("Added file server", {path: _path})
+		self.__logger.info("Added file server", {path: _path});
 		var _file_handler = new HttpServerFileServer(_web_root, _index_file);
-		return self.__router.add_path(_path, method(_file_handler, _file_handler.handler))
+		self.__router.add_path(_path, method(_file_handler, _file_handler.handler));
+		return self;
 	};
 	
 	/** Add a sprite server, serving sprite assets
 	 * @param {String} _path The path pattern to add
 	 * @param {String} _parameter_name The parameter name inside the path to use
-	 * @return {Struct.HttpServerRouter}
+	 * @return {Struct.HttpServer}
 	 */
 	static add_sprite_server = function(_path, _parameter_name="image_name") {
-		self.__logger.info("Added sprite server", {path: _path})
+		self.__logger.info("Added sprite server", {path: _path});
 		var _sprite_handler = new HttpServerSpriteServer(_parameter_name);
-		return self.__router.add_path(_path, method(_sprite_handler, _sprite_handler.handler))
+		self.__router.add_path(_path, method(_sprite_handler, _sprite_handler.handler));
+		return self;
 	};
 	
 	/** Add a constructor with a render to the router
 	 * @param {Function|Struct.HttpServerRenderBase} _render
-	 * @return {Struct.HttpServerRouter}
+	 * @return {Struct.HttpServer}
 	 */
 	static add_render = function(_render) {
 		var _inst = is_struct(_render) ? _render : new _render();
@@ -116,19 +120,27 @@ function HttpServer(_port, _logger=undefined) constructor {
 				this.__router.add_path(_path, bound_handler);
 			}));
 		}
-		
-		/// Feather ignore once GM1041
-		return self.__router;
+		return self;
 	};
 	
 	/** Add a websocket route, this is an alias for HttpServerRouter.add_path
 	 * @param {String} _path The path pattern to add
 	 * @param {Function} _callback The function to call that will handle this path
-	 * @return {Struct.HttpServerRouter}
+	 * @return {Struct.HttpServer}
 	 */
 	static add_websocket = function(_path, _callback) {
-		self.__logger.info("Added websocket", {path: _path})
-		return self.__router.add_path(_path, _callback, true);
+		self.__logger.info("Added websocket", {path: _path});
+		self.__router.add_path(_path, _callback, true);
+		return self;
+	};
+	
+	/** Set the default cache control
+	 * @param {String} _cache_control The cache control header
+	 * @return {Struct.HttpServer}
+	 */
+	static set_default_cache_control = function(_cache_control) {
+		self.__router.set_default_cache_control(_cache_control);
+		return self;
 	};
 	
 	/** Handles the incoming async_load from async networking event

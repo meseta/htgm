@@ -1,6 +1,9 @@
 function ViewHome(): HtmxView() constructor {
+	// View setup
 	static path = "home";
+	static shoud_cache = true;
 	
+	// On-page components
 	static code_example1 = new HtmlCode(@'
 		/** An example "view" */
 		function ViewExample(): HtmxView() constructor {
@@ -96,7 +99,7 @@ function ViewHome(): HtmxView() constructor {
 					<h2>A web-server framework for GameMaker written in pure GML</h2>
 				</hgroup>
 				<p>
-					<a href="#" role="button">Documentation</a> &nbsp; 
+					<a href="/'+ViewDocs.path+@'" role="button">Documentation</a> &nbsp; 
 					<a href="#" role="button" class="secondary outline">Download</a>
 				</p>
 			</section>
@@ -132,7 +135,7 @@ function ViewHome(): HtmxView() constructor {
 			<section style="text-align: center;">
 				<h1>Ready to start using HyperText GameMaker?</h1>
 				<p>
-					<a href="#" role="button">Documentation</a> &nbsp; 
+					<a href="/'+ViewDocs.path+@'" role="button">Documentation</a> &nbsp; 
 					<a href="#" role="button" class="secondary outline">Download</a>
 				</p>
 			</section>

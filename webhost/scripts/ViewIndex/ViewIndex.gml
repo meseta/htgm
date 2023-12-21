@@ -13,11 +13,14 @@ function ViewIndex(): HttpServerRenderBase() constructor {
 	
 	// Rendering dynamic routes
 	static render_route = function(_context) {
-		var _render = _context.request.pop_render_stack();
+		var _render = _context.pop_render_stack();
 		return is_method(_render) ? _render(_context) : ViewHome.render(_context);
 	};
 	
 	static render = function(_context) {
+		// Most of this site is static data, so we instruct our CDN to cache the page
+		_context.response.set_should_cache(true);
+		
 		return Chain.concurrent_struct({
 			route: self.render_route(_context),
 			navigation: self.navigation.render(_context),

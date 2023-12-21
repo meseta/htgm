@@ -1,6 +1,7 @@
 function ViewDocs(): HtmxView() constructor {
 	// View setup
 	static path = "docs";
+	static shoud_cache = true;
 	
 	// Static properties
 	static content_id = self.auto_id("content");
@@ -10,7 +11,7 @@ function ViewDocs(): HtmxView() constructor {
 	
 	// Rendering dynamic routes
 	static render_route = function(_context) {
-		var _render = _context.request.pop_render_stack();
+		var _render = _context.pop_render_stack();
 		return is_method(_render) ? _render(_context) : ViewDocs1.render(_context);
 	};
 	
