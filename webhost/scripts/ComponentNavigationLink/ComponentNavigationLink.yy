@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "config",
+  "name": "ComponentNavigationLink",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Init",
-    "path": "folders/Init.yy",
+    "name": "Navigation",
+    "path": "folders/Website/Layout/Navigation.yy",
   },
 }

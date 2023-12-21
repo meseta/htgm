@@ -26,7 +26,7 @@
   "origin": 0,
   "parent": {
     "name": "Footer",
-    "path": "folders/Website/Main/Footer.yy",
+    "path": "folders/Website/Layout/Footer.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

@@ -41,5 +41,5 @@ function HttpServerSpriteServer(_parameter_name) constructor {
 		
 		// read and return the image
 		_context.response.send_file(_filename);
-	}
+	};
 }

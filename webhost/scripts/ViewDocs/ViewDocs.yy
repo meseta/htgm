@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ComponentFooter",
+  "name": "ViewDocs",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Footer",
-    "path": "folders/Website/Layout/Footer.yy",
+    "name": "Docs",
+    "path": "folders/Website/Docs.yy",
   },
 }

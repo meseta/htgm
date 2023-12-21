@@ -25,8 +25,8 @@
   "nineSlice": null,
   "origin": 0,
   "parent": {
-    "name": "Main",
-    "path": "folders/Website/Main.yy",
+    "name": "Meta",
+    "path": "folders/Website/Layout/Meta.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

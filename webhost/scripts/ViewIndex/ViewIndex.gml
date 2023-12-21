@@ -2,21 +2,19 @@ function ViewIndex(): HttpServerRenderBase() constructor {
 	// View setup
 	static path = "";
 	
+	// Static properties
+	static content_id = self.auto_id("content");
+	static title = "HyperText GameMaker";
+	
 	// On-page components
 	static navigation = new ComponentNavigation();
 	static footer = new ComponentFooter();
 	static floating = new ComponentFloating();
 	
-	// Static properties
-	static content_id = self.auto_id("content");
-	static title = "HyperText GameMaker";
-	
 	// Rendering dynamic routes
 	static render_route = function(_context) {
-		if (is_method(_context.request.deferred_render)) {
-			return _context.request.deferred_render(_context);
-		}
-		return ViewHome.render(_context);
+		var _render = _context.request.pop_render_stack();
+		return is_method(_render) ? _render(_context) : ViewHome.render(_context);
 	};
 	
 	static render = function(_context) {
@@ -44,7 +42,7 @@ function ViewIndex(): HttpServerRenderBase() constructor {
 					<script src="/static/hljs/highlight.min.js"></script>
 					<script src="/static/hljs/gml.min.js"></script>
 				</head>
-				<body style="background-image: linear-gradient(180deg, transparent, #ffffff11); background-attachment: fixed;">
+				<body style="min-height: 100%; background-image: linear-gradient(180deg, transparent, #ffffff11); background-attachment: fixed;">
 					'+ _rendered.navigation +@'
 					<main class="container" id="'+self.content_id+@'">
 						'+ _rendered.route +@'

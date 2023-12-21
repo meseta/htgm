@@ -8,14 +8,14 @@ function HttpServerRenderBase() constructor {
 	 */
 	static auto_path = function(_path_prefix="render") {
 		return $"{_path_prefix}/{instanceof(self)}";
-	}
+	};
 	
 	/** Generate an ID based on the struct instance automatically
 	 * @param {String} _id_prefix Custom ID prefix
 	 */
 	static auto_id = function(_id_prefix) {
 		return $"{_id_prefix}-{instanceof(self)}";
-	}
+	};
 	
 	/** The render function for rendering this component
 	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex

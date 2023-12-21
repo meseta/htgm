@@ -9,8 +9,8 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "Object wrappers",
-    "path": "folders/Libraries/Object wrappers.yy",
+    "name": "AsyncWrapper",
+    "path": "folders/Libraries/AsyncWrapper.yy",
   },
   "parentObjectId": null,
   "persistent": true,

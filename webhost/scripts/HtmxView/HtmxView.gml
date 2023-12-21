@@ -1,6 +1,6 @@
 /** Base constructor for a View, which includes a redirect if the request isn't an htmx request */
 function HtmxView(): HttpServerRenderBase() constructor {
-	/* @ignore */ static redirect_path = "";
+	static redirect_path = "";
 	
 	/** The render function for rendering this component, can be either string or Chain return
 	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
@@ -17,7 +17,7 @@ function HtmxView(): HttpServerRenderBase() constructor {
 		}
 		if (_context.request.get_header("hx-request") != "true" && _context.request.path != self.redirect_path) {
 			_context.logger.debug("Htmx Fetching without view, internal redirect", {request_path: _context.request.path, redirect_path: self.redirect_path});
-			_context.request.deferred_render = method(self, self.render);
+			_context.request.push_render_stack(method(self, self.render));
 			throw new ExceptionHttpServerInternalRedirect(self.redirect_path);
 		}
 		

@@ -26,7 +26,7 @@
   "origin": 0,
   "parent": {
     "name": "Navigation",
-    "path": "folders/Website/Main/Navigation.yy",
+    "path": "folders/Website/Layout/Navigation.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

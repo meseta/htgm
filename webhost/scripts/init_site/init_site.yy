@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Init",
-    "path": "folders/Init.yy",
+    "name": "Website",
+    "path": "folders/Website.yy",
   },
 }

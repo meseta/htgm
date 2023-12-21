@@ -144,9 +144,6 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 	});
 	self.__fsm.add("response", {
 		enter: function() {
-			// check for errors
-			
-			
 			if (!self.request.keep_alive) {
 				self.response.set_header("Connection", "close");
 			}

@@ -7,7 +7,7 @@ function HttpServerWebsocketSessionBase() constructor {
 	 */
 	static on_connect = function(_websocket) {
 		self.websocket = _websocket;
-	}
+	};
 	
 	/** Function that will be called when data is received
 	 * @param {Id.Buffer} _buffer The buffer that was received
@@ -18,7 +18,7 @@ function HttpServerWebsocketSessionBase() constructor {
 		show_debug_message(_text);
 		self.websocket.send_data_string("hello");
 		self.websocket.close();
-	}
+	};
 	
 	/** Function that will be called when incoming close is received
 	 * @param {Real} _close_code The close code received

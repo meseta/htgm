@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Floating",
-    "path": "folders/Website/Main/Floating.yy",
+    "path": "folders/Website/Layout/Floating.yy",
   },
 }

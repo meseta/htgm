@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Main",
-    "path": "folders/Website/Main.yy",
+    "name": "Layout",
+    "path": "folders/Website/Layout.yy",
   },
 }

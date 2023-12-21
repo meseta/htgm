@@ -70,7 +70,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 		self.__logger.info("Added file", {path: _path})
 		var _file_handler = new HttpServerFile(_file);
 		return self.__router.add_path(_path, method(_file_handler, _file_handler.handler))
-	}
+	};
 		
 	/** Add a file server, serving from files gamemaker can access
 	 * @param {String} _path The path pattern to add
@@ -82,7 +82,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 		self.__logger.info("Added file server", {path: _path})
 		var _file_handler = new HttpServerFileServer(_web_root, _index_file);
 		return self.__router.add_path(_path, method(_file_handler, _file_handler.handler))
-	}
+	};
 	
 	/** Add a sprite server, serving sprite assets
 	 * @param {String} _path The path pattern to add
@@ -93,7 +93,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 		self.__logger.info("Added sprite server", {path: _path})
 		var _sprite_handler = new HttpServerSpriteServer(_parameter_name);
 		return self.__router.add_path(_path, method(_sprite_handler, _sprite_handler.handler))
-	}
+	};
 	
 	/** Add a constructor with a render to the router
 	 * @param {Function|Struct.HttpServerRenderBase} _render

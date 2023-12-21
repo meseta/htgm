@@ -136,7 +136,7 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 			
 			self.send_string(HttpServer.status_code_to_string(500), 500);
 		}
-	}
+	};
 
 	/** Fetch or generate the buffer to be sending
 	 * @return {Id.Buffer}

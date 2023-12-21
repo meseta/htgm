@@ -1,7 +1,8 @@
 function ComponentNavigation(): HtmlComponent() constructor {
 	static links = [
-		new ComponentNavigationLink(ViewHome.path, "Home", true),
-		new ComponentNavigationLink(ViewAbout.path, "About"),
+		new ComponentNavigationLink(ViewHome.path, "Home", ViewIndex.content_id, ViewIndex.path),
+		new ComponentNavigationLink(ViewAbout.path, "About",  ViewIndex.content_id),
+		new ComponentNavigationLink(ViewDocs.path, "Documentation",  ViewIndex.content_id),
 	];
 	
 	static render = function(_context) {
@@ -17,33 +18,4 @@ function ComponentNavigation(): HtmlComponent() constructor {
 			</nav>
 		';
 	};
-}
-
-/**
- * @param {String} _path
- * @param {String} _text
- * @param {Bool} _is_main
- */
-function ComponentNavigationLink(_path, _text, _is_main=false): HtmlComponent() constructor {
-	self.path = _path;
-	self.text = _text;
-	self.is_main = _is_main;
-	
-	static link_class = self.auto_id("link");
-	
-	static render = function(_context) {
-		var _is_on_page = (self.path == _context.request.path_original) || (self.is_main && _context.request.path_original == "");
-		return quote_fix(@'
-			<li>
-				<a
-				 hx-on="click: htmx.findAll(`.'+self.link_class+ @'`).forEach((el) => htmx.addClass(el, `secondary`)); htmx.removeClass(this, `secondary`);"
-				 hx-target="#'+ ViewIndex.content_id +@'"
-				 href="'+ self.path +@'"
-				 class="'+ self.link_class + (_is_on_page ? "" : " secondary") +@'"
-				>
-					'+ self.text +@'
-				</a>
-			</li>
-		');
-	}
 }

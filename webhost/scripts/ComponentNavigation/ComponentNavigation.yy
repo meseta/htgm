@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Navigation",
-    "path": "folders/Website/Main/Navigation.yy",
+    "path": "folders/Website/Layout/Navigation.yy",
   },
 }

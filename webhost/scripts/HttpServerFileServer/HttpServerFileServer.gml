@@ -9,7 +9,7 @@ function HttpServerFileServer(_web_root, _index_file="index.html") constructor {
 	// add trailing slash
 	if (string_char_at(self.__web_root, string_length(self.__web_root)) != "/") {
 		self.__web_root += "/";
-	}
+	};
 	
 	/** Handle function for processing a request
 	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
@@ -39,5 +39,5 @@ function HttpServerFileServer(_web_root, _index_file="index.html") constructor {
 		
 		// if that didn't work, it's not found
 		throw new ExceptionHttpNotFound($"{_context.request.path} not found");
-	}
+	};
 }

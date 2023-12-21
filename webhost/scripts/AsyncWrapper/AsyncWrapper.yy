@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Object wrappers",
-    "path": "folders/Libraries/Object wrappers.yy",
+    "name": "AsyncWrapper",
+    "path": "folders/Libraries/AsyncWrapper.yy",
   },
 }

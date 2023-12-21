@@ -286,7 +286,7 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 		else {
 			self.send_control(0x9);	
 		}
-	}
+	};
 	
 	/** Send a data frame with a string value
 	 * @param {String} _string The string to send
@@ -325,7 +325,7 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 			network_send_raw(self.__client_socket, _buffer, buffer_get_size(_buffer));
 			buffer_delete(_buffer);
 		}
-	}
+	};
 	
 	/** Send a data frame with a string value
 	 * @param {Id.Buffer} _payload The number to send
@@ -363,7 +363,7 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 			network_send_raw(self.__client_socket, _buffer, buffer_get_size(_buffer));
 			buffer_delete(_buffer);
 		}
-	}
+	};
 	
 	
 	/** Send a control frame with no payload
@@ -377,7 +377,7 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 			network_send_raw(self.__client_socket, _buffer, buffer_get_size(_buffer));
 			buffer_delete(_buffer);
 		}
-	}
+	};
 	
 	/** Send a control frame with a 64-bit float value
 	 * @param {Real} _opcode The Opcode to send
@@ -392,7 +392,7 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 			network_send_raw(self.__client_socket, _buffer, buffer_get_size(_buffer));
 			buffer_delete(_buffer);
 		}
-	}
+	};
 	
 	/** Send a control frame with a string value
 	 * @param {Real} _opcode The Opcode to send
@@ -415,7 +415,7 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 			network_send_raw(self.__client_socket, _buffer, buffer_get_size(_buffer));
 			buffer_delete(_buffer);
 		}
-	}
+	};
 	
 	/** Send a control frame with a buffer
 	 * @param {Real} _opcode The Opcode to send
@@ -433,7 +433,7 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 			network_send_raw(self.__client_socket, _buffer, buffer_get_size(_buffer));
 			buffer_delete(_buffer);
 		}
-	}
+	};
 	
 	/** Explicitly close the connection
 	 * @param {Real} _close_code The close code
@@ -477,7 +477,7 @@ function HttpServerWebsocket(_client_socket, _session_handler, _logger) construc
 			self.__closed = true;
 			self.cleanup();
 		}
-	}
+	};
 	
 	/** Clean up */
 	static cleanup = function() {
