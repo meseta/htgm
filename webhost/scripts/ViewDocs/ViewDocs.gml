@@ -12,7 +12,7 @@ function ViewDocs(): HtmxView() constructor {
 	// Rendering dynamic routes
 	static render_route = function(_context) {
 		var _render = _context.pop_render_stack();
-		return is_method(_render) ? _render(_context) : ViewDocsGettingStarted.render(_context);
+		return is_method(_render) ? _render(_context) : ViewDocsDownloading.render(_context);
 	};
 	
 	static render = function(_context) {

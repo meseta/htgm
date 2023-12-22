@@ -40,6 +40,7 @@
     {"name":"HttpServerFile","order":8,"path":"scripts/HttpServerFile/HttpServerFile.yy",},
     {"name":"HttpRequest","order":2,"path":"scripts/HttpRequest/HttpRequest.yy",},
     {"name":"sGameMaker","order":1,"path":"sprites/sGameMaker/sGameMaker.yy",},
+    {"name":"ViewDocsHelloWorld","order":6,"path":"scripts/ViewDocsHelloWorld/ViewDocsHelloWorld.yy",},
     {"name":"ComponentFloating","order":1,"path":"scripts/ComponentFloating/ComponentFloating.yy",},
     {"name":"HttpServerSpriteServer","order":15,"path":"scripts/HttpServerSpriteServer/HttpServerSpriteServer.yy",},
     {"name":"HttpResponse","order":3,"path":"scripts/HttpResponse/HttpResponse.yy",},

@@ -1,13 +1,15 @@
 function ComponentDocsNavigation(): HtmlComponent() constructor {
 	static render = function(_context) {
 		static _links_1 = [
-			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsGettingStarted.path, "Getting Started", ViewDocs.path),
+			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsDownloading.path, "Downloading", ViewDocs.path),
+			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsHelloWorld.path, "Hello World"),
 		];
 	
 		static _links_2 = [
 			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsPaths.path, "Paths"),
 			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsStaticFiles.path, "Static Files and Sprites"),
 			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsComponents.path, "Reusable Components"),
+			//new ComponentNavigationLink(ViewDocs.content_id, ViewDocsPages.path, "Views and Routers"),
 			//new ComponentNavigationLink(ViewDocs.content_id, ViewDocsPages.path, "Htmx Views"),
 			//new ComponentNavigationLink(ViewDocs.content_id, ViewDocsPages.path, "Caching and Metadata"),
 		];
@@ -20,6 +22,7 @@ function ComponentDocsNavigation(): HtmlComponent() constructor {
 	
 		return @'
 			<nav hx-boost="true">
+				<b>Getting started</b>
 				<ul>
 					'+ HtmlComponent.render_array(_links_1, "", _context) + @'
 				</ul>

@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ViewDocsGettingStarted",
+  "name": "ViewDocsDownloading",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
