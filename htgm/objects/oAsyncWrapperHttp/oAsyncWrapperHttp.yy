@@ -10,7 +10,7 @@
   "overriddenProperties": [],
   "parent": {
     "name": "AsyncWrapper",
-    "path": "folders/Libraries/AsyncWrapper.yy",
+    "path": "folders/HTGM/AsyncWrapper.yy",
   },
   "parentObjectId": null,
   "persistent": true,

@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Iterators",
-    "path": "folders/Libraries/Iterators.yy",
+    "path": "folders/HTGM/Iterators.yy",
   },
 }

@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "HttpClient",
-    "path": "folders/Libraries/HttpClient.yy",
+    "path": "folders/HTGM/HttpClient.yy",
   },
 }

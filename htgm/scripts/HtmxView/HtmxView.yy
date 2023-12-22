@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Htmx",
-    "path": "folders/Libraries/Htmx.yy",
+    "path": "folders/HTGM/Htmx.yy",
   },
 }

@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Chain",
-    "path": "folders/Libraries/Chain.yy",
+    "path": "folders/HTGM/Chain.yy",
   },
 }

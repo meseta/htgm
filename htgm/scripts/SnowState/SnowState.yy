@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "SnowState",
-    "path": "folders/Libraries/SnowState.yy",
+    "path": "folders/HTGM/SnowState.yy",
   },
 }

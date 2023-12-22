@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "AsyncWrapper",
-    "path": "folders/Libraries/AsyncWrapper.yy",
+    "path": "folders/HTGM/AsyncWrapper.yy",
   },
 }

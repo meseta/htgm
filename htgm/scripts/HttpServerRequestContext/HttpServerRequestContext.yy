@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "HttpServer",
-    "path": "folders/Libraries/HttpServer.yy",
+    "path": "folders/HTGM/HttpServer.yy",
   },
 }

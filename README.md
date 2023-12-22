@@ -1,5 +1,10 @@
 # HyperText GameMaker
 
+Links:
+* [HTGM Website](https://htgm.meseta.dev)
+* [Github](https://github.com/meseta/htgm)
+* [Downlaod](https://github.com/meseta/htgm/releases)
+
 HyperText GameMaker is an open source framework that allows GameMaker to be used as a webserver and server-side scripting language. GameMaker developers can use HTGM to create and host websites and APIs using only GML, without any external tools. It does this by providing a web-server written in pure GML, a component-framework, and integrations with HTMX to provide simple-to-use dynamic website capabilities. For example, this website is built and hosted using HyperText GameMaker.
 
 The name HTGM (HyperText GameMaker) is derived from HTML (HyperText Markup Language), indicating that GameMaker can be used to render and output HyperText to the browser. Its principle of operation is that of a server-side scripting language similar to PHP or React SSR, in that each request from the browser is handled by GameMaker project that uses HTGM which renders an HTML document to be sent to the browser to display. HTGM can act as a REST API or Websocket server equally well.

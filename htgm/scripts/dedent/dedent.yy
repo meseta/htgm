@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Utils",
-    "path": "folders/Libraries/Html/Utils.yy",
+    "name": "Html",
+    "path": "folders/HTGM/Html.yy",
   },
 }

@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Html",
-    "path": "folders/Libraries/Html.yy",
+    "path": "folders/HTGM/Html.yy",
   },
 }

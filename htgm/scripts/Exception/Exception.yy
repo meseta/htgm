@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "LoggingSuite",
-    "path": "folders/Libraries/LoggingSuite.yy",
+    "path": "folders/HTGM/LoggingSuite.yy",
   },
 }
