@@ -1,0 +1,3 @@
+*.gml    text eol=crlf
+*.yy    text eol=native
+*.yyp    text eol=native
