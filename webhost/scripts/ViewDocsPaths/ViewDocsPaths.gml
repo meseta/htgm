@@ -118,7 +118,6 @@ function ViewDocsPaths(): HtmxView() constructor {
 			</p>
 			<p>
 				The <code>render()</code> method can return a <code>Struct.Chain</code> for asynchronous responses.
-				See <a href="/'+ViewDocsAsync.path+@'">Async rendering</a> for more details.
 			</p>
 			
 			<h2>Automatically adding by Asset Tag</h2>

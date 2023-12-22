@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ViewDocsAsync",
+  "name": "ViewDocsComponents",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
