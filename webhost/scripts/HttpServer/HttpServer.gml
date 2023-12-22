@@ -104,22 +104,36 @@ function HttpServer(_port, _logger=undefined) constructor {
 	 * @return {Struct.HttpServer}
 	 */
 	static add_render = function(_render) {
-		var _inst = is_struct(_render) ? _render : new _render();
-		if (!is_instanceof(_inst, HttpServerRenderBase)) {
-			throw new ExceptionHttpServerSetup("Render not a child of HttpServerRenderBase", "Render "+instanceof(_inst)+ " is not a child of HttpServerRenderBase");
+		var _inst = is_struct(_render) && !is_method(_render) ? _render : new _render();
+		if (!is_method(_inst[$ "handler"])) {
+			throw new ExceptionHttpServerSetup("Render does not have a handler method");
+		}
+		if (!is_string(_inst[$ "path"]) && is_array(_inst[$ "paths"])) {
+			throw new ExceptionHttpServerSetup("Render does not have any paths");
 		}
 		
 		var _bound_handler = method(_inst, _inst.handler);
-		if (!is_undefined(_inst.path)) {
+		if (is_string(_inst[$ "path"])) {
 			self.__logger.info("Added render", {path: _inst.path})
 			self.__router.add_path(_inst.path, _bound_handler);
 		}
-		if (is_array(_inst.paths)) {
+		if (is_array(_inst[$ "paths"])) {
 			array_foreach(_inst.paths, method({this: other, bound_handler: _bound_handler}, function(_path) {
 				this.__logger.info("Added render", {path: _path})
 				this.__router.add_path(_path, bound_handler);
 			}));
 		}
+		return self;
+	};
+	
+	/** Add renders based on asset tag. Script resource must have the same name as the constructor in this case
+	 * @param {String} _tag_name
+	 * @return {Struct.HttpServer}
+	 */
+	static add_renders_by_tag = function(_tag_name) {
+		array_foreach(tag_get_asset_ids(_tag_name, asset_script), function(_asset) {
+			self.add_render(_asset);
+		});
 		return self;
 	};
 	

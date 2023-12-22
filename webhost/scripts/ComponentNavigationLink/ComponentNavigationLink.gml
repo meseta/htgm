@@ -1,13 +1,13 @@
 /**
+ * @param {String} _target Target element ID
  * @param {String} _path The path of the navigation
  * @param {String} _text The text label
- * @param {String} _target Target element ID
  * @param {String*} _alt_path Alternative path (used for main link highlighting)
  */
-function ComponentNavigationLink(_path, _text, _target, _alt_path=undefined): HtmlComponent() constructor {
+function ComponentNavigationLink(_target, _path, _text, _alt_path=undefined): HtmlComponent() constructor {
+	self.target = _target;
 	self.path = _path;
 	self.text = _text;
-	self.target = _target;
 	self.alt_path = _alt_path ?? self.path;
 	self.link_class = self.auto_id(self.target+"-link");
 

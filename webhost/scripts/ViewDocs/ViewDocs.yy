@@ -8,4 +8,7 @@
     "name": "Docs",
     "path": "folders/Website/Docs.yy",
   },
+  "tags": [
+    "http_view",
+  ],
 }

@@ -5,12 +5,7 @@ function ViewIndex(): HttpServerRenderBase() constructor {
 	// Static properties
 	static content_id = self.auto_id("content");
 	static title = "HyperText GameMaker";
-	
-	// On-page components
-	static navigation = new ComponentNavigation();
-	static footer = new ComponentFooter();
-	static floating = new ComponentFloating();
-	
+
 	// Rendering dynamic routes
 	static render_route = function(_context) {
 		var _render = _context.pop_render_stack();
@@ -18,14 +13,18 @@ function ViewIndex(): HttpServerRenderBase() constructor {
 	};
 	
 	static render = function(_context) {
+		static _navigation = new ComponentNavigation();
+		static _footer = new ComponentFooter();
+		static _floating = new ComponentFloating();
+	
 		// Most of this site is static data, so we instruct our CDN to cache the page
 		_context.response.set_should_cache(true);
 		
 		return Chain.concurrent_struct({
 			route: self.render_route(_context),
-			navigation: self.navigation.render(_context),
-			floating: self.floating.render(_context),
-			footer: self.footer.render(_context),
+			navigation: _navigation.render(_context),
+			floating: _floating.render(_context),
+			footer: _footer.render(_context),
 		}).chain_callback(function(_rendered) {
 			/// Feather ignore once GM1009
 			return @'

@@ -8,4 +8,7 @@
     "name": "Pages",
     "path": "folders/Website/Pages.yy",
   },
+  "tags": [
+    "http_view",
+  ],
 }

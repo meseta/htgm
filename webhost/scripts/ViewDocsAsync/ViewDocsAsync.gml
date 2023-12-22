@@ -1,12 +1,12 @@
-function ViewDocs2(): HtmxView() constructor {
+function ViewDocsAsync(): HtmxView() constructor {
 	// View setup
-	static path = "docs/docs2";
+	static path = "docs/async";
 	static redirect_path = "docs";
 	static shoud_cache = true;
 	
 	static render = function(_context) {
 		static cached = @'
-			<h2>Docs2</h2>
+			<h1>Async Rendering</h1>
 		';
 		return cached;
 	}

@@ -4,7 +4,7 @@ function ViewHome(): HtmxView() constructor {
 	static shoud_cache = true;
 	
 	// On-page components
-	static code_example1 = new HtmlCode(@'
+	static code_example1 = new HtmlCode(dedent(@'
 		/** An example "view" */
 		function ViewExample(): HtmxView() constructor {
 		  // This view will be mounted at /about
@@ -25,9 +25,9 @@ function ViewHome(): HtmxView() constructor {
 		      `+ HtmlComponent.render_array(_lines, "", _context)
 		  }
 		}
-	');
+	'));
 	
-	static code_example2 = new HtmlCode(@'
+	static code_example2 = new HtmlCode(dedent(@'
 		/** An example component that renders a paragraph */
 		function Para(_text): HtmlComponent() constructor {
 			self.text = _text;
@@ -36,15 +36,15 @@ function ViewHome(): HtmxView() constructor {
 				return $"<p>{self.text}</p>";
 			}
 		}
-	');
+	'));
 	
-	static code_example3 = new HtmlCode(@'
+	static code_example3 = new HtmlCode(dedent(@'
 		// Add ViewExample to the server
 		// The `path` will be automatically used
 		SERVER.add_render(ViewExample);
-	');
+	'));
 	
-	static code_example4 = new HtmlCode(@'
+	static code_example4 = new HtmlCode(dedent(@'
 		/** An example GET endpoint /users/{user_id} */
 		SERVER.add_path("users/{user_id}", function(_context) {
 		  if (_context.request.method != "GET") {	  
@@ -59,9 +59,9 @@ function ViewHome(): HtmxView() constructor {
 		  
 		  _context.response.send_json(_user);
 		}
-	');
+	'));
 
-	static code_example5 = new HtmlCode(@'
+	static code_example5 = new HtmlCode(dedent(@'
 		/** An example websocket handler */
 		function WebsocketChat(): HttpServerWebsocketSessionBase() constructor {
 		  // All connected chat clients
@@ -89,7 +89,7 @@ function ViewHome(): HtmxView() constructor {
 		    }
 		  }
 		}
-	');
+	'));
 	
 	static render = function(_context) {
 		static cached = @'

@@ -1,12 +1,12 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "ViewIndex",
+  "name": "ViewDocsPaths",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Layout",
-    "path": "folders/Website/Layout.yy",
+    "name": "Doc Pages",
+    "path": "folders/Website/Docs/Doc Pages.yy",
   },
   "tags": [
     "http_view",
