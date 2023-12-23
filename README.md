@@ -18,6 +18,7 @@ HTGM was created by Meseta, released under the MIT open source license, and is f
   * Add gzip support for content encoding
   * Support url entities in path and query
   * Add separate Query and Parameter in requests
+  * Fixed hang when buffer goes above 65k
 * v1.1.1 Fix query param handling
 * v1.1.0 Add redirect functionality to HttpServerRenderBase
 * v1.0.0 Initial release

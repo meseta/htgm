@@ -253,7 +253,9 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 	 */
 	static handle_data = function(_incoming_buffer, _incoming_size) {
 		self.__line_buffer.concatenate(_incoming_buffer, _incoming_size);
-		while(self.__closed == false && self.__line_buffer.has_data()) {
+		var _tell = -1;
+		while(self.__closed == false && self.__line_buffer.has_data() && _tell != self.__line_buffer.tell()) {
+			_tell = self.__line_buffer.tell();
 			self.__fsm.handle_data(self.__line_buffer);
 		}
 	};

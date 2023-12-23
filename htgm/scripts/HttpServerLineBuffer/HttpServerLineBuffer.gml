@@ -30,6 +30,16 @@ function HttpServerLineBuffer() constructor {
 		return false;
 	};
 	
+	/** Returns buffer tell
+	 * @return {Real}
+	 */
+	static tell = function() {
+		if (buffer_exists(self.__buffer)) {
+			return buffer_tell(self.__buffer);
+		}
+		return -1;
+	};
+	
 	/** Cleanup resources */
 	static cleanup = function() {
 		if (buffer_exists(self.__buffer)) {

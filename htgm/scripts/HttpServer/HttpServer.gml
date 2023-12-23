@@ -232,6 +232,7 @@ function HttpServer(_port, _logger=undefined) constructor {
 	 */
 	static url_decode = function(_str) {
 		
+		_str = string_replace_all(_str, "+", " ");
 		var _parts = string_split(_str, "%");
 		var _count = array_length(_parts);
 		var _decoded = _parts[0];

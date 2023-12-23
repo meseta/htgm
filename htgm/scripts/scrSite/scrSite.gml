@@ -13,7 +13,5 @@ function init_site(){
 	
 	// websocket
 	SERVER.add_websocket("fps", function(_context) { return new WebsocketFps(); });
-
-	show_message(SERVER.url_decode("hello%20world"))
 }
 
