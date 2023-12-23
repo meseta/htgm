@@ -114,18 +114,18 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			var _header_only = (self.request.method == "HEAD" or self.request.method == "OPTIONS")
 			
 			// check accept encodings
-			var _compress = false;
+			var _compression = "";
 			if (!_header_only) {
-				var _encodings = string_split(self.request.get_header("accept-encoding") ?? "", ",");
-				var _compression_idx = array_find_index(_encodings, function(_encoding) {
-					return string_trim(_encoding) == "deflate";
-				})
-				if (_compression_idx >= 0) {
-					_compress = true;
+				var _encodings = array_map(string_split(self.request.get_header("accept-encoding") ?? "", ","), function(_encoding) { return string_trim(_encoding); });
+				if (array_contains(_encodings, "deflate")) {
+					_compression = "deflate";
+				}
+				else if (array_contains(_encodings, "gzip")) {
+					_compression = "gzip";	
 				}
 			}
 			
-			self.response = new HttpResponse(function() { self.__fsm.change("response")}, _header_only, _compress);
+			self.response = new HttpResponse(function() { self.__fsm.change("response")}, _header_only, _compression);
 			
 			try {
 				self.__router.process_request(self.request, self.response);

@@ -1,9 +1,9 @@
 /** An HTTP response
  * @param {Function} _end_function a callback to call when the the respones is done sending
  * @param {Bool} _header_only whether the response should be only headers
- * @param {Bool} _compress whether the response should be compressed using deflate/zlib
+ * @param {String} _compression Compression to use. Either "deflate" or "gzip"
  */
-function HttpResponse(_end_function, _header_only=false, _compress=false) constructor {
+function HttpResponse(_end_function, _header_only=false, _compression="") constructor {
 	// Handles an HTTP response
 
 	self.status_code = 405;
@@ -15,7 +15,7 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 	/* @ignore */ self.__dirty = true;
 	/* @ignore */ self.__delete_buffer_on_cleanup = false;
 	/* @ignore */ self.__header_only = _header_only;
-	/* @ignore */ self.__compress = _compress;
+	/* @ignore */ self.__compression = _compression;
 	/* @ignore */ self.__should_cache = undefined;
 	
 	/** Clean up dynamic resources */
@@ -212,12 +212,21 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 		}
 		
 		var _size = buffer_get_size(_buffer);
-		if (self.__compress && _size > 300 && !struct_exists(self.headers, "Content-Encoding")) { // size above which we will compress
-			self.headers[$ "Content-Encoding"] = "deflate";
-			var _compressed_buffer = buffer_compress(_buffer, 0, _size);
-			buffer_delete(_buffer);
-			_buffer = _compressed_buffer;
-			_size = buffer_get_size(_compressed_buffer);
+		if (self.__compression != "" && _size > 300 && !struct_exists(self.headers, "Content-Encoding")) { // size above which we will compress
+			if (self.__compression == "deflate") {
+				self.headers[$ "Content-Encoding"] = "deflate";
+				var _compressed_buffer = buffer_compress(_buffer, 0, _size);
+				buffer_delete(_buffer);
+				_buffer = _compressed_buffer;
+				_size = buffer_get_size(_compressed_buffer);
+			}
+			else if (self.__compression == "gzip") {
+				self.headers[$ "Content-Encoding"] = "gzip";
+				var _compressed_buffer = buffer_compress_gzip(_buffer, 0, _size);
+				buffer_delete(_buffer);
+				_buffer = _compressed_buffer;
+				_size = buffer_get_size(_compressed_buffer);
+			}
 		}
 		
 		self.headers[$ "Content-Length"] = _size;	

@@ -16,6 +16,7 @@ function ComponentFooter(): HtmlComponent() constructor {
 				
 				<p style="text-align: center; color: var(--secondary);">
 					<small>
+						<a href="https://github.com/meseta/htgm" class="secondary">GitHub</a> &bull;
 						<a href="https://twitter.com/mesetatron" class="secondary">Twitter</a> &bull;
 						<a href="https://discord.gg/gamemaker" class="secondary">Discord</a>
 					</small>
