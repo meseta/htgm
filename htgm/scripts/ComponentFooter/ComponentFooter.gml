@@ -10,7 +10,7 @@ function ComponentFooter(): HtmlComponent() constructor {
 				
 				<p style="text-align: center; color: var(--secondary);">
 					<small>
-						Made with <img src="/images/sGameMaker.png" style="vertical-align: baseline" alt="" /> GameMaker
+						Made with <img src="/images/sGameMaker.png" style="height: 16px; width: 16px; vertical-align: baseline" alt="" /> GameMaker
 					</small>
 				</p>
 				
