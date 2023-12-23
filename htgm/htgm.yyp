@@ -88,6 +88,7 @@
     {"id":{"name":"Exception","path":"scripts/Exception/Exception.yy",},},
     {"id":{"name":"buffer_compress_gzip","path":"scripts/buffer_compress_gzip/buffer_compress_gzip.yy",},},
     {"id":{"name":"ViewDocsRenderStack","path":"scripts/ViewDocsRenderStack/ViewDocsRenderStack.yy",},},
+    {"id":{"name":"ViewDocsRequests","path":"scripts/ViewDocsRequests/ViewDocsRequests.yy",},},
     {"id":{"name":"HtmlComponent","path":"scripts/HtmlComponent/HtmlComponent.yy",},},
     {"id":{"name":"HtmlSprite","path":"scripts/HtmlSprite/HtmlSprite.yy",},},
     {"id":{"name":"Iterators","path":"scripts/Iterators/Iterators.yy",},},

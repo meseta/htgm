@@ -12,14 +12,14 @@ function buffer_compress_gzip(_buffer, _offset, _size) {
 
 		for (var _i=0; _i<256; _i++) {
 			var _c = _i;
-		    repeat(8) {
-			    if (_c & 0x1) {
-			        _c = 0xedb88320 ^ (_c >> 1);
-			    }
+			repeat(8) {
+				if (_c & 0x1) {
+					_c = 0xedb88320 ^ (_c >> 1);
+				}
 				else {
-			        _c = _c >> 1;
-			    }
-		    }
+					_c = _c >> 1;
+				}
+			}
 			_crc_table[_i] = _c;
 		}
 	}
@@ -30,7 +30,7 @@ function buffer_compress_gzip(_buffer, _offset, _size) {
 	buffer_seek(_buffer, buffer_seek_start, _offset);
 	repeat(_size) {
 		var _byte = buffer_read(_buffer, buffer_u8);
-	    _crc = _crc_table[(_crc ^ _byte) & 0xff] ^ (_crc >> 8);
+		_crc = _crc_table[(_crc ^ _byte) & 0xff] ^ (_crc >> 8);
 	}
 	_crc = (_crc ^ 0xffffffff) & 0xffffffff;
 	// put buffer pointer back where it was before

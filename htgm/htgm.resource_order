@@ -48,6 +48,7 @@
     {"name":"HttpServerRequestContext","order":12,"path":"scripts/HttpServerRequestContext/HttpServerRequestContext.yy",},
     {"name":"buffer_compress_gzip","order":16,"path":"scripts/buffer_compress_gzip/buffer_compress_gzip.yy",},
     {"name":"ViewDocsRenderStack","order":7,"path":"scripts/ViewDocsRenderStack/ViewDocsRenderStack.yy",},
+    {"name":"ViewDocsRequests","order":9,"path":"scripts/ViewDocsRequests/ViewDocsRequests.yy",},
     {"name":"HtmlSprite","order":1,"path":"scripts/HtmlSprite/HtmlSprite.yy",},
     {"name":"ViewDocsComponents","order":4,"path":"scripts/ViewDocsComponents/ViewDocsComponents.yy",},
     {"name":"HtmlCode","order":2,"path":"scripts/HtmlCode/HtmlCode.yy",},

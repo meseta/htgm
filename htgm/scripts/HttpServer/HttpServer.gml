@@ -226,6 +226,54 @@ function HttpServer(_port, _logger=undefined) constructor {
 		}
 	};
 	
+	/** Decode any url entities
+	 * @param {String} _str Input string
+	 * @return {String}
+	 */
+	static url_decode = function(_str) {
+		
+		var _parts = string_split(_str, "%");
+		var _count = array_length(_parts);
+		var _decoded = _parts[0];
+		for (var _i=1; _i<_count; _i++) {
+			var _part = _parts[_i];
+			if (string_length(_part) < 2) {
+				_decoded += "%"+_part;
+			}
+			else {
+				var _code = 0;
+				
+				var _char1 = ord(string_lower(string_char_at(_part, 1)));
+				if (_char1 >= 48 && _char1 <= 57) {
+					_code += (_char1-48) << 4;	
+				}
+				else if (_char1 >= 97 && _char1 <= 102) {
+					_code += (_char-87) << 4;	
+				}
+				else {
+					_decoded += "%"+_part;
+					continue;	
+				}
+				
+				var _char2 = ord(string_char_at(_part, 2));
+				if (_char2 >= 48 && _char2 <= 57) {
+					_code += (_char2-48);	
+				}
+				else if (_char2 >= 97 && _char2 <= 102) {
+					_code += (_char2-87);	
+				}
+				else {
+					_decoded += "%"+_part;
+					continue;	
+				}
+				
+				_decoded += chr(_code) + string_delete(_part, 1, 2);
+			}
+		}
+		
+		return _decoded;
+	};
+	
 	/** Get the string representation of a status code
 	* @param {Real} _code The numerical return code
 	* @return {String}

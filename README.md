@@ -14,7 +14,10 @@ HTGM can be used to host websites if built and deployed to a server, or it can b
 HTGM was created by Meseta, released under the MIT open source license, and is free to use for commercial and non-commercial projects. The project is released as-is, and no support or warranties are provided, but those working on GameMaker projects in general may find help from the friendly GameMaker community on Discord.
 
 ## Change History
-* v1.2.0 Add gzip support
+* v1.2.0
+  * Add gzip support for content encoding
+  * Support url entities in path and query
+  * Add separate Query and Parameter in requests
 * v1.1.1 Fix query param handling
 * v1.1.0 Add redirect functionality to HttpServerRenderBase
 * v1.0.0 Initial release

@@ -62,9 +62,9 @@ function HttpServerRouter(_logger) constructor {
 			try {
 				Iterators.foreach(self.__handlers, method(_foreach_context, function(_handler) {
 					/// Feather ignore GM1013
-					var _match_params = this.__path_match(_handler.pattern_parts, context.request.path);
-					if (!is_undefined(_match_params)) {
-						context.request.set_parameters(_match_params);
+					var _match = this.__path_match(_handler.pattern_parts, context.request.path);
+					if (!is_undefined(_match)) {
+						context.request.set_parameters(_match.parameters, _match.query);
 						_handler.callback(context);
 						completed = true;
 						throw Iterators.STOP_ITERATION;
@@ -145,19 +145,20 @@ function HttpServerRouter(_logger) constructor {
 	static __path_match = function(_pattern_parts, _raw_path) {
 		// handle queries
 		var _query_pos = string_pos("?", _raw_path);
-		var _path_params_string;
+		var _query_string;
 		var _path_string;
 		if (_query_pos > 0) {
-			_path_params_string = string_copy(_raw_path, _query_pos+1, string_length(_raw_path)-_query_pos);
+			_query_string = string_copy(_raw_path, _query_pos+1, string_length(_raw_path)-_query_pos);
 			_path_string = string_copy(_raw_path, 1, _query_pos-1);
 		}
 		else {
-			_path_params_string = "";
+			_query_string = "";
 			_path_string = _raw_path;
 		}
 		
-		 // trim first "/"
 		var _param_struct = {}
+		
+		 // trim first "/"
 		var _paths = string_split(_path_string, "/", true);
 		var _paths_len = array_length(_paths);
 		
@@ -172,8 +173,8 @@ function HttpServerRouter(_logger) constructor {
 			if (_pattern == "*") {
 				// remove the earlier parts of the path, and store the rest in _param_struct.
 				array_delete(_paths, 0, _i); // NOTE: in-place _path mutation, but we discard this array anyway so it's okay
-				_param_struct[$ "*"] = string_join_ext("/", _paths);
-				return _param_struct;
+				_param_struct[$ "*"] = HttpServer.url_decode(string_join_ext("/", _paths));
+				break;
 			}
 			
 			// check for exact match
@@ -210,19 +211,21 @@ function HttpServerRouter(_logger) constructor {
 			var _param_name = string_copy(_pattern, _before_pos+1, _after_pos-_before_pos-1);
 			var _match = string_copy(_path, _before_pos, _path_len-(_before_pos-1)-(_pattern_length-_after_pos));
 			
-			_param_struct[$ _param_name] = _match;
+			_param_struct[$ HttpServer.url_decode(_param_name)] = HttpServer.url_decode(_match);
 		}
 		
-		// decode path params
-		if (_path_params_string != "") {
-			var _path_params = string_split(_path_params_string, "&", true);
+		// decode query params
+		var _query_struct = {};
+		if (_query_string != "") {
+			var _query_params = string_split(_query_string, "&", true);
 			
-			array_foreach(_path_params, method(_param_struct, function(_path_param) {
-				var _path_params_pair = string_split(_path_param, "=", false, 1);
-				var _key = _path_params_pair[0];
+			array_foreach(_query_params, method(_query_struct, function(_query_param) {
+				var _query_params_pair = string_split(_query_param, "=", false, 1);
+				var _key = HttpServer.url_decode(_query_params_pair[0]);
 				
 				if (string_length(_key) > 0) {
-					var _value = array_length(_path_params_pair) > 1 ? _path_params_pair[1] : undefined;
+					var _value = array_length(_query_params_pair) > 1 ? _query_params_pair[1] : undefined;
+					_value = HttpServer.url_decode(_value);
 					
 					if (struct_exists(self, _key)) {
 						if (not is_array(self[$ _key])) {
@@ -238,7 +241,10 @@ function HttpServerRouter(_logger) constructor {
 			}));
 		}
 		
-		return _param_struct;
+		return {
+			parameters: _param_struct,
+			query: _query_struct,
+		};
 	};
 	
 	/** Default handler for when path isn't found

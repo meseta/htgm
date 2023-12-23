@@ -16,6 +16,7 @@ function ComponentDocsNavigation(): HtmlComponent() constructor {
 		
 		static _links_3 = [
 			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsDynamicPaths.path, "Dynamic Paths"),
+			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsRequests.path, "Requests"),
 			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsResponses.path, "Responses"),
 			// new ComponentNavigationLink(ViewDocs.content_id, ViewDocsAddingPage.path, "Websockets"),
 		];
