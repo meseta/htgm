@@ -27,6 +27,9 @@ function ComponentFloating(): HtmlComponent() constructor {
 	}
 }
 
+// initialize
+new ComponentFloating();
+
 function WebsocketFps(): HttpServerWebsocketSessionBase() constructor {
 	self.call = call_later(1, time_source_units_seconds, method(self, self.tick), true);
 	

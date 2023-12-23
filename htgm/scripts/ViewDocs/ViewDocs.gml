@@ -1,6 +1,7 @@
 function ViewDocs(): HtmxView() constructor {
 	// View setup
 	static path = "docs";
+	static redirect_path  = "";
 	static shoud_cache = true;
 	
 	// Static properties

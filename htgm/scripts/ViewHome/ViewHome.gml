@@ -1,6 +1,7 @@
 function ViewHome(): HtmxView() constructor {
 	// View setup
 	static path = "home";
+	static redirect_path  = "";
 	static shoud_cache = true;
 	
 	// On-page components

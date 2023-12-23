@@ -9,14 +9,14 @@ function ComponentDocsNavigation(): HtmlComponent() constructor {
 			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsPaths.path, "Paths"),
 			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsStaticFiles.path, "Static Files and Sprites"),
 			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsComponents.path, "Reusable Components"),
-			//new ComponentNavigationLink(ViewDocs.content_id, ViewDocsPages.path, "Views and Routers"),
+			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsRenderStack.path, "Render Stack and Redirects"),
 			//new ComponentNavigationLink(ViewDocs.content_id, ViewDocsPages.path, "Htmx Views"),
 			//new ComponentNavigationLink(ViewDocs.content_id, ViewDocsPages.path, "Caching and Metadata"),
 		];
 		
 		static _links_3 = [
 			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsDynamicPaths.path, "Dynamic Paths"),
-			//new ComponentNavigationLink(ViewDocs.content_id, ViewDocsPages.path, "Response Types"),
+			new ComponentNavigationLink(ViewDocs.content_id, ViewDocsResponses.path, "Responses"),
 			// new ComponentNavigationLink(ViewDocs.content_id, ViewDocsAddingPage.path, "Websockets"),
 		];
 	

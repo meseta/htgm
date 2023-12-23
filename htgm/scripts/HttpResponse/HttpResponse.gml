@@ -59,8 +59,6 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 	 * @return {Struct.HttpResponse}
 	 */
 	static send_file = function(_filename, _status_code=200) {
-		static _file_buffers = {}; // keep a bunch of open buffers to avoid re-reading
-		
 		if (buffer_exists(self.__response_data_buffer)) {
 			throw "HttpResponse already has data, can't add another buffer";	
 		}
@@ -70,7 +68,6 @@ function HttpResponse(_end_function, _header_only=false, _compress=false) constr
 		self.__set_buffer_response(_buffer, true);
 		return self;
 	};
-
 	
 	/** Send a string
 	 * @param {string} _string Path to file

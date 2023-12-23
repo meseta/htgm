@@ -1,6 +1,5 @@
 {
   "FolderOrderSettings": [
-    {"name":"Init","order":1,"path":"folders/Init.yy",},
     {"name":"AsyncWrapper","order":6,"path":"folders/HTGM/AsyncWrapper.yy",},
     {"name":"Chain","order":7,"path":"folders/HTGM/Chain.yy",},
     {"name":"Html","order":8,"path":"folders/HTGM/Html.yy",},
@@ -9,6 +8,7 @@
     {"name":"HttpServer","order":2,"path":"folders/HTGM/HttpServer.yy",},
     {"name":"Iterators","order":3,"path":"folders/HTGM/Iterators.yy",},
     {"name":"LoggingSuite","order":1,"path":"folders/HTGM/LoggingSuite.yy",},
+    {"name":"Init","order":1,"path":"folders/Init.yy",},
     {"name":"Website","order":2,"path":"folders/Website.yy",},
     {"name":"Docs","order":3,"path":"folders/Website/Docs.yy",},
     {"name":"Doc Pages","order":1,"path":"folders/Website/Docs/Doc Pages.yy",},
@@ -38,6 +38,7 @@
     {"name":"AsyncWrapper","order":1,"path":"scripts/AsyncWrapper/AsyncWrapper.yy",},
     {"name":"HttpServerFile","order":8,"path":"scripts/HttpServerFile/HttpServerFile.yy",},
     {"name":"HttpRequest","order":2,"path":"scripts/HttpRequest/HttpRequest.yy",},
+    {"name":"ViewDocsResponses","order":8,"path":"scripts/ViewDocsResponses/ViewDocsResponses.yy",},
     {"name":"sGameMaker","order":1,"path":"sprites/sGameMaker/sGameMaker.yy",},
     {"name":"ViewDocsHelloWorld","order":6,"path":"scripts/ViewDocsHelloWorld/ViewDocsHelloWorld.yy",},
     {"name":"ComponentFloating","order":1,"path":"scripts/ComponentFloating/ComponentFloating.yy",},
@@ -45,6 +46,7 @@
     {"name":"HttpResponse","order":3,"path":"scripts/HttpResponse/HttpResponse.yy",},
     {"name":"scrSite","order":1,"path":"scripts/scrSite/scrSite.yy",},
     {"name":"HttpServerRequestContext","order":12,"path":"scripts/HttpServerRequestContext/HttpServerRequestContext.yy",},
+    {"name":"ViewDocsRenderStack","order":7,"path":"scripts/ViewDocsRenderStack/ViewDocsRenderStack.yy",},
     {"name":"HtmlSprite","order":1,"path":"scripts/HtmlSprite/HtmlSprite.yy",},
     {"name":"ViewDocsComponents","order":4,"path":"scripts/ViewDocsComponents/ViewDocsComponents.yy",},
     {"name":"HtmlCode","order":2,"path":"scripts/HtmlCode/HtmlCode.yy",},

@@ -35,7 +35,7 @@ function HttpServerFileServer(_web_root, _index_file="index.html") constructor {
 		_file += self.__index_file;
 
 		if (file_exists(_file)) {
-			_context.set_shoud_cache(true);
+			_context.set_should_cache(true);
 			_context.response.send_file(_file);
 			return
 		}

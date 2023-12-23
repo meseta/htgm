@@ -1,23 +1,13 @@
-/** Base constructor for a View, which includes a redirect if the request isn't an htmx request */
+/** Base constructor for an Htmx-powered View, which will only redirect if
+ * the request isn't coming from HTMX. Also sets caching settings */
 function HtmxView(): HttpServerRenderBase() constructor {
-	static redirect_path = "";
 	static should_cache = undefined;
-	
-	/** The render function for rendering this component, can be either string or Chain return
-	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
-	 * @return {String|Struct.Chain}
-	 */
-	static render = function(_context) { return ""; };
 	
 	/** Handle function for processing a request
 	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
 	 */
 	static handler = function(_context) {
-		if (_context.request.method != "GET") {
-			throw new ExceptionHttpMethodNotAllowed();
-		}
-		if (_context.request.get_header("hx-request") != "true" && _context.request.path != self.redirect_path) {
-			_context.logger.debug("Htmx Fetching without view, internal redirect", {request_path: _context.request.path, redirect_path: self.redirect_path});
+		if (_context.request.get_header("hx-request") != "true" && is_string(self.redirect_path) &&  _context.request.path != self.redirect_path) {
 			_context.push_render_stack(method(self, self.render));
 			throw new ExceptionHttpServerInternalRedirect(self.redirect_path);
 		}
@@ -33,6 +23,7 @@ function HtmxView(): HttpServerRenderBase() constructor {
 					response.send_html(_payload);
 				}))
 				.on_error(method(_context, function(_err) {
+					logger.warning("Got error handling request", {err: _err});
 					response.send_exception(_err);	
 				}));
 		}
