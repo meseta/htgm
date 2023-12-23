@@ -26,6 +26,7 @@ else {
 	// don't ask to send sentry errors
 	SENTRY.set_option("ask_to_send", false);
 	SENTRY.set_option("ask_to_send_report", false);
+	SENTRY.set_option("show_popup", false);
 	
 	// Use Sentry's error handler
 	exception_unhandled_handler(global.sentry.get_exception_handler());

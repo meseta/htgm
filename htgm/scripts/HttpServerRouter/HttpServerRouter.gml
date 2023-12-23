@@ -149,7 +149,7 @@ function HttpServerRouter(_logger) constructor {
 		var _path_string;
 		if (_query_pos > 0) {
 			_path_params_string = string_copy(_raw_path, _query_pos+1, string_length(_raw_path)-_query_pos);
-			_path_string = string_copy(_raw_path, 1, _query_pos);
+			_path_string = string_copy(_raw_path, 1, _query_pos-1);
 		}
 		else {
 			_path_params_string = "";
@@ -216,14 +216,13 @@ function HttpServerRouter(_logger) constructor {
 		// decode path params
 		if (_path_params_string != "") {
 			var _path_params = string_split(_path_params_string, "&", true);
-			var _path_params_len = array_length(_path_params);
 			
-			array_foreach(_path_params, method(_param_struct, function(_path_param, _idx) {
+			array_foreach(_path_params, method(_param_struct, function(_path_param) {
 				var _path_params_pair = string_split(_path_param, "=", false, 1);
 				var _key = _path_params_pair[0];
 				
 				if (string_length(_key) > 0) {
-					var _value = _path_params_pair[1];
+					var _value = array_length(_path_params_pair) > 1 ? _path_params_pair[1] : undefined;
 					
 					if (struct_exists(self, _key)) {
 						if (not is_array(self[$ _key])) {
