@@ -45,33 +45,18 @@ function ViewIndex(): HttpServerRenderBase() constructor {
 					<script src="/static/hljs/highlight.min.js"></script>
 					<script src="/static/hljs/gml.min.js"></script>
 					
-				    <meta name="description" content="A web-server framework for GameMaker written in pure GML." />
-				    <meta name="theme-color" content="#76428a" />
+					<meta name="description" content="A web-server framework for GameMaker written in pure GML." />
+					<meta name="theme-color" content="#76428a" />
 
-				    <!-- Open Graph / Facebook -->
-				    <meta property="og:type" content="website" />
-				    <meta property="og:title" content="HyperText GameMaker" />
-				    <meta
-				      property="og:description"
-				      content="A web-server framework for GameMaker written in pure GML."
-				    />
-				    <meta
-				      property="og:image"
-				      content="https://htgm.meseta.dev/static/opengraph.png"
-				    />
+					<meta property="og:type" content="website" />
+					<meta property="og:title" content="HyperText GameMaker" />
+					<meta property="og:description" content="A web-server framework for GameMaker written in pure GML." />
+					<meta property="og:image" content="https://htgm.meseta.dev/static/opengraph.png" />
 
-				    <!-- Twitter -->
-				    <meta property="twitter:card" content="summary_large_image" />
-				    <meta property="twitter:title" content="HyperText GameMaker" />
-				    <meta
-				      property="twitter:description"
-				      content="A web-server framework for GameMaker written in pure GML."
-				    />
-				    <meta
-				      property="twitter:image"
-				      content="https://htgm.meseta.dev/static/opengraph.png"
-				    />
-					
+					<meta property="twitter:card" content="summary_large_image" />
+					<meta property="twitter:title" content="HyperText GameMaker" />
+					<meta property="twitter:description" content="A web-server framework for GameMaker written in pure GML." />
+					<meta property="twitter:image" content="https://htgm.meseta.dev/static/opengraph.png" />
 				</head>
 				<body style="min-height: 100%; background-image: linear-gradient(180deg, transparent, #ffffff11); background-attachment: fixed;">
 					'+ _rendered.navigation +@'

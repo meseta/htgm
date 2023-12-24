@@ -8,15 +8,13 @@ function ViewDocsDownloading(): HtmxView() constructor {
 		static cached = @'
 			<h1>Downloading</h1>
 			<p>
-				To get started, go to <a href="#">the releases on GitHub</a>, and choose one of the
-				packages to download. You can download just the HTGM library itself, which contains only the
-				library ready for you to create a web server iny our own project, or you can download 
-				the project that is this website.
+				You can download just the HTGM library itself, which contains only the library ready for you to create
+				a web server iny our own project, or you can download the project that is this website.
 			</p>
 			
 			<h2>HTGM Library</h2>
 			<p>
-				To downlaod the library, click on the latest version in <a href="#">the releases on GitHub</a>
+				To downlaod the library, click on the latest version in <a href="https://github.com/meseta/htgm/releases">the releases on GitHub</a>
 				and download the file called <code>dev.meseta.htgm.yymps</code>. This is a GameMaker local
 				package, and can be imported into your project via the <code>Tools &gt; Import Local Package</code>
 				Menu.
