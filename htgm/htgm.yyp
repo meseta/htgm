@@ -55,6 +55,7 @@
     {"id":{"name":"HttpServerWebsocket","path":"scripts/HttpServerWebsocket/HttpServerWebsocket.yy",},},
     {"id":{"name":"oAsyncWrapperHttp","path":"objects/oAsyncWrapperHttp/oAsyncWrapperHttp.yy",},},
     {"id":{"name":"HttpServerSession","path":"scripts/HttpServerSession/HttpServerSession.yy",},},
+    {"id":{"name":"HttpRequestFile","path":"scripts/HttpRequestFile/HttpRequestFile.yy",},},
     {"id":{"name":"Chain","path":"scripts/Chain/Chain.yy",},},
     {"id":{"name":"init","path":"scripts/init/init.yy",},},
     {"id":{"name":"ViewDocsDynamicPaths","path":"scripts/ViewDocsDynamicPaths/ViewDocsDynamicPaths.yy",},},

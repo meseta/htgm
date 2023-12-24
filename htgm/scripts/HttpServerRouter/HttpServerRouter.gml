@@ -52,6 +52,9 @@ function HttpServerRouter(_logger) constructor {
 	 * @param {Struct.HttpResponse} _response The response going back out
 	 */
 	static process_request = function(_request, _response) {
+		// try to process request body. This could error at this point
+		_request.decode_content();
+		
 		var _context = new HttpServerRequestContext(_request, _response, self.__logger.bind({}));
 		var _foreach_context = {this: other, completed: false, context: _context};
 		
@@ -226,17 +229,7 @@ function HttpServerRouter(_logger) constructor {
 				if (string_length(_key) > 0) {
 					var _value = array_length(_query_params_pair) > 1 ? _query_params_pair[1] : undefined;
 					_value = HttpServer.url_decode(_value);
-					
-					if (struct_exists(self, _key)) {
-						if (not is_array(self[$ _key])) {
-							self[$ _key] = [ self[$ _key] ];	
-						}
-						
-						array_push(self[$ _key], _value);
-					}
-					else {
-						self[$ _key] = _value;
-					}
+					HttpServer.struct_set_multiple(self, _key, _value)
 				}
 			}));
 		}

@@ -13,14 +13,38 @@ function ViewDocsRequests(): HtmxView() constructor {
 				<form action="/demos/submit" method="post">
 					<label for="name">Name: </label>
 					<input type="text" name="name">
+					<br>
+					<label for="name">Fruit: </label>
+					<input type="text" name="fruit">
+					<br>
 					<input type="submit" value="Submit">
 				</form>
 			');
 		});
 		
 		SERVER.add_path("demos/submit", function(_context) {
-			var _name = _context.request.get_form_data("name");
-			_context.response.send_string($"hello {_name}");
+			var _name = _context.request.get_form("name");
+			var _fruit = _context.request.get_form("fruit");
+			_context.response.send_string($"hello {_name} who likes {_fruit}");
+		});
+		
+		SERVER.add_path("demos/file", function(_context) {
+			_context.response.send_html(@'
+				<form action="/demos/file-submit" method="post" enctype="multipart/form-data">
+					<label for="name">Name: </label>
+					<input type="text" name="name">
+					<br>
+					<input type="file" name="file">
+					<br>
+					<input type="submit" value="Submit">
+				</form>
+			');
+		});
+		
+		SERVER.add_path("demos/file-submit", function(_context) {
+			var _name = _context.request.get_form("name");
+			var _file = _context.request.get_file("file");
+			_context.response.send_string($"hello {_name} you uploaded filesize: {_file.size}");
 		});
 	}
 	
@@ -71,14 +95,40 @@ function ViewDocsRequests(): HtmxView() constructor {
 				<form action="/demos/submit" method="post">
 					<label for="name">Name: </label>
 					<input type="text" name="name">
+					<br>
+					<label for="name">Fruit: </label>
+					<input type="text" name="fruit">
+					<br>
 					<input type="submit" value="Submit">
 				</form>
 			`);
 		});
 		
 		global.server.add_path("demos/submit", function(_context) {
-			var _name = _context.request.get_form_data("name");
-			_context.response.send_string($"hello {_name}");
+			var _name = _context.request.get_form("name");
+			var _name = _context.request.get_form("fruit");
+			_context.response.send_string($"hello {_name} who likes {_fruit}");
+		});
+	'));
+	
+	static demo_code_6 = new HtmlCode(dedent(@'
+		global.server.add_path("demos/file", function(_context) {
+			_context.response.send_html(@`
+				<form action="/demos/file-submit" method="post">
+					<label for="name">Name: </label>
+					<input type="text" name="name">
+					<br>
+					<input type="file" name="file">
+					<br>
+					<input type="submit" value="Submit">
+				</form>
+			`);
+		});
+		
+		global.server.add_path("demos/file-submit", function(_context) {
+			var _name = _context.request.get_form("name");
+			var _file = _context.request.get_file("file");
+			_context.response.send_string($"hello {_name} you uploaded filesize: {_file.size}");
 		});
 	'));
 	
@@ -147,6 +197,20 @@ function ViewDocsRequests(): HtmxView() constructor {
 			<p>
 				In the above example, if a form is submitted to that page with the field name <code>name</code>, the value will
 				be accessed. You can see <a href="/demos/form" target="_blank">the demo here</a>.
+			</p>
+			
+			<h2>File uploads</h2>
+			<p>
+				Upload files can be accessed using <code>context.request.get_file_buffer("file")</code> and
+				<code>context.request.get_file_name("file")</code> to get the buffer and the filename respectively. The buffers will
+				be cleaned up once the endpoint responds.
+			</p>
+	
+			'+ self.demo_code_6.render() + @'
+			
+			<p>
+				In the above example, a file upload form submits a file, and the buffer length is printed out.
+				You can see <a href="/demos/file" target="_blank">the demo here</a>.
 			</p>
 			
 			<script>hljs.highlightAll();</script>

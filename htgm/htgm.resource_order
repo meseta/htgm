@@ -23,6 +23,7 @@
     {"name":"HttpServerRenderBase","order":9,"path":"scripts/HttpServerRenderBase/HttpServerRenderBase.yy",},
     {"name":"HttpServerWebsocket","order":13,"path":"scripts/HttpServerWebsocket/HttpServerWebsocket.yy",},
     {"name":"HttpServerSession","order":1,"path":"scripts/HttpServerSession/HttpServerSession.yy",},
+    {"name":"HttpRequestFile","order":17,"path":"scripts/HttpRequestFile/HttpRequestFile.yy",},
     {"name":"ViewDocsDynamicPaths","order":5,"path":"scripts/ViewDocsDynamicPaths/ViewDocsDynamicPaths.yy",},
     {"name":"HttpClient","order":1,"path":"scripts/HttpClient/HttpClient.yy",},
     {"name":"ViewDocsStaticFiles","order":3,"path":"scripts/ViewDocsStaticFiles/ViewDocsStaticFiles.yy",},

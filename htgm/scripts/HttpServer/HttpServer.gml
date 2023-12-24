@@ -231,7 +231,6 @@ function HttpServer(_port, _logger=undefined) constructor {
 	 * @return {String}
 	 */
 	static url_decode = function(_str) {
-		
 		_str = string_replace_all(_str, "+", " ");
 		var _parts = string_split(_str, "%");
 		var _count = array_length(_parts);
@@ -274,6 +273,27 @@ function HttpServer(_port, _logger=undefined) constructor {
 		
 		return _decoded;
 	};
+	
+	/** Updates a struct with a key/value, but if the key already exists, make it an array
+	 * This is used in a couple places in the HTTP protocol, such as for query params and forms
+	 * @param {Struct} _struct The struct to update
+	 * @param {String} _key
+	 * @param {Any} _value
+	 */
+	static struct_set_multiple = function(_struct, _key, _value) {
+		if (struct_exists(_struct, _key)) {
+			if (is_array(_struct[$ _key])) {
+				array_push(_struct[$ _key], _value);
+			}
+			else {
+				_struct[$ _key] = [_struct[$ _key], _value];
+			}
+		}
+		else {
+			_struct[$ _key] = _value;
+		}	
+		
+	}
 	
 	/** Get the string representation of a status code
 	* @param {Real} _code The numerical return code
