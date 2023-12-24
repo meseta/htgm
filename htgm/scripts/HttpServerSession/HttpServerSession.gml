@@ -110,6 +110,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 	});
 	self.__fsm.add("dispatch", {
 		enter: function() {
+			
 			self.__logger.info("Received request", {method: self.request.method, path: self.request.path});
 			var _header_only = (self.request.method == "HEAD" or self.request.method == "OPTIONS")
 			
@@ -157,12 +158,22 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			network_send_raw(self.__client_socket, _buffer, _size);
 				
 			self.__logger.debug("Sent response", {response_code: self.response.status_code, size: _size});
-
-			if (self.request.keep_alive) {
-				self.response.cleanup();
-				self.response = undefined;
+			self.__fsm.change("cleanup");
+		}
+	});
+	self.__fsm.add("cleanup", {
+		enter: function() {
+			var _keepalive = self.request.keep_alive;
+			if (is_struct(self.request)) {
 				self.request.cleanup();
 				self.request = undefined;
+			}
+			if (is_struct(self.response)) {
+				self.response.cleanup();
+				self.response = undefined;
+			}
+				
+			if (_keepalive) {
 				self.__fsm.change("request");
 			}
 			else {
@@ -173,6 +184,10 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 	});
 	self.__fsm.add("upgrade", {
 		enter: function() {
+			// force keep_alive to false, so that when we cycle to `cleanup` we close properly
+			// rather than try to accept the next request
+			self.request.keep_alive = false;
+			
 			if (self.request.has_header("sec-websocket-key")) {
 				// handle accept, implement the websocket Accept handshake
 				var _key = self.request.get_header("sec-websocket-key");
@@ -208,8 +223,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			}
 			else {
 				self.__logger.debug("No sec-websocket-key presented for upgrade, closing", undefined);
-				self.close();
-				self.__fsm.change("finished");
+				self.__fsm.change("cleanup");
 			}
 		},
 	});
@@ -223,13 +237,13 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 			}
 			catch (_err) {
 				self.__logger.exception(_err);
-				self.close();
+				self.__fsm.change("cleanup");
 				return;
 			}
 			
 			if (is_undefined(_session_handler)) {
 				self.__logger.debug("Websocket handler not found for path");
-				self.close();
+				self.__fsm.change("cleanup");
 			}
 			else {
 				self.upgrade = new HttpServerWebsocket(self.__client_socket, _session_handler, self.__logger);	
@@ -238,8 +252,7 @@ function HttpServerSession(_client_socket, _router, _logger) constructor {
 		handle_data: function(_line_buffer) {
 			self.upgrade.handle_data(_line_buffer);
 			if (self.upgrade.is_closed()) {
-				self.close();
-				self.__fsm.change("finished");
+				self.__fsm.change("cleanup");
 			}
 		}
 	});

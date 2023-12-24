@@ -13,14 +13,13 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 	/* @ignore */ self.__response_data_buffer = -1;
 	/* @ignore */ self.__network_buffer = -1;
 	/* @ignore */ self.__dirty = true;
-	/* @ignore */ self.__delete_buffer_on_cleanup = false;
 	/* @ignore */ self.__header_only = _header_only;
 	/* @ignore */ self.__compression = _compression;
 	/* @ignore */ self.__should_cache = undefined;
 	
 	/** Clean up dynamic resources */
 	static cleanup = function() {
-		if (self.__delete_buffer_on_cleanup && buffer_exists(self.__response_data_buffer)) {
+		if (buffer_exists(self.__response_data_buffer)) {
 			buffer_delete(self.__response_data_buffer);	
 			self.__response_data_buffer = -1;
 		}
@@ -65,7 +64,7 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 		self.status_code = _status_code;
 		var _buffer = buffer_load(_filename);
 		self.headers[$ "Content-Type"] ??= HttpServer.filename_to_mimetype(_filename);
-		self.__set_buffer_response(_buffer, true);
+		self.__set_buffer_response(_buffer);
 		return self;
 	};
 	
@@ -82,7 +81,7 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 		self.status_code = _status_code;
 		var _buffer = buffer_create(string_byte_length(_string), buffer_fixed, 1);
 		buffer_write(_buffer, buffer_text, _string);
-		self.__set_buffer_response(_buffer, true);
+		self.__set_buffer_response(_buffer);
 		return self;
 	};
 	
@@ -161,7 +160,7 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 		
 		_response.top_matter += "\r\n";
 		
-		if (!buffer_exists(self.__response_data_buffer) or self.__header_only) {
+		if (!buffer_exists(self.__response_data_buffer) || self.__header_only) {
 			self.__network_buffer = buffer_create(string_byte_length(_response.top_matter), buffer_fixed, 1);
 			buffer_write(self.__network_buffer, buffer_text, _response.top_matter);
 		}
@@ -206,7 +205,7 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 	 * @param {Bool} _delete_buffer_on_cleanup whether to delete the buffer on cleanup
 	 * @ignore
 	 */
-	static __set_buffer_response = function(_buffer, _delete_buffer_on_cleanup=true) {
+	static __set_buffer_response = function(_buffer) {
 		if (buffer_exists(self.__response_data_buffer)) {
 			throw new ExceptionHttpInternal("HttpResponse already has data, can't add another buffer");
 		}
@@ -229,8 +228,7 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 			}
 		}
 		
-		self.headers[$ "Content-Length"] = _size;	
-		self.__delete_buffer_on_cleanup = _delete_buffer_on_cleanup;
+		self.headers[$ "Content-Length"] = _size;
 		self.__response_data_buffer = _buffer;
 		self.__dirty = true;
 		self.__end_function();
