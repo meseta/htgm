@@ -16,6 +16,6 @@ function Exception(_message, _long_message=undefined) constructor {
 	global.sentry_last_exception = self;
 	
 	static toString = function() {
-		return $"{instanceof(self)}: {self.message}";
+		return $"{instanceof(self)}: {self.message}\n{self.long_message}";
 	}
 }

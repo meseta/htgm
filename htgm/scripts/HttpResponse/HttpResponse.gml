@@ -27,7 +27,6 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 			buffer_delete(self.__network_buffer);
 			self.__network_buffer = -1;
 		}
-		self.headers = {};
 		self.__dirty = true;
 	};
 
@@ -42,8 +41,8 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 	};
 	
 	/** Set a header to be returned in response
-	 * @param {string} _header HTTP header key
-	 * @param {string} _value HTTP header value
+	 * @param {String} _header HTTP header key
+	 * @param {String} _value HTTP header value
 	 * @return {Struct.HttpResponse}
 	 */
 	static set_header = function(_header, _value) {
@@ -52,8 +51,41 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 		return self;
 	};
 	
+	/** Set a cookie
+	 * @param {String} _name cookie name
+	 * @param {String} _value cookie value
+	 * @param {Struct} _options additional options
+	 * @return {Struct.HttpResponse}
+	 */
+	static set_cookie = function(_name, _value, _settings={}) {
+		var _cookie = $"{_name}={_value}";
+		
+		if (struct_exists(_settings, "domain")) {
+			_cookie += $"; Domain={_settings.domain}";
+		}
+		if (struct_exists(_settings, "domain")) {
+			_cookie += $"; Domain={_settings.domain}";
+		}
+		if (struct_exists(_settings, "max_age")) {
+			_cookie += $"; Max-Age={_settings.max_age}";
+		}
+		if (struct_exists(_settings, "same_site")) {
+			_cookie += $"; SameSite={_settings.same_site}";
+		}
+		if (struct_exists(_settings, "http_only") && !!_settings.http_only) {
+			_cookie += "; HttpOnly";
+		}
+		if (struct_exists(_settings, "secure") && !!_settings.secure) {
+			_cookie += "; Secure";
+		}
+		
+		HttpServer.struct_set_multiple(self.headers, "Set-Cookie", _cookie);
+		self.__dirty = true;
+		return self;
+	};
+	
 	/** Send a file
-	 * @param {string} _filename Path to file
+	 * @param {String} _filename Path to file
 	 * @param {Real} _status_code HTTP status code
 	 * @return {Struct.HttpResponse}
 	 */
@@ -69,7 +101,7 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 	};
 	
 	/** Send a string
-	 * @param {string} _string Path to file
+	 * @param {String} _string Path to file
 	 * @param {Real} _status_code HTTP status code
 	 * @return {Struct.HttpResponse}
 	 */
@@ -155,7 +187,12 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 		
 		struct_foreach(self.headers, method(_response, function(_key, _value) {
 			/// Feather ignore GM1010
-			top_matter += $"{_key}: {_value}\r\n";
+			if (is_array(_value)) {
+				_top_matter += string_join_ext("\r\n", _value) + "\r\n";
+			}
+			else {
+				top_matter += $"{_key}: {_value}\r\n";
+			}
 		}));
 		
 		_response.top_matter += "\r\n";

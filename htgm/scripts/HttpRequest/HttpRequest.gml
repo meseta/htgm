@@ -14,6 +14,7 @@ function HttpRequest(_method, _path) constructor {
 	self.keep_alive = true;
 	self.headers = {};
 	self.parameters = {};
+	self.cookies = {};
 	
 	// body content
 	self.data = -1;
@@ -104,7 +105,31 @@ function HttpRequest(_method, _path) constructor {
 	 */
 	static set_header = function(_key, _value) {
 		self.headers[$ string_lower(_key)] = string(_value);
+		
+		// additionally decode cookies
+		if (string_lower(_key) == "cookie") {
+			var _cookies = self.__decode_header_values(_value);
+			struct_foreach(_cookies, function(_cookie_name, _cookie_value) {
+				HttpServer.struct_set_multiple(self.cookies, _cookie_name, _cookie_value);	
+			})
+		}
 		return self;
+	};
+	
+	/** Checks if a cookie exists
+	 * @param {String} _name name of the cookie
+	 * @return {Bool}
+	 */
+	static has_cookie = function(_name) {
+		return struct_exists(self.cookies, _name);
+	};
+	
+	/** Gets a cookie, returning either string or undefined
+	 * @param {String} _name the name of the cookie to get
+	 * @return {String|Array<String>|Undefined}
+	 */
+	static get_cookie = function(_name) {
+		return self.cookies[$ _name];
 	};
 	
 	/** Gets whether a parameter exists

@@ -94,10 +94,10 @@ function ViewDocsRequests(): HtmxView() constructor {
 			_context.response.send_html(@`
 				<form action="/demos/submit" method="post">
 					<label for="name">Name: </label>
-					<input type="text" name="name">
+					<input type="text" id="name" name="name">
 					<br>
 					<label for="name">Fruit: </label>
-					<input type="text" name="fruit">
+					<input type="text" id="fruit" name="fruit">
 					<br>
 					<input type="submit" value="Submit">
 				</form>
@@ -116,7 +116,7 @@ function ViewDocsRequests(): HtmxView() constructor {
 			_context.response.send_html(@`
 				<form action="/demos/file-submit" method="post">
 					<label for="name">Name: </label>
-					<input type="text" name="name">
+					<input type="text" id="name" name="name">
 					<br>
 					<input type="file" name="file">
 					<br>
