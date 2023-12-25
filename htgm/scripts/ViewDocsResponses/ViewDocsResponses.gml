@@ -31,6 +31,7 @@ function ViewDocsResponses(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = quote_fix(@'
+			<title>Responses</title>
 			<h1>Responses</h1>
 			<p>
 				When using <code>add_path</code> to add a handler for a path, it is possible to change several aspects of the

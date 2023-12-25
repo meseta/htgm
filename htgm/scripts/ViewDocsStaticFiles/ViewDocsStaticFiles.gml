@@ -37,6 +37,7 @@ function ViewDocsStaticFiles(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = quote_fix(@'
+			<title>Static Files and Sprites</title>
 			<h1>Static Files and Sprites</h1>
 			<p>
 				Most websites have a need to serve a variety of static content, not just dynamically-generated pages.

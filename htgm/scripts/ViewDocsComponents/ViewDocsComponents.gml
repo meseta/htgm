@@ -9,7 +9,6 @@ function ViewDocsComponents(): HtmxView() constructor {
 	if (!demos_created) {
 		demos_created = true;
 		
-		
 		// Add a page containing a table
 		global.server.add_render(function(): HttpServerRenderBase() constructor {
 			static path = "demos/table";
@@ -84,6 +83,7 @@ function ViewDocsComponents(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = quote_fix(@'
+			<title>Resuable Components</title>
 			<h1>Resuable Components</h1>
 			<p>
 				The benefit and advantage of dynamically generating HTML is being able to simplify that task by defining and

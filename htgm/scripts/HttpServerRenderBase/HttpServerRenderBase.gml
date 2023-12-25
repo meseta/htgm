@@ -3,6 +3,7 @@ function HttpServerRenderBase() constructor {
 	static path = undefined;
 	static paths = undefined;
 	static redirect_path = undefined;
+	static no_session_redirect_path = undefined;
 		
 	/** Generate a path based on the struct instance automatically
 	 * @param {String} _path_prefix Custom path prefix
@@ -28,6 +29,10 @@ function HttpServerRenderBase() constructor {
 	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
 	 */
 	static handler = function(_context) {
+		if (is_string(self.no_session_redirect_path) && !_context.has_session()) {
+			throw new ExceptionHttpServerInternalRedirect(self.no_session_redirect_path);
+		}
+		
 		if (is_string(self.redirect_path) && _context.request.path != self.redirect_path) {
 			_context.push_render_stack(method(self, self.render));
 			throw new ExceptionHttpServerInternalRedirect(self.redirect_path);

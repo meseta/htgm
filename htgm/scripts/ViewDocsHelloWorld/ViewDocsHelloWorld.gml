@@ -40,6 +40,7 @@ function ViewDocsHelloWorld(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = @'
+			<title>Hello World</title>
 			<h1>Hello World</h1>
 			<p>
 				To build your first website, in an object or script that will run once the game has started,

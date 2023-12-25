@@ -10,7 +10,7 @@ function ComponentNavigation(): HtmlComponent() constructor {
 			<nav hx-boost="true" class="container-fluid" style="height: 3.5em; border-bottom: 1px solid var(--primary); padding-left: 0px;">
 				<div>
 					<img src="/images/sLogo.png" alt="" style="height: 3.5em; width: 3.5em; margin-right: 0.5em;" />
-					<strong>'+ ViewIndex.title +@' </strong>
+					<strong>HyperText GameMaker</strong>
 				</div>
 				<ul>
 					'+ HtmlComponent.render_array(_links, "", _context) + @'

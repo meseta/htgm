@@ -134,6 +134,7 @@ function ViewDocsRequests(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = quote_fix(@'
+			<title>Requests</title>
 			<h1>Requests</h1>
 			<p>
 				When handling requests, several pieces of data from the incoming request is made available via the context

@@ -6,7 +6,8 @@ function ViewAbout(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = @'
-			<h2>About HyperText GameMaker</h2>
+			<title>About HyperText GameMaker</title>
+			<h1>About HyperText GameMaker</h1>
 			<p>
 				<strong>HyperText GameMaker</strong> is an open source framework that allows <a href="https://gamemaker.io">GameMaker</a>
 				to be used as a webserver and server-side scripting language. GameMaker developers can use <strong>HTGM</strong>

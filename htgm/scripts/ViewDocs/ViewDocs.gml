@@ -7,9 +7,6 @@ function ViewDocs(): HtmxView() constructor {
 	// Static properties
 	static content_id = self.auto_id("content");
 	
-	// On-page components
-	static navigation = new ComponentDocsNavigation();
-	
 	// Rendering dynamic routes
 	static render_route = function(_context) {
 		var _render = _context.pop_render_stack();
@@ -17,9 +14,10 @@ function ViewDocs(): HtmxView() constructor {
 	};
 	
 	static render = function(_context) {
+		static _navigation = new ComponentDocsNavigation();
 		return Chain.concurrent_struct({
 			route: self.render_route(_context),
-			navigation: self.navigation.render(_context),
+			navigation: _navigation.render(_context),
 		}).chain_callback(function(_rendered) {
 			return @'
 				<style>

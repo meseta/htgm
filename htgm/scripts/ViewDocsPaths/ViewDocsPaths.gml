@@ -66,6 +66,7 @@ function ViewDocsPaths(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = quote_fix(@'
+			<title>Paths</title>
 			<h1>Paths</h1>
 			<p>
 				HTGM works by assigning handler functions to handle specific paths, which will be run

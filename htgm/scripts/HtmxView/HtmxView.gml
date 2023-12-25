@@ -3,11 +3,38 @@
 function HtmxView(): HttpServerRenderBase() constructor {
 	static should_cache = undefined;
 	
+	/** Convenience function to return whether the incoming request was from 
+	 * an HTMX hx-request
+	 * @param {Struct.HttpServerRequestContext} _context
+	 * @return {Bool}
+	 */
+	static is_hx_request = function(_context) {
+		return	_context.request.get_header("hx-request") == "true";
+	}
+	
+	/** Convenience function to do an HX-Redirect
+	 * @param {Struct.HttpServerRequestContext} _context
+	 * @return {Bool}
+	 */
+	static hx_redirect = function(_context, _path) {
+		_context.response.set_header("HX-Redirect", _path);
+	}
+	
 	/** Handle function for processing a request
 	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
 	 */
 	static handler = function(_context) {
-		if (_context.request.get_header("hx-request") != "true" && is_string(self.redirect_path) &&  _context.request.path != self.redirect_path) {
+		if (is_string(self.no_session_redirect_path) && !_context.has_session()) {
+			if (self.is_hx_request(_context)) {
+				_context.response.set_header("HX-Replace-Url", self.no_session_redirect_path);
+			}
+			else {
+				_context.response.set_header("HX-Location", self.no_session_redirect_path);
+			}
+			throw new ExceptionHttpServerInternalRedirect(self.no_session_redirect_path);
+		}
+		
+		if (!self.is_hx_request(_context) && is_string(self.redirect_path) &&  _context.request.path != self.redirect_path) {
 			_context.push_render_stack(method(self, self.render));
 			throw new ExceptionHttpServerInternalRedirect(self.redirect_path);
 		}

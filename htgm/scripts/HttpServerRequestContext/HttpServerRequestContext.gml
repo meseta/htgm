@@ -10,7 +10,8 @@ function HttpServerRequestContext(_request, _response=undefined, _logger=undefin
 	self.request = _request;
 	self.response = _response;
 	self.session = undefined;
-	self.session_id = undefined;
+	
+	self.data = {}; // arbitrary context data for the application
 	
 	_logger ??= LOGGER;
 	self.logger = _logger.bind({request_time: HttpServer.rfc_date_now() });

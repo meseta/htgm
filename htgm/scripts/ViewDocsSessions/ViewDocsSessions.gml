@@ -85,6 +85,7 @@ function ViewDocsSessions(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = quote_fix(@'
+			<title>Sessions</title>
 			<h1>Sessions</h1>
 			<p>
 				HTGM is able to create persistent sessions for visitors, allowing data to be persisted across multiple requests.

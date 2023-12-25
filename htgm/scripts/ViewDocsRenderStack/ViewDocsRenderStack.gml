@@ -59,6 +59,7 @@ function ViewDocsRenderStack(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = quote_fix(@'
+			<title>Render Stack and Redirects</title>
 			<h1>Render Stack and Redirects</h1>
 			<p>
 				Render constructors are useful for creating pages that you can navigate to from a browser. The Render constructor

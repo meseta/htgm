@@ -6,6 +6,7 @@ function ViewDocsDownloading(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = @'
+			<title>Downloading</title>
 			<h1>Downloading</h1>
 			<p>
 				You can download just the HTGM library itself, which contains only the library ready for you to create

@@ -14,4 +14,3 @@ function init_site(){
 	// websocket
 	SERVER.add_websocket("fps", function(_context) { return new WebsocketFps(); });
 }
-

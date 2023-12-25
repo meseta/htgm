@@ -81,6 +81,7 @@ function ViewDocsDynamicPaths(): HtmxView() constructor {
 	
 	static render = function(_context) {
 		static cached = quote_fix(@'
+			<title>Dynamic Paths</title>
 			<h1>Dynamic Paths</h1>
 			<p>
 				When adding paths, it is possible to have HTGM match path based on a pattern, rather than an exact string. Doing
