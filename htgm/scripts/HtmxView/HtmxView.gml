@@ -20,6 +20,14 @@ function HtmxView(): HttpServerRenderBase() constructor {
 		_context.response.set_header("HX-Redirect", _path);
 	}
 	
+	/** Convenience function to do an HX-Replace-URL
+	 * @param {Struct.HttpServerRequestContext} _context
+	 * @return {Bool}
+	 */
+	static hx_replace_url = function(_context, _path) {
+		_context.response.set_header("HX-Replace-Url", _path);
+	}
+	
 	/** Handle function for processing a request
 	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
 	 */

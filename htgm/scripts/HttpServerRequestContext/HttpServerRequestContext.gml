@@ -18,12 +18,23 @@ function HttpServerRequestContext(_request, _response=undefined, _logger=undefin
 	
 	// check of session cookie
 	if (self.request.has_cookie(self.session_cookie_name)) {
-		var _session_id = self.request.get_cookie(self.session_cookie_name);
-		if (is_array(_session_id)) {
-			_session_id = _session_id[0];
+		var _session_ids = self.request.get_cookie(self.session_cookie_name);
+		if (is_string(_session_ids)) {
+			_session_ids = [_session_ids];
 		}
-		self.session = self.session_storage[$ string(_session_id)];
-		self.logger.info("Request has session", {session_id: _session_id});
+
+		for (var _i=0; _i<array_length(_session_ids); _i++) {
+			var _session_id = string(_session_ids[_i]);
+			if (struct_exists(self.session_storage, _session_id)) {
+				self.session = self.session_storage[$ _session_id];
+				self.logger.info("Request has session", {session_id: _session_id});
+				break;
+			}
+			else {
+				// remove non-existente session cookie
+				self.__set_session_cookie(_session_id, 0);	
+			}
+		}
 	}
 	
 	/* @ignore */ self.__render_stack = [];
@@ -68,6 +79,7 @@ function HttpServerRequestContext(_request, _response=undefined, _logger=undefin
 		self.session_storage[$ _session_id] = self.session;
 		self.__set_session_cookie(_session_id, _expires_seconds);
 		self.logger.info("Session started", {session_id: _session_id});
+		return _session_id;
 	}
 	
 	/** Extends the session
@@ -94,7 +106,9 @@ function HttpServerRequestContext(_request, _response=undefined, _logger=undefin
 	}
 	
 	static __set_session_cookie = function(_session_id, _max_age) {
-		self.response.set_cookie(self.session_cookie_name, self.session.session_id, {max_age: _max_age, same_site: "Strict", http_only: true});
+		if (!is_undefined(self.response)) {
+			self.response.set_cookie(self.session_cookie_name, _session_id, {max_age: _max_age, same_site: "Strict", http_only: true});
+		}
 	}
 	
 	/** Generates a UUID4 */

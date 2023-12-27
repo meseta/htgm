@@ -82,7 +82,7 @@ function ViewDocsComponents(): HtmxView() constructor {
 	'));
 	
 	static render = function(_context) {
-		static cached = quote_fix(@'
+		static cached = convert_backticks(@'
 			<title>Resuable Components</title>
 			<h1>Resuable Components</h1>
 			<p>

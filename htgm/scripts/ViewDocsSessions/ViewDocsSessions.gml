@@ -84,7 +84,7 @@ function ViewDocsSessions(): HtmxView() constructor {
 	'));
 	
 	static render = function(_context) {
-		static cached = quote_fix(@'
+		static cached = convert_backticks(@'
 			<title>Sessions</title>
 			<h1>Sessions</h1>
 			<p>

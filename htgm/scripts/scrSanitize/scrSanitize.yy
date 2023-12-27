@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "quote_fix",
+  "name": "scrSanitize",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

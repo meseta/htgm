@@ -40,6 +40,9 @@ else {
 		// Allow CDN to cache
 		SERVER.set_default_cache_control("public, max-age=1800");
 		SERVER.start();
+		
+		// send backup reports
+		SENTRY.send_all_backed_up_reports();
 	});
 
 }

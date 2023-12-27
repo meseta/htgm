@@ -6,8 +6,8 @@ function HttpRequest(_method, _path) constructor {
 	
 	// request content
 	self.method = _method;
-	self.path = _path;
-	self.path_original = _path;
+	self.path = HttpServer.url_decode(_path);
+	self.path_original = self.path;
 	self.query = {};
 	
 	// header content
@@ -323,8 +323,11 @@ function HttpRequest(_method, _path) constructor {
 				
 					if (is_undefined(_filename) && is_undefined(_content_type)) {
 						// probably just form data.
-						var _value = buffer_read(_content_buff, buffer_text);
-						buffer_delete(_content_buff);
+						var _value = "";
+						if (buffer_exists(_content_buff)) { // buffer can be non-existent for blank strings
+							_value = buffer_read(_content_buff, buffer_text);
+							buffer_delete(_content_buff);
+						}
 						HttpServer.struct_set_multiple(self.form, _name, _value);
 					}
 					else {

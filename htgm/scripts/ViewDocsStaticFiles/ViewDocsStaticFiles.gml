@@ -36,7 +36,7 @@ function ViewDocsStaticFiles(): HtmxView() constructor {
 	'));
 	
 	static render = function(_context) {
-		static cached = quote_fix(@'
+		static cached = convert_backticks(@'
 			<title>Static Files and Sprites</title>
 			<h1>Static Files and Sprites</h1>
 			<p>

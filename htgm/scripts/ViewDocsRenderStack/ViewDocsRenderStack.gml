@@ -58,7 +58,7 @@ function ViewDocsRenderStack(): HtmxView() constructor {
 	
 	
 	static render = function(_context) {
-		static cached = quote_fix(@'
+		static cached = convert_backticks(@'
 			<title>Render Stack and Redirects</title>
 			<h1>Render Stack and Redirects</h1>
 			<p>

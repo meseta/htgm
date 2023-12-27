@@ -162,7 +162,28 @@ function HttpServerRouter(_logger) constructor {
 		var _param_struct = {}
 		
 		 // trim first "/"
-		var _paths = string_split(_path_string, "/", true);
+		var _unresolved_paths = string_split_ext(_path_string, ["/", "\\"], true);
+		var _unresolved_paths_len = array_length(_unresolved_paths);
+		
+		var _paths = [];
+		for (var _i=0; _i<_unresolved_paths_len; _i++) {
+			var _unresolved_path = _unresolved_paths[_i];
+			if (_unresolved_path == ".") continue;
+			else if (_unresolved_path == "..") { // try to go up
+				if (array_length(_paths) > 0) {
+					array_pop(_paths);	
+				}
+				else {
+					return undefined; // no match
+				}
+			}
+			else if (_unresolved_path == "~") {
+				_paths = [];	
+			}
+			else {
+				array_push(_paths, _unresolved_path);	
+			}
+		}
 		var _paths_len = array_length(_paths);
 		
 		var _patterns_len = array_length(_pattern_parts);
@@ -176,7 +197,7 @@ function HttpServerRouter(_logger) constructor {
 			if (_pattern == "*") {
 				// remove the earlier parts of the path, and store the rest in _param_struct.
 				array_delete(_paths, 0, _i); // NOTE: in-place _path mutation, but we discard this array anyway so it's okay
-				_param_struct[$ "*"] = HttpServer.url_decode(string_join_ext("/", _paths));
+				_param_struct[$ "*"] = string_join_ext("/", _paths);
 				break;
 			}
 			

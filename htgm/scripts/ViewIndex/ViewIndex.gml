@@ -11,21 +11,6 @@ function ViewIndex(): HttpServerRenderBase() constructor {
 		return is_method(_render) ? _render(_context) : ViewHome.render(_context);
 	};
 	
-	static __find_title = function(_html) {
-		var _pos_start = string_pos("<title>", _html);
-		if (_pos_start < 1) {
-			return undefined;
-		}
-		
-		var _pos_end = string_pos("</title>", _html);
-		if (_pos_start < 1) {
-			return undefined;
-		}
-		
-		return string_copy(_html, _pos_start+7, _pos_end-_pos_start-7);
-		
-	}
-	
 	static render = function(_context) {
 		static _navigation = new ComponentNavigation();
 		static _footer = new ComponentFooter();
@@ -86,5 +71,19 @@ function ViewIndex(): HttpServerRenderBase() constructor {
 				</body>
 				</html>
 		'});
+	};
+		
+	static __find_title = function(_html) {
+		var _pos_start = string_pos("<title>", _html);
+		if (_pos_start < 1) {
+			return undefined;
+		}
+		
+		var _pos_end = string_pos("</title>", _html);
+		if (_pos_start < 1) {
+			return undefined;
+		}
+		
+		return string_copy(_html, _pos_start+7, _pos_end-_pos_start-7);
 	};
 }

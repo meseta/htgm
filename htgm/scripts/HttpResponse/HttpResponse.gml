@@ -188,7 +188,7 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 		struct_foreach(self.headers, method(_response, function(_key, _value) {
 			/// Feather ignore GM1010
 			if (is_array(_value)) {
-				_top_matter += string_join_ext("\r\n", _value) + "\r\n";
+				top_matter += string_join_ext("\r\n", _value) + "\r\n";
 			}
 			else {
 				top_matter += $"{_key}: {_value}\r\n";
@@ -234,7 +234,7 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 	 * @return {Bool}
 	 */
 	static get_should_cache = function() {
-		return self.__should_cache ?? false;
+		return self.__should_cache;
 	};
 	
 	/** Sets the buffer as the response

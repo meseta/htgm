@@ -17,6 +17,12 @@ HTGM was created by [Meseta](https://meseta.dev), released under the MIT open so
 * v1.3.0
   * Add support for sessions
   * Add freeform context data
+  * Add Websocket renderer support
+  * Add multiple session cookie support
+  * Add more sanitize functions
+  * Fix empty form field handling
+  * Fix duplicate header handling
+  * Fix should_cache handling
 * v1.2.0
   * Add form and file upload support
   * Add gzip support for content encoding

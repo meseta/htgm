@@ -13,7 +13,7 @@ function ComponentNavigationLink(_target, _path, _text, _alt_path=undefined): Ht
 
 	static render = function(_context) {
 		var _is_on_page = string_starts_with(_context.request.path_original, self.path) || _context.request.path_original == self.alt_path;
-		return quote_fix(@'
+		return convert_backticks(@'
 			<li>
 				<a
 				 hx-on="click: htmx.findAll(`.'+self.link_class+ @'`).forEach((el) => htmx.addClass(el, `secondary`)); htmx.removeClass(this, `secondary`);"

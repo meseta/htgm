@@ -2,11 +2,8 @@
  * @param {String} _code The code, as a string
  */
 function HtmlCode(_code, _language="gml"): HtmlComponent() constructor {
-	
-	_code = string_replace_all(_code, "<", "&lt;");
-	_code = string_replace_all(_code, ">", "&gt;");
-	_code = string_trim_end(quote_fix(_code));
-	self.code = $"<pre><code class='language-{_language}'>{_code}</code></pre>";
+	var _clean = string_trim_end(convert_backticks(sanitize_tags(_code)));
+	self.code = $"<pre><code class='language-{_language}'>{_clean}</code></pre>";
 
 	static render = function(_context) {
 		return self.code;

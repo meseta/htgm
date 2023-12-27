@@ -80,7 +80,7 @@ function ViewDocsDynamicPaths(): HtmxView() constructor {
 	
 	
 	static render = function(_context) {
-		static cached = quote_fix(@'
+		static cached = convert_backticks(@'
 			<title>Dynamic Paths</title>
 			<h1>Dynamic Paths</h1>
 			<p>
