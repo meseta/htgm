@@ -2,7 +2,7 @@ function ViewDocsResponses(): HtmxView() constructor {
 	// View setup
 	static path = "docs/responses";
 	static redirect_path = "docs";
-	static shoud_cache = true;
+	static should_cache = true;
 	
 	static demo_code_1 = new HtmlCode(dedent(@'
 		global.server.add_path("demos/headers", function(_context) {

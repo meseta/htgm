@@ -2,7 +2,7 @@ function ViewHome(): HtmxView() constructor {
 	// View setup
 	static path = "home";
 	static redirect_path  = "";
-	static shoud_cache = true;
+	static should_cache = true;
 	
 	// On-page components
 	static code_example1 = new HtmlCode(dedent(@'

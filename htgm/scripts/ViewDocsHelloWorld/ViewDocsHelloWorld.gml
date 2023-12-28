@@ -2,7 +2,7 @@ function ViewDocsHelloWorld(): HtmxView() constructor {
 	// View setup
 	static path = "docs/hello-world";
 	static redirect_path = "docs";
-	static shoud_cache = true;
+	static should_cache = true;
 	
 	static demo_code_1 = new HtmlCode(dedent(@'
 		// Create a server on port 5000

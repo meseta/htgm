@@ -2,7 +2,7 @@ function ViewDocsStaticFiles(): HtmxView() constructor {
 	// View setup
 	static path = "docs/static-files";
 	static redirect_path = "docs";
-	static shoud_cache = true;
+	static should_cache = true;
 	
 	// some demo
 	static demos_created = false;
