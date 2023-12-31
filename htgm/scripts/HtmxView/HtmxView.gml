@@ -51,6 +51,7 @@ function HtmxView(): HttpServerRenderBase() constructor {
 			_context.response.set_should_cache(self.should_cache);
 		}
 		
+		_context.response.set_header("Vary", "HX-Request"); // prevent mixup of caching
 		var _rendered = self.render(_context);
 		if (is_instanceof(_rendered, Chain)) {
 			_rendered

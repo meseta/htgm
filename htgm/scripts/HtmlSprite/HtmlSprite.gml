@@ -1,7 +1,8 @@
 /** An HTML image that is actually a gamemaker sprite
  * @param {Asset.GMSprite} _sprite A gamemaker sprite index
+ * @param {String} _alt Alt text
  */
-function HtmlSprite(_sprite): HtmlComponent() constructor {
+function HtmlSprite(_sprite, _alt=""): HtmlComponent() constructor {
 	static _generated = {}; // keep track of generated images
 	
 	var _image_name = sprite_get_name(_sprite);
@@ -23,16 +24,23 @@ function HtmlSprite(_sprite): HtmlComponent() constructor {
 		draw_sprite_stretched(_sprite, 0, 0, 0, _width, _height);
 		surface_reset_target();
 		
-		surface_save(_surface, _filename);
+		// create data buffer
+		var _buffer = buffer_png_from_surface(_surface);
 		surface_free(_surface);
 
-		var _buffer = buffer_load(_filename);
-		self.image_tag = @'<img src="data:image/jpeg;base64,'+buffer_base64_encode(_buffer, 0, buffer_get_size(_buffer))+@'" />';
+		self.image_tag = @'<img src="data:image/png;base64,'+buffer_base64_encode(_buffer, 0, buffer_get_size(_buffer))+@'" alt="'+_alt+@'" />';
 		buffer_delete(_buffer);
 		_generated[$ _filename] = self.image_tag;
 	}
 	
 	static render = function(_context) {
 		return self.image_tag;
+	}
+	
+	static __endian_swap = function(_value) {
+		return ((_value & 0xff) << 24 ) |
+				((_value & 0xff00) << 8) |
+				((_value & 0xff0000) >> 8) |
+				((_value & 0xff000000) >> 24);
 	}
 }

@@ -32,7 +32,7 @@ function ViewIndex(): HttpServerRenderBase() constructor {
 			/// Feather ignore once GM1009
 			return @'
 				<!DOCTYPE html>
-				<html data-theme="dark" lang="en"style="height: 100%">
+				<html data-theme="dark" lang="en" style="height: 100%">
 				<head>
 					<meta charset="utf-8">
 					<title>'+ (_title ?? "HyperText GameMaker") +@'</title>

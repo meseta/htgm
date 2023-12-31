@@ -17,6 +17,9 @@ HTGM can be used to host websites if built and deployed to a server, or it can b
 HTGM was created by [Meseta](https://meseta.dev), released under the MIT open source license, and is free to use for commercial and non-commercial projects. The project is released as-is, and no support or warranties are provided, but those working on GameMaker projects in general may find help from the friendly [GameMaker community on Discord](https://discord.gg/gamemaker).
 
 ## Change History
+* v1.3.1
+  * Add Vary header for HTMX requests to avoid accidental caching
+  * Add surface to PNG function
 * v1.3.0
   * Add support for sessions
   * Add freeform context data
