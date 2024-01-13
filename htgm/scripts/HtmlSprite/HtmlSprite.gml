@@ -1,8 +1,8 @@
 /** An HTML image that is actually a gamemaker sprite
  * @param {Asset.GMSprite} _sprite A gamemaker sprite index
- * @param {String} _alt Alt text
+ * @param {String} _extras Extra properties inserted into the image tag
  */
-function HtmlSprite(_sprite, _alt=""): HtmlComponent() constructor {
+function HtmlSprite(_sprite, _extras=""): HtmlComponent() constructor {
 	static _generated = {}; // keep track of generated images
 	
 	var _image_name = sprite_get_name(_sprite);
@@ -28,7 +28,7 @@ function HtmlSprite(_sprite, _alt=""): HtmlComponent() constructor {
 		var _buffer = buffer_png_from_surface(_surface);
 		surface_free(_surface);
 
-		self.image_tag = @'<img src="data:image/png;base64,'+buffer_base64_encode(_buffer, 0, buffer_get_size(_buffer))+@'" alt="'+_alt+@'" />';
+		self.image_tag = @'<img src="data:image/png;base64,'+buffer_base64_encode(_buffer, 0, buffer_get_size(_buffer))+@'" '+_extras+@'/>';
 		buffer_delete(_buffer);
 		_generated[$ _filename] = self.image_tag;
 	}
