@@ -2,7 +2,7 @@
  * @param {String} _target Target element ID
  * @param {String} _path The path of the navigation
  * @param {String} _text The text label
- * @param {String*} _alt_path Alternative path (used for main link highlighting)
+ * @param {String} _alt_path Alternative path (used for main link highlighting)
  */
 function ComponentNavigationLink(_target, _path, _text, _alt_path=undefined): HtmlComponent() constructor {
 	self.target = _target;

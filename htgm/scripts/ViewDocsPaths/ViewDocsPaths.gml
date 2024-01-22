@@ -89,7 +89,7 @@ function ViewDocsPaths(): HtmxView() constructor {
 				to the client.
 			</p>
 						
-			'+ self.demo_code_1.render() + @'
+			'+ self.demo_code_1.render(_context) + @'
 			
 			<p>
 				In the above example, a new HTTP server is created, listening on port 5000, and the path for
@@ -104,7 +104,7 @@ function ViewDocsPaths(): HtmxView() constructor {
 				server using <code>add_render()</code>.
 			</p>
 						
-			'+ self.demo_code_2.render() + @'
+			'+ self.demo_code_2.render(_context) + @'
 			
 			<p>
 				In the above example, a new constructor is created, using <code>HttpServerRenderBase</code> as
@@ -128,7 +128,7 @@ function ViewDocsPaths(): HtmxView() constructor {
 				that have been tagged in the asset browser with a given tag.
 			</p>
 						
-			'+ self.demo_code_3.render() + @'
+			'+ self.demo_code_3.render(_context) + @'
 			
 			<p>
 				For this to work, the asset name must match the constructor name exactly.

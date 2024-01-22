@@ -219,12 +219,16 @@ function Sentry(_dsn="") constructor {
 		}
 		self.__sentry_handled = true;
 		
+		var _tracearray;
+		var _message;
+		var _stacktrace;
+		
 		// special HTML5 handling
 		if (!is_struct(_err) && !is_string(_err)) {
-			var _message = string(_err);
-			var _tracearray = debug_get_callstack();
+			_message = string(_err);
+			_tracearray = debug_get_callstack();
 			var _count = array_length(_tracearray);
-			var _stacktrace = array_create(_count);
+			_stacktrace = array_create(_count);
 			for (var _i=0; _i<_count; _i++) {
 				var _struct = {};
 				var _func = _tracearray[_i];
@@ -249,19 +253,19 @@ function Sentry(_dsn="") constructor {
 				}
 				var _line = string_copy(_msg, 40, (_pos>0?_pos: string_length(_msg))-40);
 				if (_line == string(global.sentry_last_exception)) {
-					var _message = string(global.sentry_last_exception);
-					var _tracearray = global.sentry_last_exception.stacktrace;
+					_message = string(global.sentry_last_exception);
+					_tracearray = global.sentry_last_exception.stacktrace;
 				}
 				else {
-					var _message = _line;
-					var _tracearray = _err.stacktrace;
+					_message = _line;
+					_tracearray = _err.stacktrace;
 				}
 			}
 			else {
-				var _message = _err.message;
-				var _tracearray = _err.stacktrace;
+				_message = _err.message;
+				_tracearray = _err.stacktrace;
 			}
-			var _stacktrace = self.__format_stacktrace(_tracearray);
+			_stacktrace = self.__format_stacktrace(_tracearray);
 		}
 	
 		var _payload = self.__create_payload("error", _message, _stacktrace);
@@ -511,7 +515,7 @@ function Sentry(_dsn="") constructor {
 				}
 			}
 			
-			var _pos = string_last_pos(":", _entry);
+			_pos = string_last_pos(":", _entry);
 			if (_pos > 0) {
 				var _lineno = string_delete(_entry, 1, _pos);
 				
@@ -615,7 +619,7 @@ function Sentry(_dsn="") constructor {
 	}
 	
 	/** Generate a Unix timestamp
-	 * @return {Number}
+	 * @return {Real}
 	 * @ignore
 	 */
 	static __unix_timestamp = function() {
@@ -716,7 +720,7 @@ function Sentry(_dsn="") constructor {
 	}
 	
 	/** Returns the string form of the browser
-	 * @return {String*}
+	 * @return {String|Undefined}
 	 * @ignore
 	 */
 	static __browser_string = function() {

@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "buffer_crc32_iso3309",
+  "name": "HttpBufferUtils",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

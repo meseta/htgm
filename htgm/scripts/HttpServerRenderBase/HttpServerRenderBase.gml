@@ -21,7 +21,7 @@ function HttpServerRenderBase() constructor {
 	
 	/** The render function for rendering this component
 	 * @param {Struct.HttpServerRequestContext} _context The incoming request contex
-	 * @return {String}
+	 * @return {String|Struct.Chain}
 	 */
 	static render = function(_context) { return ""; };
 
@@ -39,7 +39,7 @@ function HttpServerRenderBase() constructor {
 		}
 		
 		var _rendered = self.render(_context);
-		if (is_instanceof(_rendered, Chain)) {
+		if (!is_string(_rendered) && is_instanceof(_rendered, Chain)) {
 			_rendered
 				.chain_callback(method(_context, function(_payload) {
 					response.send_html(_payload);

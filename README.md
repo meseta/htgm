@@ -21,6 +21,7 @@ HTGM was created by [Meseta](https://meseta.dev), released under the MIT open so
   * Add Vary header for HTMX requests to avoid accidental caching
   * Add surface to PNG function
   * Add Extras argument for HTMLSprite
+  * Update logging suite
 * v1.3.0
   * Add support for sessions
   * Add freeform context data

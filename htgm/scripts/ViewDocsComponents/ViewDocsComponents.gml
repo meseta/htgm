@@ -96,7 +96,7 @@ function ViewDocsComponents(): HtmxView() constructor {
 				HTGM library and can be used as a starting point, such as the base <code>HtmlComponent</code> constructor.
 			</p>
 						
-			'+ self.demo_code_1.render() + @'
+			'+ self.demo_code_1.render(_context) + @'
 			
 			<p>
 				In the above example, a reusable component is defined, that will render out one row of an HTML table.

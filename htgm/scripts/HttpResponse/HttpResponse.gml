@@ -258,7 +258,7 @@ function HttpResponse(_end_function, _header_only=false, _compression="") constr
 			}
 			else if (self.__compression == "gzip") {
 				self.headers[$ "Content-Encoding"] = "gzip";
-				var _compressed_buffer = buffer_compress_gzip(_buffer, 0, _size);
+				var _compressed_buffer = HttpBufferUtils.compress_gzip(_buffer, 0, _size);
 				buffer_delete(_buffer);
 				_buffer = _compressed_buffer;
 				_size = buffer_get_size(_compressed_buffer);

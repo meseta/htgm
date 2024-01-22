@@ -24,7 +24,7 @@ function HtmlComponent() constructor {
 			_delimiter,
 			array_map(_array, method(_context, function(_component) {
 				return _component.render(self);
-			})),
+			}))
 		);
 	};
 }

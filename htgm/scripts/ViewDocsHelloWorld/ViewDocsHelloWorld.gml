@@ -47,7 +47,7 @@ function ViewDocsHelloWorld(): HtmxView() constructor {
 				and instantiate the server.
 			</p>
 					
-			'+self.demo_code_1.render()+@'
+			'+self.demo_code_1.render(_context)+@'
 
 			<p>
 				Once you run the project you should be able to open a browser and open the url

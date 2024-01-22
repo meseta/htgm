@@ -5,7 +5,7 @@ function HttpServerWebsocketBase() constructor {
 	
 	/** Handle function for processing a websocket connection
 	 * Must return a websocket session struct, or undefined to reject the connection
-	 * @return {Struct.HttpServerWebsocketSessionBase}
+	 * @return {Struct.HttpServerWebsocketSessionBase|Undefined}
 	 */
 	static handler = function(_context) {
 		return undefined;

@@ -75,7 +75,7 @@ function ViewDocsRenderStack(): HtmxView() constructor {
 				set, it will stop processing the render, and redirect to the redirected path instead.
 			</p>
 			
-			'+ self.demo_code_1.render() + @'
+			'+ self.demo_code_1.render(_context) + @'
 			
 			<p>
 				In the above example, a Render is created that has an internal redirect from <code>demos/something</code> to
@@ -95,7 +95,7 @@ function ViewDocsRenderStack(): HtmxView() constructor {
 				while the child Renders can contain the actual page content.
 			</p>
 				
-			'+ self.demo_code_2.render() + @'
+			'+ self.demo_code_2.render(_context) + @'
 			
 			<p>
 				In the above example, a template page has been implemented. Inside its render, it checks if there was any other

@@ -44,7 +44,7 @@ function ViewDocsResponses(): HtmxView() constructor {
 				The function <code>context.response.set_header()</code> Can be used to set headers in the response.
 			</p>
 						
-			'+ self.demo_code_1.render() + @'
+			'+ self.demo_code_1.render(_context) + @'
 			
 			<p>
 				In the above example, the endpoint sets the header <code>Access-Control-Allow-Origin</code> to the value <code>*</code>.
@@ -55,7 +55,7 @@ function ViewDocsResponses(): HtmxView() constructor {
 				A convenient function is provided to send structs or other serializable things as JSON.
 			</p>
 			
-			'+ self.demo_code_2.render() + @'
+			'+ self.demo_code_2.render(_context) + @'
 			
 			<p>
 				In the above example, a struct is being sent. This will get automatically run through <code>json_stringify()</code>
@@ -67,7 +67,7 @@ function ViewDocsResponses(): HtmxView() constructor {
 				Sometimes an empty response is needed. This is a special-type of HTTP response that has no body (not even a string).
 			</p>
 			
-			'+ self.demo_code_3.render() + @'
+			'+ self.demo_code_3.render(_context) + @'
 			
 			<p>
 				In the above example, no response body will be sent. The status code of 204 will be used by default, unless otherwise
@@ -80,7 +80,7 @@ function ViewDocsResponses(): HtmxView() constructor {
 				the <code>send_empty()</code> which defaults to 204.
 			</p>
 			
-			'+ self.demo_code_4.render() + @'
+			'+ self.demo_code_4.render(_context) + @'
 			
 			<p>
 				In the above example, a JSON is being sent with a status code of 400. This is useful for some clients that read the

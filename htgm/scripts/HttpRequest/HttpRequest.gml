@@ -65,7 +65,7 @@ function HttpRequest(_method, _path) constructor {
 	};
 	
 	/** Gets the buffer as a json
-	 * @return {Struct*}
+	 * @return {Any}
 	 */
 	static get_data_as_json = function() {
 		if (!buffer_exists(self.data)) {
@@ -92,7 +92,7 @@ function HttpRequest(_method, _path) constructor {
 	
 	/** Gets a header, returning either string or undefined
 	 * @param {String} _key the name of the header to get
-	 * @return {String*}
+	 * @return {String}
 	 */
 	static get_header = function(_key) {
 		return self.headers[$ string_lower(_key)];
@@ -126,7 +126,7 @@ function HttpRequest(_method, _path) constructor {
 	
 	/** Gets a cookie, returning either string or undefined
 	 * @param {String} _name the name of the cookie to get
-	 * @return {String|Array<String>|Undefined}
+	 * @return {Any}
 	 */
 	static get_cookie = function(_name) {
 		return self.cookies[$ _name];
@@ -142,7 +142,7 @@ function HttpRequest(_method, _path) constructor {
 
 	/** Gets a path paramete
 	 * @param {String} _key the name of the query to get
-	 * @return {String*}
+	 * @return {String}
 	 */
 	static get_parameter = function(_key) {
 		return self.parameters[$ _key];
@@ -158,7 +158,7 @@ function HttpRequest(_method, _path) constructor {
 
 	/** Gets a query value
 	 * @param {String} _key the name of the query to get
-	 * @return {String*}
+	 * @return {String}
 	 */
 	static get_query = function(_key) {
 		return self.query[$ _key];
@@ -174,7 +174,7 @@ function HttpRequest(_method, _path) constructor {
 
 	/** Gets a form value, returning either string or undefined
 	 * @param {String} _key the name of the query to get
-	 * @return {String*}
+	 * @return {String}
 	 */
 	static get_form = function(_key) {
 		return self.form[$ _key];
@@ -198,7 +198,7 @@ function HttpRequest(_method, _path) constructor {
 	
 	/** Gets the name of the file returning either string or undefined
 	 * @param {String} _key the name of the query to get
-	 * @return {String*}
+	 * @return {String}
 	 */
 	static get_file_name = function(_key) {
 		return self.file_names[$ _key];
@@ -217,11 +217,11 @@ function HttpRequest(_method, _path) constructor {
 	
 	/** Decodes the content of the request, used for form data */
 	static decode_content = function() {
-		var _content_type = self.get_header("content-type");
-		if (!is_string(_content_type)) {
+		var _content_type_header = self.get_header("content-type");
+		if (!is_string(_content_type_header)) {
 			return;
 		}
-		var _content_type_data = self.__decode_header_values(_content_type);
+		var _content_type_data = self.__decode_header_values(_content_type_header);
 		
 		if(_content_type_data._ == "application/x-www-form-urlencoded") {
 			var _string = self.get_data_as_string();	

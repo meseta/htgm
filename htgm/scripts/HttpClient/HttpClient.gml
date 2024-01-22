@@ -1,7 +1,7 @@
 /** A HTTP client that returns a Chain
  * You must run cleanup() to avoid a memory leak when this struct is no longer needed
- * @param {String*} _base_url The base url used for every request
- * @param {String*} _logger_name The name the internal logger will use
+ * @param {String} _base_url The base url used for every request
+ * @param {String} _logger_name The name the internal logger will use
  * @param {Struct.Logger*} _parent_logger A parent logger to use
  * @author Meseta https://meseta.dev
  */
@@ -74,9 +74,9 @@ function HttpClient(_base_url="", _logger_name="HttpClient", _parent_logger=unde
 	/** Make an HTTP request. this method returns a Chain 
 	 * @param {String} _http_method Http Method, e.g "GET", "POST"
 	 * @param {String} _url URL, this is appendend to the base URL
-	 * @param {String|Struct*} _body Body of request, can be undefined or blank
-	 * @param {Number*} _timeout Timeout for request in seconds
-	 * @param {Bool*} _result_raw Whether to return raw result and headers or attempt to decode it
+	 * @param {String|Struct} _body Body of request, can be undefined or blank
+	 * @param {Real} _timeout Timeout for request in seconds
+	 * @param {Bool} _result_raw Whether to return raw result and headers or attempt to decode it
 	 * @return {Struct.Chain}
 	 */
 	static request = function(_http_method, _url, _body=undefined, _timeout=15, _result_raw=false) {
@@ -115,8 +115,8 @@ function HttpClient(_base_url="", _logger_name="HttpClient", _parent_logger=unde
 	
 	/** Make an HTTP GET request. this method returns a Chain
 	 * @param {String} _url URL, this is appendend to the base URL
-	 * @param {String|Struct*} _body Body of request, can be undefined or blank
-	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @param {String|Struct} _body Body of request, can be undefined or blank
+	 * @param {Real} _timeout Timeout for request in seconds
 	 * @return {Struct.Chain}
 	 */
 	static get = function(_url, _body=undefined, _timeout=15) {
@@ -125,8 +125,8 @@ function HttpClient(_base_url="", _logger_name="HttpClient", _parent_logger=unde
 	
 	/** Make an HTTP POST request. this method returns a Chain 
 	 * @param {String} _url URL, this is appendend to the base URL
-	 * @param {String|Struct*} _body Body of request, can be undefined or blank
-	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @param {String|Struct} _body Body of request, can be undefined or blank
+	 * @param {Real} _timeout Timeout for request in seconds
 	 * @return {Struct.Chain}
 	 */
 	static post = function(_url, _body=undefined, _timeout=15) {
@@ -135,8 +135,8 @@ function HttpClient(_base_url="", _logger_name="HttpClient", _parent_logger=unde
 	
 	/** Make an HTTP PUT request. this method returns a Chain 
 	 * @param {String} _url URL, this is appendend to the base URL
-	 * @param {String|Struct*} _body Body of request, can be undefined or blank
-	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @param {String|Struct} _body Body of request, can be undefined or blank
+	 * @param {Real} _timeout Timeout for request in seconds
 	 * @return {Struct.Chain}
 	 */
 	static put = function(_url, _body=undefined, _timeout=15) {
@@ -145,8 +145,8 @@ function HttpClient(_base_url="", _logger_name="HttpClient", _parent_logger=unde
 	
 	/** Make an HTTP PATCH request. this method returns a Chain 
 	 * @param {String} _url URL, this is appendend to the base URL
-	 * @param {String|Struct*} _body Body of request, can be undefined or blank
-	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @param {String|Struct} _body Body of request, can be undefined or blank
+	 * @param {Real} _timeout Timeout for request in seconds
 	 * @return {Struct.Chain}
 	 */
 	static patch = function(_url, _body=undefined, _timeout=15) {
@@ -155,8 +155,8 @@ function HttpClient(_base_url="", _logger_name="HttpClient", _parent_logger=unde
 	
 	/** Make an HTTP DELETE request. this method returns a Chain 
 	 * @param {String} _url URL, this is appendend to the base URL
-	 * @param {String|Struct*} _body Body of request, can be undefined or blank
-	 * @param {Number*} _timeout Timeout for request in seconds
+	 * @param {String|Struct} _body Body of request, can be undefined or blank
+	 * @param {Real} _timeout Timeout for request in seconds
 	 * @return {Struct.Chain}
 	 */
 	static del = function(_url, _body=undefined, _timeout=15) {
@@ -262,13 +262,14 @@ function HttpClient(_base_url="", _logger_name="HttpClient", _parent_logger=unde
 				// decode json if headers is such
 				var _content_type = _headers[? "content-type"] ?? (_headers[? "Content-Type"] ?? "");
 				if (string_pos("application/json", _content_type) == 1) {
+					var _struct;
 					try {
-						var _struct = json_parse(_async_load[? "result"]);
+						_struct = json_parse(_async_load[? "result"]);
+						_request.callback(_struct);
 					}
 					catch (_err) {
-						_request.errback(_err);	
+						_request.errback(_err);
 					}
-					_request.callback(_struct);
 				}
 				else {
 					_request.callback(_async_load[? "result"]);

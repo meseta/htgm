@@ -148,7 +148,7 @@ function ViewDocsRequests(): HtmxView() constructor {
 				so these functions are not case sensitive on the header name.
 			</p>
 			
-			'+ self.demo_code_1.render() + @'
+			'+ self.demo_code_1.render(_context) + @'
 			
 			<p>
 				In the above example, the <code>Authorization</code> header is checked, and if there isn`t one, a message
@@ -162,7 +162,7 @@ function ViewDocsRequests(): HtmxView() constructor {
 				request.
 			</p>
 			
-			'+ self.demo_code_2.render() + @'
+			'+ self.demo_code_2.render(_context) + @'
 			
 			<p>
 				In the above example, if the user requests the path <code>demos/steve?id=123</code>, then this would result in
@@ -176,7 +176,7 @@ function ViewDocsRequests(): HtmxView() constructor {
 				"GET", "POST", "DELET", and so on.
 			</p>
 			
-			'+ self.demo_code_3.render() + @'
+			'+ self.demo_code_3.render(_context) + @'
 			
 			<h2>Body data</h2>
 			<p>
@@ -185,7 +185,7 @@ function ViewDocsRequests(): HtmxView() constructor {
 				<code>context.request.get_data_as_json()</code>.
 			</p>
 			
-			'+ self.demo_code_4.render() + @'
+			'+ self.demo_code_4.render(_context) + @'
 	
 			<h2>Form parameters</h2>
 			<p>
@@ -193,7 +193,7 @@ function ViewDocsRequests(): HtmxView() constructor {
 				<code>context.request.get_form("name")</code>. This can be used to fetch data from HTML forms.
 			</p>
 	
-			'+ self.demo_code_5.render() + @'
+			'+ self.demo_code_5.render(_context) + @'
 			
 			<p>
 				In the above example, if a form is submitted to that page with the field name <code>name</code>, the value will
@@ -207,7 +207,7 @@ function ViewDocsRequests(): HtmxView() constructor {
 				be cleaned up once the endpoint responds.
 			</p>
 	
-			'+ self.demo_code_6.render() + @'
+			'+ self.demo_code_6.render(_context) + @'
 			
 			<p>
 				In the above example, a file upload form submits a file, and the buffer length is printed out.

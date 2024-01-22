@@ -32,7 +32,7 @@ function Chain() constructor {
 	};
 	
 	/** Adds a call_later into the chain here, so when the call gets to this point we fire off a delay
-	 * @param {Number} _time The number of seconds
+	 * @param {Real} _time The number of seconds
 	 * @return {Struct.Chain}
 	 */
 	static chain_delay = function(_time) {
@@ -137,9 +137,9 @@ function Chain() constructor {
 	};
 	
 	/** Runs the chain 
-	 * @param {Function*} _callback
-	 * @param {Function*} _errback
-	 * @return {Struct.Chain}
+	 * @param {Function} _callback
+	 * @param {Function} _errback
+	 * @return {Struct.Chain|Undefined}
 	 * @ignore
 	 */
 	static __run_chain = function(_callback=undefined, _errback=undefined) {

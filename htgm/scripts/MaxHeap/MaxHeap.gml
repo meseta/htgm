@@ -25,7 +25,7 @@ function MaxHeap() constructor {
 	
 	/** Removes the highest value/priority pair from the heap, and returns it as an array
 	 * in the format [value, priority]; undefined will be returned if there's no values available
-	 * @return {Array*}
+	 * @return {Array|Undefined}
 	 */
 	static pop_max = function() {
 		if (self.__length == 0) {
@@ -49,7 +49,7 @@ function MaxHeap() constructor {
 	};
 	
 	/** Removes the highest value/priority pair from the heap, and returns the priority
-	 * @return {Real*}
+	 * @return {Real|Undefined}
 	 */
 	static pop_max_priority = function() {
 		if (self.__length == 0) {
@@ -62,7 +62,7 @@ function MaxHeap() constructor {
 	
 	/** Fetch the highest value/priority pair from the heap without removing it, and returns it as an array
 	 * in the format [value, priority]; undefined will be returned if there's no values available
-	 * @return {Array*}
+	 * @return {Array|Undefined}
 	 */
 	static peek_max = function() {
 		return self.__length ? self.__values[0] : undefined;
@@ -76,7 +76,7 @@ function MaxHeap() constructor {
 	};
 	
 	/** Fetch the highest priority value from the heap without removing it
-	 * @return {Real*}
+	 * @return {Real}
 	 */
 	static peek_max_priority = function() {
 		return self.__length ? self.__values[0][1] : undefined;

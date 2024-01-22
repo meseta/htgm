@@ -51,7 +51,7 @@ function ViewDocsStaticFiles(): HtmxView() constructor {
 				useful for things like image files, javascript libraries, or even whole HTML websites.
 			</p>
 						
-			'+ self.demo_code_1.render() + @'
+			'+ self.demo_code_1.render(_context) + @'
 			
 			<p>
 				In the above example, a dynamic path <code>demos/file-server/*</code> is used, and mapped to a folder
@@ -67,7 +67,7 @@ function ViewDocsStaticFiles(): HtmxView() constructor {
 				assets in the project available to the webserver.
 			</p>
 						
-			'+ self.demo_code_2.render() + @'
+			'+ self.demo_code_2.render(_context) + @'
 			
 			<p>
 				In the above example, a dynamic path <code>demos/sprite-server/{sprite}.png"</code> is used, and the sprite path variable

@@ -99,7 +99,7 @@ function ViewDocsSessions(): HtmxView() constructor {
 				session, and send the session ID to the client as a cookie.
 			</p>
 						
-			'+ self.demo_code_1.render() + @'
+			'+ self.demo_code_1.render(_context) + @'
 			
 			<p>
 				In the above example, a form is used to submit the username to the login endpoint, which then creates a session and
@@ -113,7 +113,7 @@ function ViewDocsSessions(): HtmxView() constructor {
 				a session is present and valid.
 			</p>
 			
-			'+ self.demo_code_2.render() + @'
+			'+ self.demo_code_2.render(_context) + @'
 			
 			<p>
 				In the above example, assuming the user has logged in previously, it will be able to fetch the stored username from
@@ -125,7 +125,7 @@ function ViewDocsSessions(): HtmxView() constructor {
 				Sessions normally have a set validity period. But sessions can be closed early using <code>context.close_session()</code>
 			</p>
 			
-			'+ self.demo_code_3.render() + @'
+			'+ self.demo_code_3.render(_context) + @'
 			
 			<p>
 				In the above example, the user`s session will be closed. You can see <a href="/demos/sessions/logout" target="_blank">the demo here</a>.

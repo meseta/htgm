@@ -60,7 +60,7 @@ function HttpServerLineBuffer(_buffer=-1) constructor {
 	};
 	
 	/** Read a line of text from the buffer
-	 * @return {String*}
+	 * @return {String|Undefined}
 	 */
 	static read_line = function() {
 		if (!buffer_exists(self.__buffer)) return undefined;
@@ -93,7 +93,7 @@ function HttpServerLineBuffer(_buffer=-1) constructor {
 	
 	/** Read until a certain set of bytes are found
 	 * @param {Id.Buffer} _boundary the buffer containing the boundary bytes
-	 * @return {Id.Buffer*}
+	 * @return {Id.Buffer|Undefined}
 	 */
 	static read_until_bytes = function(_boundary) {
 		if (!buffer_exists(self.__buffer)) return undefined;
@@ -135,7 +135,7 @@ function HttpServerLineBuffer(_buffer=-1) constructor {
 	
 	/** Read the rest of the data on the buffer
 	 * @param {Real} _end_bytes number of bytes to skip at the end
-	 * @return {Id.Buffer*}p
+	 * @return {Id.Buffer|Undefined}
 	 */
 	static read_until_end = function(_end_bytes=0) {
 		if (!buffer_exists(self.__buffer)) return undefined;

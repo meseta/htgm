@@ -53,7 +53,7 @@ function HtmxView(): HttpServerRenderBase() constructor {
 		
 		_context.response.set_header("Vary", "HX-Request"); // prevent mixup of caching
 		var _rendered = self.render(_context);
-		if (is_instanceof(_rendered, Chain)) {
+		if (!is_string(_rendered) && is_instanceof(_rendered, Chain)) {
 			_rendered
 				.chain_callback(method(_context, function(_payload) {
 					response.send_html(_payload);

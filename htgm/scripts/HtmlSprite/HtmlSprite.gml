@@ -25,7 +25,7 @@ function HtmlSprite(_sprite, _extras=""): HtmlComponent() constructor {
 		surface_reset_target();
 		
 		// create data buffer
-		var _buffer = buffer_png_from_surface(_surface);
+		var _buffer = HttpBufferUtils.png_from_surface(_surface);
 		surface_free(_surface);
 
 		self.image_tag = @'<img src="data:image/png;base64,'+buffer_base64_encode(_buffer, 0, buffer_get_size(_buffer))+@'" '+_extras+@'/>';
@@ -35,12 +35,5 @@ function HtmlSprite(_sprite, _extras=""): HtmlComponent() constructor {
 	
 	static render = function(_context) {
 		return self.image_tag;
-	}
-	
-	static __endian_swap = function(_value) {
-		return ((_value & 0xff) << 24 ) |
-				((_value & 0xff00) << 8) |
-				((_value & 0xff0000) >> 8) |
-				((_value & 0xff000000) >> 24);
 	}
 }

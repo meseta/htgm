@@ -4,7 +4,7 @@
  * @return {String}
  */
 function convert_backticks(_string) {
-	return string_replace_all(_string, "`", "'");;
+	return string_replace_all(_string, "`", "'");
 }
 
 /** Replaces the " and ' with HTML entities

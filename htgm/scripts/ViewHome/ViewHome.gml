@@ -115,11 +115,11 @@ function ViewHome(): HtmxView() constructor {
 				<p>Use re-usable components to build webpages easily</p>
 				<div class="grid">
 					<div>
-						'+self.code_example1.render()+@'
+						'+self.code_example1.render(_context)+@'
 					</div>
 					<div>
-						'+self.code_example2.render()+@'
-						'+self.code_example3.render()+@'
+						'+self.code_example2.render(_context)+@'
+						'+self.code_example3.render(_context)+@'
 					</div>
 				</div>
 			</article>
@@ -127,13 +127,13 @@ function ViewHome(): HtmxView() constructor {
 			<article>
 				<h2>Make API Endpoints in GameMaker</h2>
 				<p>Create REST endpoints for backend services</p>
-				'+self.code_example4.render()+@'
+				'+self.code_example4.render(_context)+@'
 			</article>
 			
 			<article>
 				<h2>Make Websocket servers in GameMaker</h2>
 				<p>Create Websocket endpoints for bi-bidirectional communication in browsers</p>
-				'+self.code_example5.render()+@'
+				'+self.code_example5.render(_context)+@'
 			</article>
 			
 			<script>hljs.highlightAll();</script>

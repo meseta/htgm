@@ -95,7 +95,7 @@ function ViewDocsDynamicPaths(): HtmxView() constructor {
 				which will match any value.
 			</p>
 						
-			'+ self.demo_code_1.render() + @'
+			'+ self.demo_code_1.render(_context) + @'
 			
 			<p>
 				In the above example, the wildcard path <code>demos/wildcard/*/path</code> is added. This will match any request
@@ -124,7 +124,7 @@ function ViewDocsDynamicPaths(): HtmxView() constructor {
 			</p>
 		
 						
-			'+ self.demo_code_2.render() + @'
+			'+ self.demo_code_2.render(_context) + @'
 			
 			<p>
 				In the above example, the wildcard path <code>demos/wildcard_end/*</code> is added. This will match any request
@@ -148,7 +148,7 @@ function ViewDocsDynamicPaths(): HtmxView() constructor {
 				allowing you to create paths that dynamically render content based on what was requested
 			</p>
 						
-			'+ self.demo_code_3.render() + @'
+			'+ self.demo_code_3.render(_context) + @'
 			
 			<p>
 				In the above example, a path pattern of <code>demos/fruit/{fruit_name}/like</code> is added. This makes the variable
@@ -164,7 +164,7 @@ function ViewDocsDynamicPaths(): HtmxView() constructor {
 				Multiple path parameters can be used together
 			</p>
 						
-			'+ self.demo_code_4.render() + @'
+			'+ self.demo_code_4.render(_context) + @'
 			
 			<p>
 				In the above example, a path pattern of <code>demos/users/{user_name}/likes_fruit/{fruit_name}</code> is added.
