@@ -6,7 +6,7 @@ function HttpBufferUtils() constructor {
 	* @return {ID.Buffer}
 	*/
 	static compress_gzip = function(_buffer, _offset, _size) {
-		var _crc = self.crc32_iso3309(_buffer, _offset, _size);
+		var _crc = HttpBufferUtils.crc32_iso3309(_buffer, _offset, _size);
 
 		// compress using normal deflate
 		var _deflate_buffer = buffer_compress(_buffer, _offset, _size);
@@ -63,19 +63,19 @@ function HttpBufferUtils() constructor {
 		buffer_write(_buffer, buffer_u32, 0x0a1a0a0d); // header 2
 		buffer_write(_buffer, buffer_u32, 0x0d000000); // IHDR length
 		buffer_write(_buffer, buffer_u32, 0x52444849); // IHDR
-		buffer_write(_buffer, buffer_u32, self.endian_swap(_width)); // width
-		buffer_write(_buffer, buffer_u32, self.endian_swap(_height)); // height
+		buffer_write(_buffer, buffer_u32, HttpBufferUtils.endian_swap(_width)); // width
+		buffer_write(_buffer, buffer_u32, HttpBufferUtils.endian_swap(_height)); // height
 		buffer_write(_buffer, buffer_u32, 0x00000608); // bit depth, color type, compression method, filter method
 		buffer_write(_buffer, buffer_u8, 0x00); // interlace method
-		var _crc = self.crc32_iso3309(_buffer, buffer_tell(_buffer)-17, 17);
-		buffer_write(_buffer, buffer_u32, self.endian_swap(_crc)); // CRC
+		var _crc = HttpBufferUtils.crc32_iso3309(_buffer, buffer_tell(_buffer)-17, 17);
+		buffer_write(_buffer, buffer_u32, HttpBufferUtils.endian_swap(_crc)); // CRC
 		
-		buffer_write(_buffer, buffer_u32, self.endian_swap(_compressed_buffer_size)); // IDAT length
+		buffer_write(_buffer, buffer_u32, HttpBufferUtils.endian_swap(_compressed_buffer_size)); // IDAT length
 		buffer_write(_buffer, buffer_u32, 0x54414449); // IDAT
 		buffer_copy(_compressed_buffer, 0, _compressed_buffer_size, _buffer, buffer_tell(_buffer));
 		buffer_seek(_buffer, buffer_seek_relative, _compressed_buffer_size);
-		_crc = self.crc32_iso3309(_buffer, buffer_tell(_buffer)-(_compressed_buffer_size+4), _compressed_buffer_size+4);
-		buffer_write(_buffer, buffer_u32, self.endian_swap(_crc)); // CRC
+		_crc = HttpBufferUtils.crc32_iso3309(_buffer, buffer_tell(_buffer)-(_compressed_buffer_size+4), _compressed_buffer_size+4);
+		buffer_write(_buffer, buffer_u32, HttpBufferUtils.endian_swap(_crc)); // CRC
 		
 		buffer_write(_buffer, buffer_u32, 0x00000000); // IEND length
 		buffer_write(_buffer, buffer_u32, 0x444e4549); // IEND
@@ -93,7 +93,7 @@ function HttpBufferUtils() constructor {
 	* @param {Real} _size the number of bytes to compress
 	* @return {Real}
 	*/
-	function crc32_iso3309(_buffer, _offset, _size) {
+	static crc32_iso3309 = function(_buffer, _offset, _size) {
 		// Pre-calculated CRC table
 		static _crc_table = undefined;
 		if (is_undefined(_crc_table)) {
