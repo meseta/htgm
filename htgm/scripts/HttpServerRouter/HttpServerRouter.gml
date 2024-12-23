@@ -103,9 +103,9 @@ function HttpServerRouter(_logger) constructor {
 		
 		Iterators.foreach(self.__websocket_handlers, method(_foreach_context, function(_handler) {
 			/// Feather ignore GM1013
-			var _match_params = this.__path_match(_handler.pattern_parts, context.request.path);
-			if (!is_undefined(_match_params)) {
-				context.request.set_parameters(_match_params);
+			var _match = this.__path_match(_handler.pattern_parts, context.request.path);
+			if (!is_undefined(_match)) {
+				context.request.set_parameters(_match.parameters, _match.query);
 				session_handler = _handler.callback(context);
 				throw Iterators.STOP_ITERATION;
 			}
