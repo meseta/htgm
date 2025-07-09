@@ -114,7 +114,7 @@ function ViewDocsRequests(): HtmxView() constructor {
 	static demo_code_6 = new HtmlCode(dedent(@'
 		global.server.add_path("demos/file", function(_context) {
 			_context.response.send_html(@`
-				<form action="/demos/file-submit" method="post">
+				<form action="/demos/file-submit" method="post" enctype="multipart/form-data">
 					<label for="name">Name: </label>
 					<input type="text" id="name" name="name">
 					<br>
